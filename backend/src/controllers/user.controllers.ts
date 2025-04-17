@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
-const signupUser = async (req: Request, res: Response) => {};
+const signupUser: RequestHandler = async (req, res) => {};
 
-const signinUser = async (req: Request, res: Response) => {};
+const signinUser: RequestHandler = async (req, res) => {};
 
 export { signupUser, signinUser };

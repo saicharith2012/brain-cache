@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
-const createLink = async (req: Request, res: Response) => {};
+const createLink: RequestHandler = async (req, res) => {};
 
-const shareLink = async (req: Request, res: Response) => {};
+const shareLink: RequestHandler = async (req, res) => {};
 
 export { createLink, shareLink };

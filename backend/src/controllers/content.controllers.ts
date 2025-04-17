@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
-const addDocument = async (req: Request, res: Response) => {};
+const addDocument: RequestHandler = async (req, res) => {};
 
-const getAllDocuments = async (req: Request, res: Response) => {};
+const getAllDocuments: RequestHandler = async (req, res) => {};
 
-const deleteDocument = async (req: Request, res: Response) => {};
+const deleteDocument: RequestHandler = async (req, res) => {};
 
 export { addDocument, getAllDocuments, deleteDocument };

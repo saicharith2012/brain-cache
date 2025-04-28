@@ -32,14 +32,20 @@ const getAllDocuments: RequestHandler = async (req, res) => {
 
 const deleteDocument: RequestHandler = async (req, res) => {
   const { contentId } = req.body;
-  await Content.deleteMany({
-    _id: contentId,
-    userId: req.userId,
-  });
+  try {
+    await Content.deleteMany({
+      _id: contentId,
+      userId: req.userId,
+    });
 
-  res.json({
-    message: "content deleted succesfully.",
-  });
+    res.status(200).json({
+      message: "content deleted succesfully.",
+    });
+  } catch (error) {
+    res.status(403).json({
+      message: "trying to delete a doc you don't own.",
+    });
+  }
 };
 
 export { addDocument, getAllDocuments, deleteDocument };

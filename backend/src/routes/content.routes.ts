@@ -4,11 +4,12 @@ import {
   deleteDocument,
   getAllDocuments,
 } from "../controllers/content.controllers.js";
+import { authenticateUser } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-router.post("/", addDocument);
-router.get("/", getAllDocuments);
-router.delete("/", deleteDocument);
+router.post("/", authenticateUser, addDocument);
+router.get("/", authenticateUser, getAllDocuments);
+router.delete("/", authenticateUser, deleteDocument);
 
 export default router;

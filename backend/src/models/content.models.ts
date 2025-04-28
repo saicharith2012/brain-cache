@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { model, Schema } from "mongoose";
 import { User } from "./user.models.js";
 
-const contentTypes = ["document", "link", "youtube", "link"];
+const contentTypes = ["document", "tweet", "youtube", "link"];
 
 const contentSchema = new Schema(
   {
@@ -10,7 +10,7 @@ const contentSchema = new Schema(
       type: String,
       required: true,
     },
-    contentType: {
+    type: {
       type: String,
       enum: contentTypes,
       required: true,

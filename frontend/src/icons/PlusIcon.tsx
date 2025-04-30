@@ -1,4 +1,4 @@
-import { IconProps, IconStyles } from "./IconTypes";
+import { IconProps, IconSizeVariants } from "./IconTypes";
 
 export default function PlusIcon(props: IconProps) {
   return (
@@ -8,7 +8,7 @@ export default function PlusIcon(props: IconProps) {
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      className={IconStyles[props.size]}
+      className={IconSizeVariants[props.size]}
     >
       <path
         stroke-linecap="round"

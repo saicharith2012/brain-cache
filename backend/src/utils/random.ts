@@ -1,5 +1,5 @@
 export default function random(len: number): string {
-  let options = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const options = "abcdefghijklmnopqrstuvwxyz0123456789";
 
   let ans = "";
 

@@ -5,82 +5,103 @@ import { Content } from "../models/content.models.js";
 import { User } from "../models/user.models.js";
 
 const createLink: RequestHandler = async (req, res) => {
-  const share = req.body.share;
-  // check if the link for the user brain cache is to be shared, i.e, share is true
-  if (share) {
-    // If yes, check if there is any existing link corresponding to the user
-    const existingLink = await Link.findOne({
-      userId: req.userId,
-    });
+  // extract share boolean from request body
+  // check if the link is to be shared (share = true)
+  // if true, search if a link already exists on this user Id
+  // if it exists, send the link hash as response
+  // else create a new hash using random util
+  // create a new link in the database
+  // send response
+  // if the share boolean is false, remove the link from the db.
+  try {
+    const share = req.body.share;
 
-    // If link exists, return it
-    if (existingLink) {
-      res.json({
-        link: existingLink.hash,
+    if (share) {
+      const existingLink = await Link.findOne({
+        userId: req.userId,
       });
-      return;
+
+      if (existingLink) {
+        res.json({
+          link: existingLink.hash,
+        });
+        return;
+      }
+
+      const hash = random(15);
+
+      await Link.create({
+        hash,
+        userId: req.userId,
+      });
+
+      res.json({
+        link: hash,
+      });
+    } else {
+      await Link.deleteOne({
+        userId: req.userId,
+      });
+
+      res.json({
+        message: "removed link.",
+      });
     }
-
-    // else create a new hash using random() util
-    const hash: string = random(15);
-    // create a new link object in the db
-    await Link.create({
-      hash,
-      userId: req.userId,
-    });
-
-    // return the new hash
-    res.json({
-      link: hash,
-    });
-  } else {
-    // if share is false, remove the link from the db
-    await Link.deleteOne({
-      userId: req.userId,
-    });
-
-    res.json({
-      message: "removed link.",
+  } catch (error) {
+    res.status(500).json({
+      message: `Error: ${
+        error instanceof Error ? error.message : "Internal Server Error"
+      } `,
     });
   }
 };
 
 const shareLink: RequestHandler = async (req, res) => {
-  // fetch the link hash from the url params
-  // check if the link exists
-  // fetch the content from the db
-  // check if the owner of the content exists
-  // send response containing owner username and content
-  const hash = req.params.shareLink;
+  // fetch the hash from the request url
+  // fetch the link document that belongs to the hash from db (throw error if it doesn't exist) and extract userId
+  // fetch content documents with the userId from the db
+  // fetch the user document and extract username
+  // throw error if user does not exist
+  // send the response containing contents and username
 
-  const link = await Link.findOne({
-    hash,
-  });
+  try {
+    const hash = req.params.shareLink;
 
-  if (!link) {
-    res.status(404).json({
-      message: "Invalid URL",
+    const link = await Link.findOne({
+      hash,
     });
-    return;
-  }
 
-  const content = await Content.find({
-    userId: link.userId,
-  });
+    if (!link) {
+      res.status(404).json({
+        message: "Invalid URL",
+      });
+      return;
+    }
 
-  const user = await User.findById(link.userId);
-
-  if (!user) {
-    res.status(404).json({
-      message: "user not found.",
+    const content = await Content.find({
+      userId: link.userId,
     });
-    return;
-  }
 
-  res.status(200).json({
-    username: user.username,
-    content,
-  });
+    const user = await User.findById(link.userId);
+
+    if (!user) {
+      res.status(404).json({
+        message: "user not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      user: user.username,
+      content,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: `Error: ${
+        error instanceof Error ? error.message : "Internal Server Error."
+      }`,
+    });
+  }
 };
 
 export { createLink, shareLink };

@@ -30,13 +30,13 @@ const createLink: RequestHandler = async (req, res) => {
 
       const hash = random(15);
 
-      await Link.create({
+      const link = await Link.create({
         hash,
         userId: req.userId,
       });
 
       res.json({
-        link: hash,
+        link: link.hash,
       });
     } else {
       await Link.deleteOne({

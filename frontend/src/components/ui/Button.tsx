@@ -17,7 +17,7 @@ const variantStyles: Record<Variant, string> = {
   secondary: "bg-cpurple-300 text-cpurple-500",
 };
 
-const defaultStyles = "rounded-md flex items-center";
+const defaultStyles = "rounded-md flex items-center cursor-pointer";
 
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "py-1 px-2",

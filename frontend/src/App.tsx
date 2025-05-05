@@ -18,7 +18,7 @@ function App() {
         size="md"
         text="Add Content"
         onClick={() => {}}
-        startIcon={<PlusIcon size="lg"/>}
+        startIcon={<PlusIcon size="xl"/>}
       />
     </>
   );

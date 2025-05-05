@@ -36,7 +36,7 @@ const createLink: RequestHandler = async (req, res) => {
       });
 
       res.json({
-        link: link.hash,
+        message: `/share/${link.hash}`
       });
     } else {
       await Link.deleteOne({

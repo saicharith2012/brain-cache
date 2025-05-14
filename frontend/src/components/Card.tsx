@@ -1,5 +1,9 @@
+import DeleteIcon from "../icons/DeleteIcon";
+import DocumentIcon from "../icons/DocumentIcon";
 import LinkIcon from "../icons/LinkIcon";
-import ShareIcon from "../icons/ShareIcon";
+import OpenIcon from "../icons/OpenIcon";
+import TwitterIcon from "../icons/TwitterIcon";
+import YoutubeIcon from "../icons/YoutubeIcon";
 
 interface CardProps {
   title: string;
@@ -12,21 +16,22 @@ export default function Card(props: CardProps) {
     <div className="bg-white rounded-lg border shadow-sm border-gray-100 p-4 max-w-72 min-w-72 h-fit min-h-56">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
-          <div className="mr-2 text-gray-500">
-            <ShareIcon size="lg" />
+          <div className="pr-3 text-gray-500">
+            {props.type === "youtube" && <YoutubeIcon />}
+            {props.type === "tweet" && <TwitterIcon />}
+            {props.type === "document" && <DocumentIcon size="xl" />}
+            {props.type === "link" && <LinkIcon size="xl" />}
           </div>
           <span className="font-medium text-gray-600">{props.title}</span>
         </div>
 
-        <div className="flex text-gray-400">
-          <div className="mr-2">
-            <ShareIcon size="lg" />
+        <div className="flex text-gray-400 items-center gap-2">
+          <a href={props.link} target="_blank">
+            <OpenIcon size="xl" />
+          </a>
+          <div className="cursor-pointer">
+            <DeleteIcon size="xl" />
           </div>{" "}
-          <div className="mr-2">
-            <a href={props.link} target="_blank">
-              <ShareIcon size="lg" />
-            </a>
-          </div>
         </div>
       </div>
 
@@ -51,11 +56,11 @@ export default function Card(props: CardProps) {
         )}
 
         {/* embedding a link or document */}
-        {(props.type === "link") && (
+        {props.type === "link" && (
           <a href={props.link}>
-          <div className="w-full h-[150px] flex justify-center items-center bg-gray-100 rounded-lg">
-            <LinkIcon size="3xl" />
-          </div>
+            <div className="w-full h-[150px] flex justify-center items-center bg-gray-100 rounded-lg">
+              <LinkIcon size="3xl" />
+            </div>
           </a>
         )}
       </div>

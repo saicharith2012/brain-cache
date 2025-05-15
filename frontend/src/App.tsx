@@ -1,12 +1,21 @@
+import { useState } from "react";
 import "./App.css";
 import { Button } from "./components/Button";
 import Card from "./components/Card";
+import CreateContentModal from "./components/CreateContentModal";
 import PlusIcon from "./icons/PlusIcon";
 import ShareIcon from "./icons/ShareIcon";
 
 function App() {
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="font-roboto">
+      <CreateContentModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+        }}
+      />
       <div className="flex justify-between items-center p-4 pl-8 ">
         <div className="text-3xl font-semibold">All Notes</div>
         <div className="flex gap-4">
@@ -14,7 +23,7 @@ function App() {
             variant="primary"
             size="md"
             text="Add content"
-            onClick={() => {}}
+            onClick={() => setModalOpen(true)}
             startIcon={<PlusIcon size="xl" />}
           />
 

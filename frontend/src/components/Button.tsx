@@ -9,7 +9,7 @@ interface ButtonProps {
   text: string;
   startIcon?: ReactElement;
   endIcon?: ReactElement;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const variantStyles: Record<Variant, string> = {
@@ -31,6 +31,7 @@ export const Button = (props: ButtonProps) => {
       className={`${variantStyles[props.variant]} ${defaultStyles} ${
         sizeStyles[props.size]
       }`}
+      onClick={props.onClick}
     >
       {props.startIcon ? <div className="pr-2">{props.startIcon}</div> : null}{" "}
       {props.text} {props.endIcon}

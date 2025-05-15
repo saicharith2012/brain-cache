@@ -27,7 +27,7 @@ export default function Card(props: CardProps) {
 
         <div className="flex text-gray-400 items-center gap-2">
           <a href={props.link} target="_blank">
-            <OpenIcon size="xl" />
+            <OpenIcon/>
           </a>
           <div className="cursor-pointer">
             <DeleteIcon size="xl" />

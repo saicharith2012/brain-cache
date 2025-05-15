@@ -5,36 +5,36 @@ import Card from "./components/Card";
 import CreateContentModal from "./components/CreateContentModal";
 import PlusIcon from "./icons/PlusIcon";
 import ShareIcon from "./icons/ShareIcon";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div className="font-roboto">
+    <div className="font-roboto pl-64">
       <CreateContentModal
         isOpen={modalOpen}
         onClose={() => {
-          setModalOpen(false)
+          setModalOpen(false);
         }}
       />
-      <div className="flex justify-between items-center p-4 pl-8 ">
-        <div className="text-3xl font-semibold">All Notes</div>
-        <div className="flex gap-4">
-          <Button
-            variant="primary"
-            size="md"
-            text="Add content"
-            onClick={() => setModalOpen(true)}
-            startIcon={<PlusIcon size="xl" />}
-          />
 
-          <Button
-            variant="secondary"
-            size="md"
-            text="Share brain"
-            onClick={() => {}}
-            startIcon={<ShareIcon size="lg" />}
-          />
-        </div>
+      <Sidebar />
+      <div className="flex justify-end gap-4 p-4 pl-8 ">
+        <Button
+          variant="primary"
+          size="md"
+          text="Add content"
+          onClick={() => setModalOpen(true)}
+          startIcon={<PlusIcon size="xl" />}
+        />
+
+        <Button
+          variant="secondary"
+          size="md"
+          text="Share brain"
+          onClick={() => {}}
+          startIcon={<ShareIcon size="lg" />}
+        />
       </div>
 
       <div className="flex gap-8 p-8">

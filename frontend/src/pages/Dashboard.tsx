@@ -1,13 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
 import Card from "../components/Card";
 import CreateContentModal from "../components/CreateContentModal";
 import PlusIcon from "../icons/PlusIcon";
 import ShareIcon from "../icons/ShareIcon";
 import Sidebar from "../components/Sidebar";
+import axios from "axios";
+import { BACKEND_URL } from "../config";
+import { ContentType } from "../constants";
+
+interface Content {
+  title: string;
+  link: string;
+  type: ContentType;
+}
 
 export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [contents, setContents] = useState<Content[]>([]);
+
+  useEffect(() => {
+    async function getContents() {
+      const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      setContents(response.data.content);
+    }
+
+    getContents();
+  }, []);
+
   return (
     <div className="font-roboto">
       <CreateContentModal
@@ -38,26 +64,13 @@ export default function Dashboard() {
         </div>
 
         <div className="flex gap-8 p-8">
-          <Card
-            title="I Built a Trading Bot"
-            link="https://www.youtube.com/watch?v=Mi0QycA81go"
-            type="youtube"
-          />
-
-          <Card
-            title="First tweet"
-            link="https://x.com/saicharithp/status/1903311548761919750"
-            type="tweet"
-          />
-
-          <Card
-            title="Jaeger Docs"
-            link="https://www.jaegertracing.io/docs/2.3/getting-started/"
-            type="link"
-          />
+          {contents.map((item, index) => (
+            <div key={index}>
+              <Card title={item.title} link={item.link} type={item.type} />
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
-

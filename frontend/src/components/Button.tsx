@@ -13,8 +13,8 @@ interface ButtonProps {
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary: "bg-cpurple-600 text-white",
-  secondary: "bg-cpurple-300 text-cpurple-500",
+  primary: "bg-gray-700 text-white",
+  secondary: "bg-gray-200 text-black",
 };
 
 const defaultStyles = "rounded-md flex items-center cursor-pointer";

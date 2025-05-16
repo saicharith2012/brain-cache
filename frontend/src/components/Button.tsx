@@ -10,6 +10,8 @@ interface ButtonProps {
   startIcon?: ReactElement;
   endIcon?: ReactElement;
   onClick?: () => void;
+  fullWidth?: boolean;
+  loading?: boolean;
 }
 
 const variantStyles: Record<Variant, string> = {
@@ -17,7 +19,8 @@ const variantStyles: Record<Variant, string> = {
   secondary: "bg-gray-200 text-black hover:bg-gray-300 focus:bg-gray-400",
 };
 
-const defaultStyles = "rounded-md flex items-center cursor-pointer transition-all duration-150";
+const defaultStyles =
+  "rounded-md flex items-center cursor-pointer transition-all duration-150";
 
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "py-1 px-2",
@@ -30,8 +33,11 @@ export const Button = (props: ButtonProps) => {
     <button
       className={`${variantStyles[props.variant]} ${defaultStyles} ${
         sizeStyles[props.size]
+      } ${props.fullWidth ? "w-full justify-center" : ""} ${
+        props.loading ? "opacity-40" : "opacity-100"
       }`}
       onClick={props.onClick}
+      disabled={props.loading}
     >
       {props.startIcon ? <div className="pr-2">{props.startIcon}</div> : null}{" "}
       {props.text} {props.endIcon}

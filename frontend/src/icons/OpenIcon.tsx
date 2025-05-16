@@ -10,7 +10,7 @@ export default function OpenIcon(props: IconProps) {
       viewBox="0,0,256,256"
     >
       <g
-        fill="#99a1af"
+        fill="currentColor"
         fillRule="nonzero"
         stroke="none"
         strokeWidth="1"

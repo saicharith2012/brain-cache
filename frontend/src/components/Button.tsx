@@ -13,11 +13,11 @@ interface ButtonProps {
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary: "bg-gray-700 text-white",
-  secondary: "bg-gray-200 text-black",
+  primary: "bg-gray-700 text-white hover:bg-gray-800 focus:bg-black",
+  secondary: "bg-gray-200 text-black hover:bg-gray-300 focus:bg-gray-400",
 };
 
-const defaultStyles = "rounded-md flex items-center cursor-pointer";
+const defaultStyles = "rounded-md flex items-center cursor-pointer transition-all duration-150";
 
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "py-1 px-2",

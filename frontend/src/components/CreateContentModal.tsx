@@ -13,7 +13,7 @@ export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
     <div>
       {isOpen && (
         <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-100">
-          <div className=" bg-white rounded-lg opacity-100 p-4 flex flex-col items-center">
+          <div className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm">
             <div className="flex justify-end w-full mb-4">
               <div className="cursor-pointer" onClick={onClose}>
                 <CrossIcon size="2xl"/>

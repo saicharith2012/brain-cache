@@ -64,8 +64,6 @@ export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
             <div className="flex p-2 mb-4 [&_input]:mr-1 [&_input]:w-5 [&_input]:cursor-pointer [&_label]:mr-4">
               <input
                 type="radio"
-                name="content_type"
-                value={ContentType.Tweet}
                 checked={type === ContentType.Tweet}
                 onChange={() => setType(ContentType.Tweet)}
               />
@@ -73,8 +71,6 @@ export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
 
               <input
                 type="radio"
-                name="content_type"
-                value={ContentType.Youtube}
                 checked={type === ContentType.Youtube}
                 onChange={() => setType(ContentType.Youtube)}
               />
@@ -82,8 +78,6 @@ export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
 
               <input
                 type="radio"
-                name="content_type"
-                value={ContentType.Link}
                 checked={type === ContentType.Link}
                 onChange={() => setType(ContentType.Link)}
               />
@@ -91,8 +85,6 @@ export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
 
               <input
                 type="radio"
-                name="content_type"
-                value={ContentType.Document}
                 checked={type === ContentType.Document}
                 onChange={() => setType(ContentType.Document)}
               />

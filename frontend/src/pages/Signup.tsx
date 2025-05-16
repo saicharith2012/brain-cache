@@ -3,11 +3,13 @@ import { Button } from "../components/Button";
 import InputComponent from "../components/InputComponent";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const emailRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   async function signup() {
     const email = emailRef.current?.value;
@@ -22,7 +24,7 @@ export default function Signup() {
       password,
     });
 
-    alert("You are signed up.");
+    navigate("/signin");
   }
   return (
     <div className="w-screen h-screen bg-gray-200 flex justify-center items-center">

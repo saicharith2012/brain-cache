@@ -10,13 +10,18 @@ interface ModalProps {
   onClose: () => void;
 }
 
-type ContentType = "tweet" | "youtube" | "link" | "document";
+enum ContentType {
+  Tweet = "tweet",
+  Youtube = "youtube",
+  Link = "link",
+  Document = "document",
+}
 
 // controlled component
 export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
-  const [type, setType] = useState<ContentType>("tweet");
+  const [type, setType] = useState<ContentType>(ContentType.Tweet);
   async function addContent() {
     const title = titleRef.current?.value;
     const link = linkRef.current?.value;
@@ -60,36 +65,36 @@ export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
               <input
                 type="radio"
                 name="content_type"
-                value="tweet"
-                checked={type === "tweet"}
-                onChange={() => setType("tweet")}
+                value={ContentType.Tweet}
+                checked={type === ContentType.Tweet}
+                onChange={() => setType(ContentType.Tweet)}
               />
               <label>Tweet</label>
 
               <input
                 type="radio"
                 name="content_type"
-                value="youtube"
-                checked={type === "youtube"}
-                onChange={() => setType("youtube")}
+                value={ContentType.Youtube}
+                checked={type === ContentType.Youtube}
+                onChange={() => setType(ContentType.Youtube)}
               />
               <label>Youtube</label>
 
               <input
                 type="radio"
                 name="content_type"
-                value="link"
-                checked={type === "link"}
-                onChange={() => setType("link")}
+                value={ContentType.Link}
+                checked={type === ContentType.Link}
+                onChange={() => setType(ContentType.Link)}
               />
               <label>Link</label>
 
               <input
                 type="radio"
                 name="content_type"
-                value="document"
-                checked={type === "document"}
-                onChange={() => setType("document")}
+                value={ContentType.Document}
+                checked={type === ContentType.Document}
+                onChange={() => setType(ContentType.Document)}
               />
               <label>Document</label>
             </div>

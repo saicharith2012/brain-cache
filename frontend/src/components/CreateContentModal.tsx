@@ -4,17 +4,11 @@ import { Button } from "./Button";
 import InputTextComponent from "./InputTextComponent";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { ContentType } from "../constants";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-}
-
-enum ContentType {
-  Tweet = "tweet",
-  Youtube = "youtube",
-  Link = "link",
-  Document = "document",
 }
 
 // controlled component

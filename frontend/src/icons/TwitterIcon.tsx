@@ -1,12 +1,13 @@
-export default function TwitterIcon() {
+import { IconProps, IconSizeVariants } from "./IconTypes";
+
+export default function TwitterIcon(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      width="20"
-      height="20"
       viewBox="0,0,256,256"
+      className={IconSizeVariants[props.size]}
     >
       <g
         fill="#6a7282"

@@ -1,11 +1,12 @@
-export default function OpenIcon() {
+import { IconProps, IconSizeVariants } from "./IconTypes";
+
+export default function OpenIcon(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      width="25"
-      height="25"
+      className={IconSizeVariants[props.size]}
       viewBox="0,0,256,256"
     >
       <g

@@ -1,12 +1,13 @@
-export default function YoutubeIcon() {
+import { IconProps, IconSizeVariants } from "./IconTypes";
+
+export default function YoutubeIcon(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      width="25"
-      height="25"
       viewBox="0,0,256,256"
+      className={IconSizeVariants[props.size]}
     >
       <g
         fill="#6a7282"

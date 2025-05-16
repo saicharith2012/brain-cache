@@ -17,8 +17,8 @@ export default function Card(props: CardProps) {
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <div className="pr-3 text-gray-500">
-            {props.type === "youtube" && <YoutubeIcon />}
-            {props.type === "tweet" && <TwitterIcon />}
+            {props.type === "youtube" && <YoutubeIcon size="2xl"/>}
+            {props.type === "tweet" && <TwitterIcon size="xl"/>}
             {props.type === "document" && <DocumentIcon size="xl" />}
             {props.type === "link" && <LinkIcon size="xl" />}
           </div>
@@ -27,7 +27,7 @@ export default function Card(props: CardProps) {
 
         <div className="flex text-gray-400 items-center gap-2">
           <a href={props.link} target="_blank">
-            <OpenIcon/>
+            <OpenIcon size="2xl"/>
           </a>
           <div className="cursor-pointer">
             <DeleteIcon size="xl" />

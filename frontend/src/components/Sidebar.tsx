@@ -7,17 +7,17 @@ import HashtagIcon from "../icons/HashtagIcon";
 import SidebarItem from "./SidebarItem";
 
 const sidebarItems: { icon: ReactElement; title: string }[] = [
-  { icon: <TwitterIcon />, title: "Tweets" },
-  { icon: <YoutubeIcon />, title: "Videos" },
+  { icon: <TwitterIcon size="2xl"/>, title: "Tweets" },
+  { icon: <YoutubeIcon size="2xl"/>, title: "Videos" },
   { icon: <DocumentIcon size="2xl" />, title: "Documents" },
-  { icon: <LinkIcon size="xl" />, title: "Links" },
-  { icon: <HashtagIcon size="xl" />, title: "Tags" },
+  { icon: <LinkIcon size="2xl" />, title: "Links" },
+  { icon: <HashtagIcon size="2xl" />, title: "Tags" },
 ];
 
 export default function Sidebar() {
   return (
-    <div className="h-screen bg-white border-r border-black/30 w-64 fixed top-0 left-0 p-4">
-      <div className="flex items-center mb-8">
+    <div className="h-screen bg-white shadow border-black/30 w-64 fixed top-0 left-0 p-4">
+      <div className="flex items-center mt-2 ml-2 mb-8">
         <img src="./braincache-logo.png" className="w-10 mr-2"></img>
         <h1 className="text-2xl font-semibold">Braincache</h1>
       </div>

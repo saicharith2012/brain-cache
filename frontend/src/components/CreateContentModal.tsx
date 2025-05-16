@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import CrossIcon from "../icons/CrossIcon";
 import { Button } from "./Button";
-import InputComponent from "./InputComponent";
+import InputTextComponent from "./InputTextComponent";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 
@@ -55,8 +55,8 @@ export default function CreateContentModal({ isOpen, onClose }: ModalProps) {
                 <CrossIcon size="2xl" />
               </div>
             </div>
-            <InputComponent placeholder="Title" ref={titleRef} />
-            <InputComponent placeholder="Link" ref={linkRef} />
+            <InputTextComponent placeholder="Title" ref={titleRef} />
+            <InputTextComponent placeholder="Link" ref={linkRef} />
 
             <div className="flex justify-start w-full px-2 mt-2">
               <p>Type </p>

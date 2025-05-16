@@ -3,7 +3,7 @@ interface InputProps {
   ref?: React.RefObject<HTMLInputElement | null>
 }
 
-export default function InputComponent(props: InputProps) {
+export default function InputTextComponent(props: InputProps) {
   return (
     <input
       type="text"

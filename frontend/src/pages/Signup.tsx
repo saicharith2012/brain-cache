@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Button } from "../components/Button";
-import InputComponent from "../components/InputComponent";
+import InputTextComponent from "../components/InputTextComponent";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -29,10 +29,10 @@ export default function Signup() {
   return (
     <div className="w-screen h-screen bg-gray-200 flex justify-center items-center">
       <div className="bg-white rounded-lg shadow-sm min-w-48 flex flex-col p-8">
-        <InputComponent ref={emailRef} placeholder="Email" />
-        <InputComponent ref={usernameRef} placeholder="Username" />
-        <InputComponent ref={passwordRef} placeholder="Enter Password" />
-        <InputComponent placeholder="Confirm Password" />
+        <InputTextComponent ref={emailRef} placeholder="Email" />
+        <InputTextComponent ref={usernameRef} placeholder="Username" />
+        <InputTextComponent ref={passwordRef} placeholder="Enter Password" />
+        <InputTextComponent placeholder="Confirm Password" />
         <div className="mt-4">
           <Button
             variant="primary"

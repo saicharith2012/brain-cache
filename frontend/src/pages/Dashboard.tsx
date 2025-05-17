@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
 import Card from "../components/Card";
 import CreateContentModal from "../components/CreateContentModal";
@@ -7,11 +7,14 @@ import ShareIcon from "../icons/ShareIcon";
 import Sidebar from "../components/Sidebar";
 import useContent from "../hooks/useContent";
 
-
 export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const contents = useContent()
+  const { contents, getContents } = useContent();
+
+  useEffect(() => {
+    getContents();
+  }, [modalOpen]);
 
   return (
     <div className="font-roboto">
@@ -43,7 +46,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex gap-8 p-8">
-          {contents.map(({title, link, type}, index) => (
+          {contents.map(({ title, link, type }, index) => (
             <div key={index}>
               <Card title={title} link={link} type={type} />
             </div>

@@ -1,38 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../components/Button";
 import Card from "../components/Card";
 import CreateContentModal from "../components/CreateContentModal";
 import PlusIcon from "../icons/PlusIcon";
 import ShareIcon from "../icons/ShareIcon";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
-import { ContentType } from "../constants";
+import useContent from "../hooks/useContent";
 
-interface Content {
-  title: string;
-  link: string;
-  type: ContentType;
-}
 
 export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [contents, setContents] = useState<Content[]>([]);
-
-  useEffect(() => {
-    async function getContents() {
-      const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      setContents(response.data.content);
-    }
-
-    getContents();
-  }, []);
+  const contents = useContent()
 
   return (
     <div className="font-roboto">
@@ -64,9 +43,9 @@ export default function Dashboard() {
         </div>
 
         <div className="flex gap-8 p-8">
-          {contents.map((item, index) => (
+          {contents.map(({title, link, type}, index) => (
             <div key={index}>
-              <Card title={item.title} link={item.link} type={item.type} />
+              <Card title={title} link={link} type={type} />
             </div>
           ))}
         </div>

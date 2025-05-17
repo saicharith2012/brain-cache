@@ -45,7 +45,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="flex gap-8 p-8">
+        <div className="flex flex-wrap gap-8 p-8">
           {contents.map(({ title, link, type }, index) => (
             <div key={index}>
               <Card title={title} link={link} type={type} />

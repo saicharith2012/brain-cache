@@ -1,14 +1,15 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import signup from "../../../actions/signup";
 import { signUpFormSchema, SignUpFormSchema } from "../../../config";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function SignupForm() {
   const router = useRouter();
+  const session = useSession()
   const {
     handleSubmit,
     register,
@@ -17,6 +18,12 @@ export default function SignupForm() {
     resolver: zodResolver(signUpFormSchema),
     mode: "onChange",
   });
+
+    useEffect(() => {
+      if (session.data) {
+        router.push("/dashboard");
+      }
+    }, [session, router]);
 
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();
@@ -102,6 +109,13 @@ export default function SignupForm() {
 
         <button type="submit">{isPending ? "Signing up" : "Sign up"}</button>
         {serverError && <p>{serverError}</p>}
+
+        <p
+          className="underline cursor-pointer"
+          onClick={() => router.push("/signin")}
+        >
+          Already have an account? Sign in
+        </p>
       </form>
     </div>
   );

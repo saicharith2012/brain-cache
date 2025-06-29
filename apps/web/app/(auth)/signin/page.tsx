@@ -1,13 +1,14 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
-import { signIn } from "next-auth/react";
+import { useEffect, useState, useTransition } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { signInSchema, SignInSchema } from "@repo/common/config";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function SigninForm() {
   const router = useRouter();
+  const session = useSession();
   const {
     handleSubmit,
     register,
@@ -19,13 +20,17 @@ export default function SigninForm() {
 
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  useEffect(() => {
+    if (session.data) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   const onSubmit = (data: SignInSchema) => {
     const { username, password } = data;
 
-    console.log(username, password)
+    // console.log(username, password);
 
     startTransition(async () => {
       try {
@@ -39,7 +44,7 @@ export default function SigninForm() {
           throw new Error(signinResult.error);
         }
 
-        router.push(callbackUrl);
+        router.push("/dashboard");
         router.refresh();
       } catch (error) {
         const errorMessage =
@@ -80,6 +85,8 @@ export default function SigninForm() {
 
         <button type="submit">{isPending ? "Signing in" : "Sign in"}</button>
         {serverError && <p>{serverError}</p>}
+
+        <p className="underline cursor-pointer" onClick={() => router.push("/signup")}>Create a new account</p>
       </form>
     </div>
   );

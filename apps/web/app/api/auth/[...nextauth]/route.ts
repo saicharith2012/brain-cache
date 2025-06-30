@@ -5,7 +5,9 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
 
 // extend the session and user types to include 'id'
-import type { DefaultSession, DefaultUser } from "next-auth";
+import type { DefaultSession, DefaultUser, Session, User } from "next-auth";
+import { JwtPayload } from "jsonwebtoken";
+import { nextAuthSecret } from "../../../../config";
 
 declare module "next-auth" {
   interface Session {
@@ -18,15 +20,15 @@ declare module "next-auth" {
   }
 }
 
-const handler = NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
   pages: {
     signIn: "/signin",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: nextAuthSecret,
   providers: [
     CredentialsProvider({
       name: "Sign in with credentials",
@@ -53,34 +55,40 @@ const handler = NextAuth({
         );
 
         if (!isPasswordCorrect) {
-          throw new Error("Invalid password");
+          throw new Error("Incorrect password");
         }
 
         return {
           id: user.id,
-          name: user.username,
           email: user.email,
+          name: user.username,
         };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JwtPayload; user: User }) {
       if (user) {
         token.id = user.id;
       }
 
+      // console.log(token);
+
       return token;
     },
 
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JwtPayload }) {
       if (token && session.user) {
         session.user.id = token.id as string;
       }
 
+      // console.log(session);
+
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

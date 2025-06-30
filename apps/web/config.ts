@@ -16,3 +16,5 @@ export const signUpFormSchema = signUpSchema
   });
 
 export type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
+
+export const nextAuthSecret = process.env.NEXTAUTH_SECRET

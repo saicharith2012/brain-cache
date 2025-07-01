@@ -3,11 +3,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@repo/db/client";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
+import GoogleProvider from "next-auth/providers/google";
 
 // extend the session and user types to include 'id'
 import type { DefaultSession, DefaultUser, Session, User } from "next-auth";
 import { JwtPayload } from "jsonwebtoken";
-import { nextAuthSecret } from "../../../../config";
+import { googleId, googleSecret, nextAuthSecret } from "../../../../config";
 
 declare module "next-auth" {
   interface Session {
@@ -51,7 +52,7 @@ export const authOptions = {
 
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password,
-          user.password
+          user.password!
         );
 
         if (!isPasswordCorrect) {
@@ -63,6 +64,17 @@ export const authOptions = {
           email: user.email,
           name: user.username,
         };
+      },
+    }),
+    GoogleProvider({
+      clientId: googleId as string,
+      clientSecret: googleSecret as string,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
       },
     }),
   ],

@@ -16,12 +16,16 @@ enum ContentType {
 }
 
 model User {
-  id       String    @id @default(uuid())
-  email    String    @unique
-  username String    @unique
-  password String
-  links    Link[]
-  contents Content[]
+  id            String    @id @default(uuid())
+  email         String    @unique
+  username      String?   @unique
+  password      String?
+  links         Link[]
+  contents      Content[]
+  accounts      Account[] // Added relation field for Account
+  name          String?
+  image         String?
+  emailVerified DateTime?
 }
 
 model Tag {
@@ -56,4 +60,23 @@ model ContentTag {
   tag     Tag     @relation(fields: [tagId], references: [id])
 
   @@id([contentId, tagId]) // Composite primary key
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? // optional
+  access_token      String? // optional
+  expires_at        Int? // optional
+  token_type        String? // optional
+  scope             String? // optional
+  id_token          String? // optional
+  session_state     String? // optional
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
 }

@@ -18,3 +18,5 @@ export const signUpFormSchema = signUpSchema
 export type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
 
 export const nextAuthSecret = process.env.NEXTAUTH_SECRET
+export const googleId = process.env.GOOGLE_ID
+export const googleSecret = process.env.GOOGLE_SECRET

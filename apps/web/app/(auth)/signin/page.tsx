@@ -86,8 +86,22 @@ export default function SigninForm() {
         <button type="submit">{isPending ? "Signing in" : "Sign in"}</button>
         {serverError && <p>{serverError}</p>}
 
-        <p className="underline cursor-pointer" onClick={() => router.push("/signup")}>Create a new account</p>
+        <p
+          className="underline cursor-pointer"
+          onClick={() => router.push("/signup")}
+        >
+          Create a new account
+        </p>
       </form>
+
+      <button
+        className="border p-2"
+        onClick={() => {
+          signIn("google", {callbackUrl: "/dashboard"});
+        }}
+      >
+        Sign in with google
+      </button>
     </div>
   );
 }

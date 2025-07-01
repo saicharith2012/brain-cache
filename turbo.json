@@ -4,7 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["NEXTAUTH_SECRET"],
+      "env": ["NEXTAUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
@@ -17,7 +17,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["NEXTAUTH_SECRET"]
+      "env": ["NEXTAUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET"]
     }
   }
 }

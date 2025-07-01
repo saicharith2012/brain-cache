@@ -1,8 +1,15 @@
 import { z } from "zod";
+import { ContentType } from "@repo/db/client";
 
+// auth schemas
 export const signUpSchema = z.object({
   email: z.string().email("invalid email").toLowerCase().trim(),
-  username: z.string().min(1, "username is required").max(20).toLowerCase().trim(),
+  username: z
+    .string()
+    .min(1, "username is required")
+    .max(20)
+    .toLowerCase()
+    .trim(),
   password: z
     .string()
     .min(8, "password must be atleast 8 characters long.")
@@ -26,3 +33,12 @@ export const signInSchema = z.object({
 export type SignInSchema = z.infer<typeof signInSchema>;
 
 export const envSchema = z.object({});
+
+export const addContentSchema = z.object({
+  link: z.string().min(1, "link is required"),
+  type: z.nativeEnum(ContentType),
+  title: z.string().min(1, "title is required"),
+  tags: z.array(z.string()).optional(),
+});
+
+export type AddContentSchema = z.infer<typeof addContentSchema>;

@@ -27,7 +27,6 @@ model User {
 model Tag {
   id          String       @id @default(uuid())
   title       String       @unique
-  contents    Content[]
   contentTags ContentTag[]
 }
 
@@ -44,7 +43,6 @@ model Content {
   link        String       @unique
   type        ContentType
   createdAt   DateTime     @default(now())
-  tags        Tag[]
   userId      String
   user        User         @relation(fields: [userId], references: [id])
   contentTags ContentTag[]

@@ -11,7 +11,8 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@repo/db": "workspace:*"
   },
   "dependencies": {
     "zod": "^3.25.67"

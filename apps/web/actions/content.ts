@@ -72,11 +72,13 @@ export async function getAllDocuments(userId: string) {
       },
       include: {
         contentTags: {
-          include: {
-            tag: true
-          }
-        }
-      }
+          select: {
+            tag: {
+              select: { title: true },
+            },
+          },
+        },
+      },
     });
 
     if (!contents) {

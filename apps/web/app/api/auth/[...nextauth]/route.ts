@@ -69,13 +69,6 @@ export const authOptions = {
     GoogleProvider({
       clientId: googleId as string,
       clientSecret: googleSecret as string,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
     }),
   ],
   callbacks: {

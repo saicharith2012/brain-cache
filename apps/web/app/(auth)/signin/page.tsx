@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { signInSchema, SignInSchema } from "@repo/common/config";
 import { useRouter } from "next/navigation";
+import InputComponent from "@repo/ui/inputComponent";
 
 export default function SigninForm() {
   const router = useRouter();
@@ -59,29 +60,22 @@ export default function SigninForm() {
     <div>
       <div>Signin Page</div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Username:</label>
-          <input {...register("username")} disabled={isPending} />
-          {errors.username ? (
-            <span>{errors.username.message}</span>
-          ) : (
-            <span></span>
-          )}
-        </div>
-
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            {...register("password")}
-            disabled={isPending}
-          />
-          {errors.password ? (
-            <span>{errors.password.message}</span>
-          ) : (
-            <span></span>
-          )}
-        </div>
+        <InputComponent
+          label="Username"
+          type="text"
+          placeholder="Enter Username"
+          disabled={isPending}
+          {...register("username")}
+          error={errors.username?.message}
+        />
+        <InputComponent
+          label="Password"
+          type="password"
+          placeholder="Enter Password"
+          disabled={isPending}
+          {...register("password")}
+          error={errors.password?.message}
+        />
 
         <button type="submit">{isPending ? "Signing in" : "Sign in"}</button>
         {serverError && <p>{serverError}</p>}
@@ -97,7 +91,7 @@ export default function SigninForm() {
       <button
         className="border p-2"
         onClick={() => {
-          signIn("google", {callbackUrl: "/dashboard"});
+          signIn("google", { callbackUrl: "/dashboard" });
         }}
       >
         Sign in with google

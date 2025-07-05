@@ -6,10 +6,11 @@ import signup from "../../../actions/signup";
 import { signUpFormSchema, SignUpFormSchema } from "../../../config";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
+import InputComponent from "@repo/ui/inputComponent";
 
 export default function SignupForm() {
   const router = useRouter();
-  const session = useSession()
+  const session = useSession();
   const {
     handleSubmit,
     register,
@@ -19,11 +20,11 @@ export default function SignupForm() {
     mode: "onChange",
   });
 
-    useEffect(() => {
-      if (session.data) {
-        router.push("/dashboard");
-      }
-    }, [session, router]);
+  useEffect(() => {
+    if (session.data) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();
@@ -39,15 +40,11 @@ export default function SignupForm() {
           throw new Error(signupResult.error);
         }
 
-        const signinResult = await signIn("credentials", {
+        await signIn("credentials", {
           username,
           password,
           redirect: false,
         });
-
-        if (signinResult?.error) {
-          throw new Error(signinResult.error);
-        }
 
         router.push("/dashboard");
       } catch (error) {
@@ -63,49 +60,41 @@ export default function SignupForm() {
     <div>
       <div>Signup Page</div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Email:</label>
-          <input {...register("email")} disabled={isPending} />
-          {errors.email ? <span>{errors.email.message}</span> : <span></span>}
-        </div>
+        <InputComponent
+          label="Email"
+          type="text"
+          placeholder="Enter you email"
+          {...register("email")}
+          disabled={isPending}
+          error={errors.email?.message}
+        />
 
-        <div>
-          <label>Username:</label>
-          <input {...register("username")} disabled={isPending} />
-          {errors.username ? (
-            <span>{errors.username.message}</span>
-          ) : (
-            <span></span>
-          )}
-        </div>
+        <InputComponent
+          label="Username"
+          type="text"
+          placeholder="Enter username"
+          disabled={isPending}
+          error={errors.username?.message}
+          {...register("username")}
+        />
 
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            {...register("password")}
-            disabled={isPending}
-          />
-          {errors.password ? (
-            <span>{errors.password.message}</span>
-          ) : (
-            <span></span>
-          )}
-        </div>
+        <InputComponent
+          label="Password"
+          type="password"
+          placeholder="Enter password"
+          disabled={isPending}
+          {...register("password")}
+          error={errors.password?.message}
+        />
 
-        <div>
-          <label>Confirm password:</label>
-          <input
-            type="password"
-            {...register("confirmPassword")}
-            disabled={isPending}
-          />
-          {errors.confirmPassword ? (
-            <span>{errors.confirmPassword.message}</span>
-          ) : (
-            <span></span>
-          )}
-        </div>
+        <InputComponent
+          label="Confirm password"
+          type="password"
+          placeholder="Reenter your password"
+          disabled={isPending}
+          error={errors.confirmPassword?.message}
+          {...register("confirmPassword")}
+        />
 
         <button type="submit">{isPending ? "Signing up" : "Sign up"}</button>
         {serverError && <p>{serverError}</p>}

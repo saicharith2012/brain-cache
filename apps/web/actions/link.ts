@@ -48,9 +48,12 @@ export async function createLink(share: boolean, userId: string) {
   }
 }
 
-
 export async function shareLink(hash: string): Promise<
-  | { success: true; content: (Content & { contentTags: { tag: { title: string } }[] })[]; username: string }
+  | {
+      success: true;
+      content: (Content & { contentTags: { tag: { title: string } }[] })[];
+      username: string;
+    }
   | { error: string }
 > {
   try {
@@ -97,7 +100,7 @@ export async function shareLink(hash: string): Promise<
     return {
       success: true,
       content,
-      username: user.username,
+      username: user.username || "null",
     };
   } catch (error) {
     return {

@@ -7,6 +7,7 @@ import { signUpFormSchema, SignUpFormSchema } from "../../../config";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import InputComponent from "@repo/ui/inputComponent";
+import { Button } from "@repo/ui/button";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -96,7 +97,13 @@ export default function SignupForm() {
           {...register("confirmPassword")}
         />
 
-        <button type="submit">{isPending ? "Signing up" : "Sign up"}</button>
+        <Button
+          type="submit"
+          text={isPending ? "Signing up" : "Sign up"}
+          variant="primary"
+          size="md"
+          loading={isPending}
+        />
         {serverError && <p>{serverError}</p>}
 
         <p

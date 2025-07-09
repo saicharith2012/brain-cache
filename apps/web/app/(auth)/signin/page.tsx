@@ -6,6 +6,8 @@ import { signIn, useSession } from "next-auth/react";
 import { signInSchema, SignInSchema } from "@repo/common/config";
 import { useRouter } from "next/navigation";
 import InputComponent from "@repo/ui/inputComponent";
+import { Button } from "@repo/ui/button";
+import GoogleIcon from "@repo/ui/icons/GoogleIcon";
 
 export default function SigninForm() {
   const router = useRouter();
@@ -77,7 +79,13 @@ export default function SigninForm() {
           error={errors.password?.message}
         />
 
-        <button type="submit">{isPending ? "Signing in" : "Sign in"}</button>
+        <Button
+          type="submit"
+          text={isPending ? "Signing in" : "Sign in"}
+          variant="primary"
+          size="md"
+          loading={isPending}
+        />
         {serverError && <p>{serverError}</p>}
 
         <p
@@ -88,14 +96,16 @@ export default function SigninForm() {
         </p>
       </form>
 
-      <button
-        className="border p-2"
+      <Button
         onClick={() => {
           signIn("google", { callbackUrl: "/dashboard" });
         }}
-      >
-        Sign in with google
-      </button>
+        text="Sign in with google"
+        size="md"
+        variant="google"
+        startIcon={<GoogleIcon size="xl" />}
+        loading={isPending}
+      />
     </div>
   );
 }

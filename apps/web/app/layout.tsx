@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-roboto">{children}</body>
+      <body className="font-roboto text-sm tracking-[0.005em]">{children}</body>
     </html>
   );
 }

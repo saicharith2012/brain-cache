@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import InputComponent from "@repo/ui/inputComponent";
 import { Button } from "@repo/ui/button";
+import EyeIcon from "@repo/ui/icons/EyeIcon";
+import EyeSlashIcon from "@repo/ui/icons/EyeSlashIcon";
+import GoogleIcon from "@repo/ui/icons/GoogleIcon";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -18,7 +21,7 @@ export default function SignupForm() {
     formState: { errors },
   } = useForm<SignUpFormSchema>({
     resolver: zodResolver(signUpFormSchema),
-    mode: "onChange",
+    mode: "onTouched",
   });
 
   useEffect(() => {
@@ -29,6 +32,9 @@ export default function SignupForm() {
 
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isGoogleSigninPending, startGoogleSigninTransition] = useTransition();
 
   const onSubmit = (data: SignUpFormSchema) => {
     const { email, username, password } = data;
@@ -59,8 +65,8 @@ export default function SignupForm() {
 
   return (
     <div>
-      <div>Signup Page</div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="text-3xl font-bold mb-6 text-center">Create Account.</div>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <InputComponent
           label="Email"
           type="text"
@@ -81,20 +87,32 @@ export default function SignupForm() {
 
         <InputComponent
           label="Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Enter password"
           disabled={isPending}
           {...register("password")}
           error={errors.password?.message}
+          endIcon={
+            showPassword ? <EyeIcon size="xl" /> : <EyeSlashIcon size="xl" />
+          }
+          toggleOnClick={() => setShowPassword((p) => !p)}
         />
 
         <InputComponent
           label="Confirm password"
-          type="password"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Reenter your password"
           disabled={isPending}
           error={errors.confirmPassword?.message}
           {...register("confirmPassword")}
+          endIcon={
+            showConfirmPassword ? (
+              <EyeIcon size="xl" />
+            ) : (
+              <EyeSlashIcon size="xl" />
+            )
+          }
+          toggleOnClick={() => setShowConfirmPassword((p) => !p)}
         />
 
         <Button
@@ -106,13 +124,32 @@ export default function SignupForm() {
         />
         {serverError && <p>{serverError}</p>}
 
-        <p
-          className="underline cursor-pointer"
+        <span
+          className="underline cursor-pointer inline text-center mt-3"
           onClick={() => router.push("/signin")}
         >
           Already have an account? Sign in
-        </p>
+        </span>
       </form>
+      <div className="w-[95%] mx-auto my-4 text-black flex items-center">
+        <hr className="opacity-30 w-[50%]" />
+        <span className="text-sm px-2 opacity-50">or</span>
+        <hr className="opacity-30 w-[50%]" />
+      </div>
+
+      <Button
+        onClick={() => {
+          startGoogleSigninTransition(async () => {
+            signIn("google", { callbackUrl: "/dashboard" });
+          });
+        }}
+        text="Continue with google"
+        size="md"
+        variant="google"
+        startIcon={<GoogleIcon size="xl" />}
+        loading={isGoogleSigninPending}
+        fullWidth={true}
+      />
     </div>
   );
 }

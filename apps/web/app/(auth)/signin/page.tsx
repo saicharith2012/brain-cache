@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import InputComponent from "@repo/ui/inputComponent";
 import { Button } from "@repo/ui/button";
 import GoogleIcon from "@repo/ui/icons/GoogleIcon";
+import EyeIcon from "@repo/ui/icons/EyeIcon";
+import EyeSlashIcon from "@repo/ui/icons/EyeSlashIcon";
 
 export default function SigninForm() {
   const router = useRouter();
@@ -18,11 +20,13 @@ export default function SigninForm() {
     formState: { errors },
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
-    mode: "onChange",
+    mode: "onTouched",
   });
 
   const [isPending, startTransition] = useTransition();
+  const [isGoogleSigninPending, startGoogleSigninTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (session.data) {
@@ -60,8 +64,8 @@ export default function SigninForm() {
 
   return (
     <div>
-      <div>Signin Page</div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+        <div className="text-3xl font-bold mb-6 text-center">Welcome back.</div>
         <InputComponent
           label="Username"
           type="text"
@@ -72,11 +76,15 @@ export default function SigninForm() {
         />
         <InputComponent
           label="Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Enter Password"
           disabled={isPending}
           {...register("password")}
           error={errors.password?.message}
+          endIcon={
+            showPassword ? <EyeIcon size="xl" /> : <EyeSlashIcon size="xl" />
+          }
+          toggleOnClick={() => setShowPassword((p) => !p)}
         />
 
         <Button
@@ -88,23 +96,32 @@ export default function SigninForm() {
         />
         {serverError && <p>{serverError}</p>}
 
-        <p
-          className="underline cursor-pointer"
+        <span
+          className="underline cursor-pointer inline text-center mt-3"
           onClick={() => router.push("/signup")}
         >
-          Create a new account
-        </p>
+          Don&#39;t have an account?
+        </span>
       </form>
+
+      <div className="w-[95%] mx-auto my-4 text-black flex items-center">
+        <hr className="opacity-30 w-[50%]" />
+        <span className="text-sm px-2 opacity-50">or</span>
+        <hr className="opacity-30 w-[50%]" />
+      </div>
 
       <Button
         onClick={() => {
-          signIn("google", { callbackUrl: "/dashboard" });
+          startGoogleSigninTransition(async () => {
+            signIn("google", { callbackUrl: "/dashboard" });
+          });
         }}
         text="Sign in with google"
         size="md"
         variant="google"
         startIcon={<GoogleIcon size="xl" />}
-        loading={isPending}
+        loading={isGoogleSigninPending}
+        fullWidth={true}
       />
     </div>
   );

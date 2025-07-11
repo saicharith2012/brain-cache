@@ -18,10 +18,10 @@ export default function SignupForm() {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm<SignUpFormSchema>({
     resolver: zodResolver(signUpFormSchema),
-    mode: "onTouched",
+    mode: "onChange",
   });
 
   useEffect(() => {
@@ -65,91 +65,101 @@ export default function SignupForm() {
 
   return (
     <div>
-      <div className="text-3xl font-bold mb-6 text-center">Create Account.</div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        <InputComponent
-          label="Email"
-          type="text"
-          placeholder="Enter you email"
-          {...register("email")}
-          disabled={isPending}
-          error={errors.email?.message}
-        />
-
-        <InputComponent
-          label="Username"
-          type="text"
-          placeholder="Enter username"
-          disabled={isPending}
-          error={errors.username?.message}
-          {...register("username")}
-        />
-
-        <InputComponent
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          placeholder="Enter password"
-          disabled={isPending}
-          {...register("password")}
-          error={errors.password?.message}
-          endIcon={
-            showPassword ? <EyeIcon size="xl" /> : <EyeSlashIcon size="xl" />
-          }
-          toggleOnClick={() => setShowPassword((p) => !p)}
-        />
-
-        <InputComponent
-          label="Confirm password"
-          type={showConfirmPassword ? "text" : "password"}
-          placeholder="Reenter your password"
-          disabled={isPending}
-          error={errors.confirmPassword?.message}
-          {...register("confirmPassword")}
-          endIcon={
-            showConfirmPassword ? (
-              <EyeIcon size="xl" />
-            ) : (
-              <EyeSlashIcon size="xl" />
-            )
-          }
-          toggleOnClick={() => setShowConfirmPassword((p) => !p)}
-        />
-
-        <Button
-          type="submit"
-          text={isPending ? "Signing up" : "Sign up"}
-          variant="primary"
-          size="md"
-          loading={isPending}
-        />
-        {serverError && <p>{serverError}</p>}
-
-        <span
-          className="underline cursor-pointer inline text-center mt-3"
-          onClick={() => router.push("/signin")}
-        >
-          Already have an account? Sign in.
-        </span>
-      </form>
-      <div className="w-[95%] mx-auto my-4 text-black flex items-center">
-        <hr className="opacity-30 w-[50%]" />
-        <span className="text-sm px-2 opacity-50">or</span>
-        <hr className="opacity-30 w-[50%]" />
+      <div className="text-2xl font-bold mb-6 text-center">
+        Create your account.
       </div>
 
-      <Button
-        onClick={() => {
-          startGoogleSigninTransition(async () => {
-            signIn("google", { callbackUrl: "/dashboard" });
-          });
-        }}
-        text="Continue with google"
-        size="md"
-        variant="google"
-        startIcon={<GoogleIcon size="xl" />}
-        loading={isGoogleSigninPending}
-        fullWidth={true}
-      />
+      <div className="h-[580px]">
+        <Button
+          onClick={() => {
+            startGoogleSigninTransition(async () => {
+              signIn("google", { callbackUrl: "/dashboard" });
+            });
+          }}
+          text="Continue with google"
+          size="md"
+          variant="google"
+          startIcon={<GoogleIcon size="xl" />}
+          loading={isGoogleSigninPending}
+          fullWidth={true}
+        />
+
+        <div className="w-[95%] mx-auto my-5 text-black flex items-center">
+          <hr className="opacity-30 w-[50%]" />
+          <span className="text-sm px-2 opacity-50">or</span>
+          <hr className="opacity-30 w-[50%]" />
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+          <InputComponent
+            label="Email"
+            type="text"
+            placeholder="john.doe@example.com"
+            {...register("email")}
+            disabled={isPending}
+            error={errors.email?.message}
+            isSubmitted={isSubmitted}
+          />
+
+          <InputComponent
+            label="Username"
+            type="text"
+            placeholder="johndoe"
+            {...register("username")}
+            disabled={isPending}
+            error={errors.username?.message}
+            isSubmitted={isSubmitted}
+          />
+
+          <InputComponent
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Johndoe@123"
+            disabled={isPending}
+            {...register("password")}
+            error={errors.password?.message}
+            isSubmitted={isSubmitted}
+            endIcon={
+              showPassword ? <EyeIcon size="xl" /> : <EyeSlashIcon size="xl" />
+            }
+            toggleOnClick={() => setShowPassword((p) => !p)}
+          />
+
+          <InputComponent
+            label="Confirm password"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="•••••••••••"
+            {...register("confirmPassword")}
+            disabled={isPending}
+            error={errors.confirmPassword?.message}
+            isSubmitted={isSubmitted}
+            endIcon={
+              showConfirmPassword ? (
+                <EyeIcon size="xl" />
+              ) : (
+                <EyeSlashIcon size="xl" />
+              )
+            }
+            toggleOnClick={() => setShowConfirmPassword((p) => !p)}
+          />
+
+          <Button
+            type="submit"
+            text={isPending ? "Signing up" : "Sign up"}
+            variant="primary"
+            size="md"
+            loading={isPending}
+          />
+          {serverError && <p>{serverError}</p>}
+
+          <span
+            className="underline cursor-pointer inline text-center mt-3"
+            onClick={() => router.push("/signin")}
+          >
+            Already have an account? Sign in.
+          </span>
+        </form>
+      </div>
     </div>
   );
 }

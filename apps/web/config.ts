@@ -3,14 +3,14 @@ import { z } from "zod";
 
 export const signUpFormSchema = signUpSchema
   .extend({
-    confirmPassword: z.string().min(1, "confirm you password"),
+    confirmPassword: z.string().min(1, "Confirm your password"),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["confirmPassword"],
-        message: "passwords don't match",
+        message: "Passwords don't match",
       });
     }
   });

@@ -3,19 +3,20 @@ import React from "react";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  isSubmitted?: boolean;
   endIcon?: React.ReactNode;
   toggleOnClick?: () => void;
 }
 
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, endIcon, toggleOnClick, ...rest }, ref) => {
+  ({ label, error, endIcon, toggleOnClick, isSubmitted, ...rest }, ref) => {
     return (
       <div className="flex flex-col pb-1">
         {label && <label className="my-1 font-semibold">{label}</label>}
-        <div className={`relative p-2 border rounded-lg ${error && "outline-red-500"}`}>
+        <div className={`relative p-2 border rounded-lg focus-within:outline-1`}>
           <input
             ref={ref}
-            className={`focus:outline-none ${endIcon ? "w-7/8" : "w-full"}`}
+            className={`group focus:outline-none ${endIcon ? "w-7/8" : "w-full"}`}
             {...rest}
           />
           {endIcon ? (
@@ -27,7 +28,7 @@ const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           ) : null}
         </div>
-        <span className="text-sm text-red-500 py-1">{error ? error : ""}</span>
+        <span className="text-sm text-red-500 py-1">{error && isSubmitted ? error : ""}</span>
       </div>
     );
   }

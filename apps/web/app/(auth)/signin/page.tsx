@@ -17,7 +17,7 @@ export default function SigninForm() {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     mode: "onTouched",
@@ -64,65 +64,70 @@ export default function SigninForm() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        <div className="text-3xl font-bold mb-6 text-center">Welcome.</div>
-        <InputComponent
-          label="Username"
-          type="text"
-          placeholder="Enter Username"
-          disabled={isPending}
-          {...register("username")}
-          error={errors.username?.message}
-        />
-        <InputComponent
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          placeholder="Enter Password"
-          disabled={isPending}
-          {...register("password")}
-          error={errors.password?.message}
-          endIcon={
-            showPassword ? <EyeIcon size="xl" /> : <EyeSlashIcon size="xl" />
-          }
-          toggleOnClick={() => setShowPassword((p) => !p)}
-        />
+      <div className="text-3xl font-bold mb-6 text-center">Welcome.</div>
+      <div className="h-[380px]">
 
         <Button
-          type="submit"
-          text={isPending ? "Signing in" : "Sign in"}
-          variant="primary"
+          onClick={() => {
+            startGoogleSigninTransition(async () => {
+              signIn("google", { callbackUrl: "/dashboard" });
+            });
+          }}
+          text="Sign in with google"
           size="md"
-          loading={isPending}
+          variant="google"
+          startIcon={<GoogleIcon size="xl" />}
+          loading={isGoogleSigninPending}
+          fullWidth={true}
         />
-        {serverError && <p>{serverError}</p>}
+        <div className="w-[95%] mx-auto my-5 text-black flex items-center">
+          <hr className="opacity-30 w-[50%]" />
+          <span className="text-sm px-2 opacity-50">or</span>
+          <hr className="opacity-30 w-[50%]" />
+        </div>
 
-        <span
-          className="underline cursor-pointer inline text-center mt-3"
-          onClick={() => router.push("/signup")}
-        >
-          Don&#39;t have an account? Get started.
-        </span>
-      </form>
+        
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+          <InputComponent
+            label="Username"
+            type="text"
+            placeholder="johndoe"
+            {...register("username")}
+            disabled={isPending}
+            error={errors.username?.message}
+            isSubmitted={isSubmitted}
+          />
+          <InputComponent
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            placeholder="••••••••"
+            {...register("password")}
+            disabled={isPending}
+            error={errors.password?.message}
+            isSubmitted={isSubmitted}
+            endIcon={
+              showPassword ? <EyeIcon size="xl" /> : <EyeSlashIcon size="xl" />
+            }
+            toggleOnClick={() => setShowPassword((p) => !p)}
+          />
 
-      <div className="w-[95%] mx-auto my-4 text-black flex items-center">
-        <hr className="opacity-30 w-[50%]" />
-        <span className="text-sm px-2 opacity-50">or</span>
-        <hr className="opacity-30 w-[50%]" />
+          <Button
+            type="submit"
+            text={isPending ? "Signing in" : "Sign in"}
+            variant="primary"
+            size="md"
+            loading={isPending}
+          />
+          {serverError && <p>{serverError}</p>}
+
+          <span
+            className="underline cursor-pointer inline text-center mt-3"
+            onClick={() => router.push("/signup")}
+          >
+            Don&#39;t have an account? Get started.
+          </span>
+        </form>
       </div>
-
-      <Button
-        onClick={() => {
-          startGoogleSigninTransition(async () => {
-            signIn("google", { callbackUrl: "/dashboard" });
-          });
-        }}
-        text="Sign in with google"
-        size="md"
-        variant="google"
-        startIcon={<GoogleIcon size="xl" />}
-        loading={isGoogleSigninPending}
-        fullWidth={true}
-      />
     </div>
   );
 }

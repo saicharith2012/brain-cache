@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import Sidebar from "../../components/Sidebar";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -9,5 +10,9 @@ export default async function Dashboard() {
     redirect("/signin");
   }
 
-  return <div>dashboard page {JSON.stringify(session)}</div>;
+  return (
+    <div>
+      <Sidebar />
+    </div>
+  );
 }

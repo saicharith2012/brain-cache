@@ -17,7 +17,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 flex items-center justify-between py-1 px-4">
+    <div className="fixed top-0 left-64 right-0 flex items-center justify-between py-1 px-4">
       <span>navbar</span>
       <Button
         text="Sign out"

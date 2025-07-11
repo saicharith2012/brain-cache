@@ -3,13 +3,17 @@
 import { Button } from "@repo/ui/button";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 export default function Navbar() {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  async function signOutUser() {
-    await signOut();
-    router.push("/signin");
+  function signOutUser() {
+    startTransition(async () => {
+      await signOut();
+      router.push("/signin");
+    });
   }
 
   return (
@@ -20,6 +24,7 @@ export default function Navbar() {
         variant="primary"
         size="md"
         onClick={signOutUser}
+        loading={isPending}
       />
     </div>
   );

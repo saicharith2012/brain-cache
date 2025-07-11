@@ -65,7 +65,7 @@ export default function SigninForm() {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        <div className="text-3xl font-bold mb-6 text-center">Welcome back.</div>
+        <div className="text-3xl font-bold mb-6 text-center">Welcome.</div>
         <InputComponent
           label="Username"
           type="text"
@@ -100,7 +100,7 @@ export default function SigninForm() {
           className="underline cursor-pointer inline text-center mt-3"
           onClick={() => router.push("/signup")}
         >
-          Don&#39;t have an account?
+          Don&#39;t have an account? Get started.
         </span>
       </form>
 

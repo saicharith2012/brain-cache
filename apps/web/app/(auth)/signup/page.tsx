@@ -128,7 +128,7 @@ export default function SignupForm() {
           className="underline cursor-pointer inline text-center mt-3"
           onClick={() => router.push("/signin")}
         >
-          Already have an account? Sign in
+          Already have an account? Sign in.
         </span>
       </form>
       <div className="w-[95%] mx-auto my-4 text-black flex items-center">

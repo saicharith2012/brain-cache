@@ -20,7 +20,7 @@ const variantStyles: Record<Variant, string> = {
 };
 
 const defaultStyles =
-  "rounded-md flex items-center cursor-pointer transition-all duration-150 justify-center my-2 font-[600]";
+  "rounded-md flex items-center cursor-pointer transition-all duration-150 justify-center font-[600]";
 
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "py-1 px-2",

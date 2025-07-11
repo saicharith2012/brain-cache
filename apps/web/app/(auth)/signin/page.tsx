@@ -79,6 +79,7 @@ export default function SigninForm() {
           startIcon={<GoogleIcon size="xl" />}
           loading={isGoogleSigninPending}
           fullWidth={true}
+          className="my-2"
         />
         <div className="w-[95%] mx-auto my-5 text-black flex items-center">
           <hr className="opacity-30 w-[50%]" />
@@ -117,6 +118,7 @@ export default function SigninForm() {
             variant="primary"
             size="md"
             loading={isPending}
+            className="my-2"
           />
           {serverError && <p>{serverError}</p>}
 

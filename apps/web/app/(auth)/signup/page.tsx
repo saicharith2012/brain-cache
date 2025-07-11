@@ -82,6 +82,7 @@ export default function SignupForm() {
           startIcon={<GoogleIcon size="xl" />}
           loading={isGoogleSigninPending}
           fullWidth={true}
+          className="my-2"
         />
 
         <div className="w-[95%] mx-auto my-5 text-black flex items-center">
@@ -149,6 +150,7 @@ export default function SignupForm() {
             variant="primary"
             size="md"
             loading={isPending}
+            className="my-2"
           />
           {serverError && <p>{serverError}</p>}
 

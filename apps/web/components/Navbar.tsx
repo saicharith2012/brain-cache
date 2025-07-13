@@ -21,20 +21,18 @@ export default function Navbar() {
   }
 
   return (
-    <div className="fixed top-0 left-64 right-0 flex items-center justify-end gap-4 p-4 h-18">
+    <div className="fixed top-0 left-64 right-0 flex items-center justify-end gap-4 p-4 h-18 [&_button]:font-medium">
       <Button
         text="Add content"
         variant="primary"
         size="md"
         startIcon={<PlusIcon size="xl" />}
-        className="text-base"
       />
       <Button
         text="Share brain"
         variant="secondary"
         size="md"
         startIcon={<ShareIcon size="lg" />}
-        className="text-base"
       />
       <Button
         text="Sign out"
@@ -42,9 +40,8 @@ export default function Navbar() {
         size="md"
         onClick={signOutUser}
         loading={isPending}
-        className="text-base"
       />
-      <div className="w-fit h-fit rounded-full overflow-hidden border-2 border-black">
+      <div className="w-fit h-fit rounded-full overflow-hidden border-2 border-black ml-3 cursor-pointer">
         <Image
           src={session.data?.user.image || "/unknown-image.jpg"}
           alt="user profile"

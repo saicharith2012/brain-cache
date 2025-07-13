@@ -5,8 +5,8 @@ export interface CardProps {
   title: string;
   link: string;
   type: ContentType;
-  tags?: {
-    tag: { title: string, color: string };
+  tags: {
+    tag: { title: string; color: string };
   }[];
 }
 
@@ -21,7 +21,7 @@ export interface ContentWithTags {
   contentTags: {
     tag: {
       title: string;
-      color: string
+      color: string;
     };
   }[];
 }

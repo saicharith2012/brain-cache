@@ -1,43 +1,16 @@
-import YoutubeIcon from "@repo/ui/icons/YoutubeIcon";
 import { CardProps } from "../types/global";
-import TwitterIcon from "@repo/ui/icons/TwitterIcon";
-import DocumentIcon from "@repo/ui/icons/DocumentIcon";
-import LinkIcon from "@repo/ui/icons/LinkIcon";
-import OpenIcon from "@repo/ui/icons/OpenIcon";
-import DeleteIcon from "@repo/ui/icons/DeleteIcon";
 import { TAG_COLOR_PALETTE } from "../lib/constants/colors";
+import DeleteIcon from "@repo/ui/icons/DeleteIcon";
+import WebIcon from "@repo/ui/icons/WebIcon";
 
 export default function Card(props: CardProps) {
   return (
-    <div className="bg-white rounded-lg border shadow-sm border-gray-100 p-4 max-w-72 min-w-72 h-fit min-h-56">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center">
-          <div className="pr-3 text-gray-500">
-            {props.type === "youtube" && <YoutubeIcon size="2xl" />}
-            {props.type === "tweet" && <TwitterIcon size="xl" />}
-            {props.type === "document" && <DocumentIcon size="xl" />}
-            {props.type === "link" && <LinkIcon size="xl" />}
-          </div>
-          <span className="font-medium text-gray-600">{props.title}</span>
-        </div>
-
-        <div className="flex text-gray-400 items-center gap-2">
-          <span className="hover:text-gray-600 transition-all duration-150">
-            <a href={props.link} target="_blank" rel="noreferrer">
-              <OpenIcon size="2xl" />
-            </a>
-          </span>
-          <span className="cursor-pointer hover:text-red-400 transition-all duration-150">
-            <DeleteIcon size="xl" />
-          </span>{" "}
-        </div>
-      </div>
-
-      <div className="mt-4">
+    <div className="group relative bg-white rounded-lg border shadow-sm border-gray-100 max-w-72 min-w-72 h-fit min-h-56 transition-all duration-300 overflow-hidden">
+      <div>
         {/* embedding a youtube video */}
         {props.type === "youtube" && (
           <iframe
-            className="w-full rounded-lg"
+            className="w-full"
             src={props.link.replace("watch?v=", "embed/")}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -56,20 +29,35 @@ export default function Card(props: CardProps) {
         {/* embedding a link or document */}
         {props.type === "link" && (
           <a href={props.link}>
-            <div className="w-full h-[150px] flex justify-center items-center bg-gray-100 rounded-lg">
-              <LinkIcon size="3xl" />
+            <div className="relative w-full h-[160px] flex justify-center items-center bg-[url(/default-webpage.jpg)] bg-cover">
+              <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full">
+                <WebIcon size="lg" />
+                <div>Web</div>
+              </div>
+            </div>
+            <div className="px-3 pt-3">
+              <div className="text-base mb-4">
+                {props.title.charAt(0).toUpperCase() + props.title.slice(1)}
+              </div>
+              <div className="text-gray-700 text-[13px]">
+                {props.link.replace("http://", "").split("/")[0]}
+              </div>
             </div>
           </a>
         )}
       </div>
 
-      <div className="mt-4 flex gap-2">
+      <div className="p-2 flex flex-wrap gap-2 ">
         {props.tags?.map((item, index) => (
           <div
             className={`px-2 py-1 ${TAG_COLOR_PALETTE[item.tag.color]} w-fit rounded-lg`}
             key={index}
           >{`#${item.tag.title}`}</div>
         ))}
+      </div>
+
+      <div className="absolute right-2 bottom-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:bg-gray-400 p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+        <DeleteIcon size="xl" strokeWidth="2" />
       </div>
     </div>
   );

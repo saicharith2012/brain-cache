@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@repo/ui/button";
-import PlusIcon from "@repo/ui/icons/PlusIcon";
 import ShareIcon from "@repo/ui/icons/ShareIcon";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -22,12 +21,6 @@ export default function Navbar() {
 
   return (
     <div className="fixed top-0 left-64 right-0 flex items-center justify-end gap-4 p-4 h-18 [&_button]:font-medium">
-      <Button
-        text="Add content"
-        variant="primary"
-        size="md"
-        startIcon={<PlusIcon size="xl" />}
-      />
       <Button
         text="Share brain"
         variant="secondary"

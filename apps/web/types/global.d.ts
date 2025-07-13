@@ -4,9 +4,11 @@ import { ContentType } from "@repo/db/client";
 export interface CardProps {
   title: string;
   link: string;
-  type: ContentType
+  type: ContentType;
+  tags?: {
+    tag: { title: string, color: string };
+  }[];
 }
-
 
 // interfaces for server actions
 export interface ContentWithTags {
@@ -19,6 +21,7 @@ export interface ContentWithTags {
   contentTags: {
     tag: {
       title: string;
+      color: string
     };
   }[];
 }
@@ -36,4 +39,3 @@ export interface ActionSuccess {
   success: true;
   message: string;
 }
-

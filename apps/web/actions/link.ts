@@ -1,5 +1,5 @@
 import prisma, { Content } from "@repo/db/client";
-import random from "../utils/random";
+import random from "../lib/utils/random";
 
 export async function createLink(share: boolean, userId: string) {
   try {

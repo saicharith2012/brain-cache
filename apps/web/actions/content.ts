@@ -1,6 +1,7 @@
 import { addContentSchema, AddContentSchema } from "@repo/common/config";
 import prisma from "@repo/db/client";
 import { ActionError, GetAllDocumentsResponse } from "../types/global";
+import getTagColor from "../lib/utils/getTagColor";
 
 export async function addDocument(data: AddContentSchema, userId: string) {
   try {
@@ -16,6 +17,7 @@ export async function addDocument(data: AddContentSchema, userId: string) {
     const existingTags = await prisma.tag.findMany({
       where: {
         title: { in: tags },
+        userId,
       },
     });
 
@@ -27,13 +29,19 @@ export async function addDocument(data: AddContentSchema, userId: string) {
     );
 
     await prisma.tag.createMany({
-      data: missingTagNames?.map((title) => ({ title })) ?? [],
+      data:
+        missingTagNames?.map((title) => ({
+          title,
+          userId,
+          color: getTagColor(),
+        })) ?? [],
     });
 
     // fetch all the relevant tags again
     const finalTags = await prisma.tag.findMany({
       where: {
         title: { in: tags },
+        userId,
       },
     });
 
@@ -65,7 +73,9 @@ export async function addDocument(data: AddContentSchema, userId: string) {
   }
 }
 
-export async function getAllDocuments(userId: string): Promise<GetAllDocumentsResponse | ActionError> {
+export async function getAllDocuments(
+  userId: string
+): Promise<GetAllDocumentsResponse | ActionError> {
   try {
     const contents = await prisma.content.findMany({
       where: {
@@ -75,7 +85,10 @@ export async function getAllDocuments(userId: string): Promise<GetAllDocumentsRe
         contentTags: {
           select: {
             tag: {
-              select: { title: true },
+              select: {
+                title: true,
+                color: true,
+              },
             },
           },
         },

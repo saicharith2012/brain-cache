@@ -5,6 +5,7 @@ import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 import LinkIcon from "@repo/ui/icons/LinkIcon";
 import OpenIcon from "@repo/ui/icons/OpenIcon";
 import DeleteIcon from "@repo/ui/icons/DeleteIcon";
+import { TAG_COLOR_PALETTE } from "../lib/constants/colors";
 
 export default function Card(props: CardProps) {
   return (
@@ -60,6 +61,15 @@ export default function Card(props: CardProps) {
             </div>
           </a>
         )}
+      </div>
+
+      <div className="mt-4 flex gap-2">
+        {props.tags?.map((item, index) => (
+          <div
+            className={`px-2 py-1 ${TAG_COLOR_PALETTE[item.tag.color]} w-fit rounded-lg`}
+            key={index}
+          >{`#${item.tag.title}`}</div>
+        ))}
       </div>
     </div>
   );

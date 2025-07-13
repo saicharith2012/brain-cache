@@ -26,12 +26,17 @@ model User {
   name          String?
   image         String?
   emailVerified DateTime?
+  Tag           Tag[]
 }
 
 model Tag {
   id          String       @id @default(uuid())
   title       String       @unique
   contentTags ContentTag[]
+  color       String       @default("amber")
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  @@unique([title, userId])
 }
 
 model Link {

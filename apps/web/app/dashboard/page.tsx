@@ -5,6 +5,7 @@ import Sidebar from "../../components/Sidebar";
 import { getAllDocuments } from "../../actions/content";
 import { GetAllDocumentsResponse } from "../../types/global";
 import Content from "../../components/Content";
+import Navbar from "../../components/Navbar";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -18,6 +19,7 @@ export default async function Dashboard() {
 
   return (
     <div>
+      <Navbar />
       <Sidebar />
       {/* {JSON.stringify(contents)} */}
       <Content data={contents} />

@@ -1,5 +1,6 @@
 import { addContentSchema, AddContentSchema } from "@repo/common/config";
 import prisma from "@repo/db/client";
+import { ActionError, GetAllDocumentsResponse } from "../types/global";
 
 export async function addDocument(data: AddContentSchema, userId: string) {
   try {
@@ -64,7 +65,7 @@ export async function addDocument(data: AddContentSchema, userId: string) {
   }
 }
 
-export async function getAllDocuments(userId: string) {
+export async function getAllDocuments(userId: string): Promise<GetAllDocumentsResponse | ActionError> {
   try {
     const contents = await prisma.content.findMany({
       where: {
@@ -85,7 +86,11 @@ export async function getAllDocuments(userId: string) {
       throw new Error("Error while fetching documents.");
     }
 
-    return { success: true, message: "all documents successfully fetched." };
+    return {
+      success: true,
+      message: "all documents successfully fetched.",
+      contents,
+    };
   } catch (error) {
     return {
       error: `${error instanceof Error ? error.message : "Error while fetching documents."}`,

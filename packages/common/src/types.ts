@@ -14,8 +14,14 @@ export const signUpSchema = z.object({
     .string()
     .min(8, "Password must be atleast 8 characters long.")
     .max(50)
-    .regex(new RegExp(/.*[A-Z].*/), "Password must contain atleast one uppercase letter")
-    .regex(new RegExp(/.*[a-z].*/), "Password must contain atleast one lowercase letter")
+    .regex(
+      new RegExp(/.*[A-Z].*/),
+      "Password must contain atleast one uppercase letter"
+    )
+    .regex(
+      new RegExp(/.*[a-z].*/),
+      "Password must contain atleast one lowercase letter"
+    )
     .regex(new RegExp(/.*[0-9].*/), "Password must contain atleast one number")
     .regex(
       new RegExp(/.*[^A-Za-z0-9].*/),
@@ -34,11 +40,62 @@ export type SignInSchema = z.infer<typeof signInSchema>;
 
 export const envSchema = z.object({});
 
-export const addContentSchema = z.object({
-  link: z.string().min(1, "Link is required"),
+// add content schema
+export const addContentBaseSchema = z.object({
   type: z.nativeEnum(ContentType),
-  title: z.string().min(1, "Title is required"),
-  tags: z.array(z.string()).optional(),
 });
 
-export type AddContentSchema = z.infer<typeof addContentSchema>;
+const youtubeSchema = addContentBaseSchema.extend({
+  type: z.literal(ContentType.youtube),
+  title: z.string().min(1, "Title is required"),
+  link: z.string().url("Must be a valid video URL"),
+});
+
+export type YoutubeSchema = z.infer<typeof youtubeSchema>;
+
+const tweetSchema = addContentBaseSchema.extend({
+  type: z.literal(ContentType.tweet),
+  title: z.string().min(1, "Title is required."),
+  link: z
+    .string()
+    .url()
+    .refine((val) => val.includes("x.com"), {
+      message: "URL must be a tweet link",
+    }),
+});
+
+export type TweetSchema = z.infer<typeof tweetSchema>;
+
+const linkSchema = addContentBaseSchema.extend({
+  type: z.literal(ContentType.link),
+  title: z.string().min(1, "Title is required."),
+  link: z.string().url("Web page link must be a valid URL."),
+});
+
+export type LinkSchema = z.infer<typeof linkSchema>;
+
+const noteSchema = addContentBaseSchema.extend({
+  type: z.literal(ContentType.note),
+  content: z.string().min(1, "Enter something."),
+});
+
+export type NoteSchema = z.infer<typeof noteSchema>;
+
+const documentSchema = addContentBaseSchema.extend({
+  type: z.literal(ContentType.document),
+  file: z
+    .instanceof(File)
+    .refine((file) => file.size < 5 * 1024 * 1024, "File must be < 5MB"),
+});
+
+export type DocumentSchema = z.infer<typeof documentSchema>;
+
+export const contentSchema = z.discriminatedUnion("type", [
+  youtubeSchema,
+  tweetSchema,
+  linkSchema,
+  noteSchema,
+  documentSchema,
+]);
+
+export type ContentFormData = z.infer<typeof contentSchema>;

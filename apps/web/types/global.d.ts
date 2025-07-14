@@ -10,6 +10,16 @@ export interface CardProps {
   }[];
 }
 
+export interface CreateContentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface TypeSelectorProps {
+  selected: ContentType;
+  onSelect: (type: ContentType) => void;
+}
+
 // interfaces for server actions
 export interface ContentWithTags {
   id: string;

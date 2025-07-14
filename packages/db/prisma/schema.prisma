@@ -13,6 +13,7 @@ enum ContentType {
   tweet
   youtube
   link
+  note
 }
 
 model User {
@@ -49,7 +50,7 @@ model Link {
 model Content {
   id          String       @id @default(uuid())
   title       String
-  link        String       @unique
+  link        String?       @unique
   type        ContentType
   createdAt   DateTime     @default(now())
   userId      String

@@ -19,10 +19,15 @@ export default function SignupForm() {
     handleSubmit,
     register,
     formState: { errors, isSubmitted },
+    setFocus,
   } = useForm<SignUpFormSchema>({
     resolver: zodResolver(signUpFormSchema),
     mode: "onChange",
   });
+
+  useEffect(() => {
+    setFocus("email");
+  }, [setFocus]);
 
   useEffect(() => {
     if (session.data) {
@@ -152,7 +157,7 @@ export default function SignupForm() {
             loading={isPending}
             className="my-2 font-semibold"
           />
-          {serverError && <p>{serverError}</p>}
+          {serverError && <p className="text-red-500 py-1">{serverError}</p>}
 
           <span
             className="underline cursor-pointer inline text-center mt-3"

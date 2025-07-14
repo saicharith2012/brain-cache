@@ -18,15 +18,20 @@ export default function SigninForm() {
     handleSubmit,
     register,
     formState: { errors, isSubmitted },
+    setFocus,
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
-    mode: "onTouched",
+    mode: "onChange",
   });
 
   const [isPending, startTransition] = useTransition();
   const [isGoogleSigninPending, startGoogleSigninTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    setFocus("username");
+  }, [setFocus]);
 
   useEffect(() => {
     if (session.data) {
@@ -66,7 +71,6 @@ export default function SigninForm() {
     <div>
       <div className="text-3xl font-bold mb-6 text-center">Welcome.</div>
       <div className="h-[380px]">
-
         <Button
           onClick={() => {
             startGoogleSigninTransition(async () => {
@@ -87,7 +91,6 @@ export default function SigninForm() {
           <hr className="opacity-30 w-[50%]" />
         </div>
 
-        
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
           <InputComponent
             label="Username"
@@ -120,7 +123,7 @@ export default function SigninForm() {
             loading={isPending}
             className="my-2 font-semibold"
           />
-          {serverError && <p>{serverError}</p>}
+          {serverError && <p className="text-red-500 py-1">{serverError}</p>}
 
           <span
             className="underline cursor-pointer inline text-center mt-3"

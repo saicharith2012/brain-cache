@@ -114,7 +114,9 @@ export default function TagSelector({
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                e.preventDefault();
+                if (isDropDownOpen) {
+                  e.preventDefault();
+                }
                 let newTag: Tag | undefined;
 
                 if (highlightedIndex !== -1 && filteredTags[highlightedIndex]) {
@@ -136,6 +138,7 @@ export default function TagSelector({
                 ) {
                   handleTagAdd(newTag);
                 }
+                setHighlightedIndex(-1)
               } else if (e.key === "Escape") {
                 setIsDropDownOpen(false);
                 setHighlightedIndex(-1);
@@ -152,7 +155,7 @@ export default function TagSelector({
           />
 
           {isDropDownOpen && (
-            <div className="absolute top-10/12 w-full flex flex-col max-h-[176px] overflow-y-auto bg-white border border-black/50 z-10">
+            <div className="absolute top-[38px] w-full flex flex-col max-h-[176px] overflow-y-auto bg-white border border-black/50 z-10">
               {/* Create New Tag Option */}
               {inputValue.trim() !== "" &&
                 !tags.some(

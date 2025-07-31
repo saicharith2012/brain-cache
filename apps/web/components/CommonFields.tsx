@@ -25,7 +25,7 @@ export default function CommonFields({ register, errors }: CommonFieldsProps) {
 
       <InputComponent
         label="Link"
-        type="url"
+        type="text"
         {...register("link")}
         placeholder="Enter the link"
         error={errors.link?.message}

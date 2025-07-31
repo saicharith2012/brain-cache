@@ -1,17 +1,18 @@
 "use client";
 import PlusIcon from "@repo/ui/icons/PlusIcon";
-import { ContentWithTags } from "../types/global";
+import { ContentWithTags, Tag } from "../types/global";
 import Card from "./Card";
 import { useState } from "react";
 import CreateContentModal from "./CreateContentModal";
 
-export default function Content({ data }: { data: ContentWithTags[] }) {
+export default function Content({ data, tags }: { data: ContentWithTags[], tags: Tag[] }) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
     <div>
       <CreateContentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        tags={tags}
       />
       <div className="p-8 flex flex-wrap gap-4">
         <div

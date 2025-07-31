@@ -42,7 +42,10 @@ export const envSchema = z.object({});
 
 // add content schema
 export const addContentBaseSchema = z.object({
-  type: z.nativeEnum(ContentType),
+  type: z.nativeEnum(ContentType, {
+    errorMap: () => ({ message: "Invalid content type" }),
+  }),
+  tags: z.array(z.string()).min(1, "Adding atleast one tag would be helpful")
 });
 
 const youtubeSchema = addContentBaseSchema.extend({

@@ -18,7 +18,7 @@ export default function TypeSelector({
       {TYPES.map((type) => (
         <div
           key={type}
-          className={`cursor-pointer border rounded-lg p-3 text-center font-semibold transition ${selected === type ? "bg-blue-600 text-white border-blue-700 shadow" : "bg-white text-black hover:bg-gray-100"}`}
+          className={`cursor-pointer border rounded-lg p-3 text-center font-semibold transition ${selected === type ? "bg-gray-500 text-white border-black shadow" : "bg-white text-black hover:bg-gray-100"}`}
           onClick={() => onSelect(type)}
         >
           {type.charAt(0).toUpperCase() + type.slice(1)}

@@ -13,6 +13,7 @@ export interface CardProps {
 export interface CreateContentModalProps {
   isOpen: boolean;
   onClose: () => void;
+  tags: Tag[]
 }
 
 export interface TypeSelectorProps {
@@ -40,6 +41,18 @@ export interface GetAllDocumentsResponse {
   success: true;
   message: string;
   contents: ContentWithTags[];
+}
+
+export interface Tag {
+  id?: string;
+  title: string;
+  color: string;
+}
+
+export interface GetAllTagsResponse {
+  success: true;
+  message: string;
+  tags: Tag[]
 }
 
 export interface ActionError {

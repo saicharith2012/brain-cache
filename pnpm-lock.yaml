@@ -319,7 +319,7 @@ packages:
       react-hook-form: ^7.55.0
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.59.0(react@19.0.0)
+      react-hook-form: 7.59.0(react@19.1.0)
     dev: false
 
   /@humanfs/core@0.19.1:
@@ -3088,15 +3088,6 @@ packages:
     dependencies:
       react: 19.1.0
       scheduler: 0.26.0
-    dev: false
-
-  /react-hook-form@7.59.0(react@19.0.0):
-    resolution: {integrity: sha512-kmkek2/8grqarTJExFNjy+RXDIP8yM+QTl3QL6m6Q8b2bih4ltmiXxH7T9n+yXNK477xPh5yZT/6vD8sYGzJTA==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18 || ^19
-    dependencies:
-      react: 19.0.0
     dev: false
 
   /react-hook-form@7.59.0(react@19.1.0):

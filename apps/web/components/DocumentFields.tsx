@@ -20,6 +20,7 @@ export default function DocumentFields({
             setValue("file", e.target.files[0]);
           }
         }}
+        className="cursor-pointer"
         error={errors.file?.message}
       />
     </>

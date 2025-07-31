@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { CreateContentModalProps } from "../types/global";
 import CrossIcon from "@repo/ui/icons/CrossIcon";
 import { ContentFormData, contentSchema } from "@repo/common/config";
@@ -11,75 +11,111 @@ import CommonFields from "./CommonFields";
 import NoteFields from "./NoteFields";
 import DocumentFields from "./DocumentFields";
 import { Button } from "@repo/ui/button";
+import TagSelector from "./TagSelector";
+import { useEffect } from "react";
 
 // controlled component
 export default function CreateContentModal({
   isOpen,
   onClose,
+  tags,
 }: CreateContentModalProps) {
+  const form = useForm<ContentFormData>({
+    resolver: zodResolver(contentSchema),
+    defaultValues: { type: "youtube" },
+  });
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
-  } = useForm<ContentFormData>({
-    resolver: zodResolver(contentSchema),
-    defaultValues: { type: "youtube" },
-  });
+    setFocus,
+  } = form;
 
   const type = watch("type");
 
   const onSubmit = (data: ContentFormData) => {
     console.log(data);
+    reset();
     onClose();
   };
+
+  useEffect(() => {
+    if (type === "youtube" || type === "tweet" || type === "link") {
+      setFocus("title");
+    } else if (type === "note") {
+      setFocus("content");
+    } else if (type === "document") {
+      setFocus("file");
+    }
+  }, [setFocus, type, isOpen]);
 
   return (
     <div>
       {isOpen && (
-        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-100">
-          <div className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm">
+        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-100 ">
+          <div className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]">
             <div className="flex justify-end w-full mb-4">
-              <div className="cursor-pointer" onClick={onClose}>
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  reset();
+                  onClose();
+                }}
+              >
                 <CrossIcon size="2xl" />
               </div>
             </div>
 
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-4"
-            >
-              <TypeSelector
-                selected={type}
-                onSelect={(val) =>
-                  setValue("type", val, { shouldValidate: true })
-                }
-              />
+            <FormProvider {...form}>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-3 w-full"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSubmit(onSubmit);
+                  }
+                }}
+              >
+                <TypeSelector
+                  selected={type}
+                  onSelect={(val) =>
+                    setValue("type", val, { shouldValidate: true })
+                  }
+                />
 
-              {[
-                ContentType.youtube as string,
-                ContentType.tweet as string,
-                ContentType.link as string,
-              ].includes(type) && (
-                <CommonFields register={register} errors={errors} />
-              )}
+                {[
+                  ContentType.youtube as string,
+                  ContentType.tweet as string,
+                  ContentType.link as string,
+                ].includes(type) && (
+                  <CommonFields register={register} errors={errors} />
+                )}
 
-              {type === ContentType.note && (
-                <NoteFields register={register} errors={errors} />
-              )}
+                {type === ContentType.note && (
+                  <NoteFields register={register} errors={errors} />
+                )}
 
-              {type === ContentType.document && (
-                <DocumentFields errors={errors} setValue={setValue} />
-              )}
+                {type === ContentType.document && (
+                  <DocumentFields errors={errors} setValue={setValue} />
+                )}
 
-              <Button
-                variant="primary"
-                text="Add Memory"
-                type="submit"
-                size="md"
-              />
-            </form>
+                <TagSelector tags={tags} setValue={setValue} errors={errors}/>
+
+                <Button
+                  variant="primary"
+                  text="Add Memory"
+                  type="submit"
+                  size="lg"
+                  className="mt-4 font-bold"
+                />
+              </form>
+            </FormProvider>
+
+            {/* {JSON.stringify(tags)} */}
           </div>
         </div>
       )}

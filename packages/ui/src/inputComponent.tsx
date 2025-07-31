@@ -9,9 +9,12 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, endIcon, toggleOnClick, isSubmitted, ...rest }, ref) => {
+  (
+    { label, error, endIcon, toggleOnClick, isSubmitted, className, ...rest },
+    ref
+  ) => {
     return (
-      <div className="flex flex-col pb-1">
+      <div className={`flex flex-col ${className}`}>
         {label && <label className="my-1 font-semibold">{label}</label>}
         <div
           className={`relative p-2 border rounded-lg focus-within:outline-1`}
@@ -30,7 +33,7 @@ const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           ) : null}
         </div>
-        <span className="text-sm text-red-500 py-1">
+        <span className={`text-sm text-red-500 ${(error && error !== "") ? "py-1" : ""}`}>
           {error || (isSubmitted && error) ? error : ""}
         </span>
       </div>

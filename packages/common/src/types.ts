@@ -87,7 +87,7 @@ export type NoteSchema = z.infer<typeof noteSchema>;
 const documentSchema = addContentBaseSchema.extend({
   type: z.literal(ContentType.document),
   file: z
-    .instanceof(File)
+    .instanceof(File, {message: "Upload a document (pdf, doc or docx)"})
     .refine((file) => file.size < 5 * 1024 * 1024, "File must be < 5MB"),
 });
 

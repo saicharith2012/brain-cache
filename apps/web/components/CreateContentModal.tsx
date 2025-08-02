@@ -32,6 +32,7 @@ export default function CreateContentModal({
     setValue,
     reset,
     formState: { errors },
+    clearErrors,
     setFocus,
   } = form;
 
@@ -52,6 +53,10 @@ export default function CreateContentModal({
       setFocus("file");
     }
   }, [setFocus, type, isOpen]);
+
+  useEffect(() => {
+    clearErrors();
+  }, [type, clearErrors]);
 
   return (
     <div>
@@ -103,7 +108,7 @@ export default function CreateContentModal({
                   <DocumentFields errors={errors} setValue={setValue} />
                 )}
 
-                <TagSelector tags={tags} setValue={setValue} errors={errors}/>
+                <TagSelector tags={tags} setValue={setValue} errors={errors} />
 
                 <Button
                   variant="primary"

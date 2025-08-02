@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { signInSchema, SignInSchema } from "@repo/common/config";
 import { useRouter } from "next/navigation";
-import InputComponent from "@repo/ui/inputComponent";
+import InputTextComponent from "@repo/ui/inputTextComponent";
 import { Button } from "@repo/ui/button";
 import GoogleIcon from "@repo/ui/icons/GoogleIcon";
 import EyeIcon from "@repo/ui/icons/EyeIcon";
@@ -92,7 +92,7 @@ export default function SigninForm() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-          <InputComponent
+          <InputTextComponent
             label="Username"
             type="text"
             placeholder="johndoe"
@@ -101,7 +101,7 @@ export default function SigninForm() {
             error={errors.username?.message}
             isSubmitted={isSubmitted}
           />
-          <InputComponent
+          <InputTextComponent
             label="Password"
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"

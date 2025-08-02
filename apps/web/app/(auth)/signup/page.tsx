@@ -6,7 +6,7 @@ import signup from "../../../actions/signup";
 import { signUpFormSchema, SignUpFormSchema } from "../../../config";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import InputComponent from "@repo/ui/inputComponent";
+import InputTextComponent from "@repo/ui/inputTextComponent";
 import { Button } from "@repo/ui/button";
 import EyeIcon from "@repo/ui/icons/EyeIcon";
 import EyeSlashIcon from "@repo/ui/icons/EyeSlashIcon";
@@ -97,7 +97,7 @@ export default function SignupForm() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-          <InputComponent
+          <InputTextComponent
             label="Email"
             type="text"
             placeholder="john.doe@example.com"
@@ -107,7 +107,7 @@ export default function SignupForm() {
             isSubmitted={isSubmitted}
           />
 
-          <InputComponent
+          <InputTextComponent
             label="Username"
             type="text"
             placeholder="johndoe"
@@ -117,7 +117,7 @@ export default function SignupForm() {
             isSubmitted={isSubmitted}
           />
 
-          <InputComponent
+          <InputTextComponent
             label="Password"
             type={showPassword ? "text" : "password"}
             placeholder="Johndoe@123"
@@ -131,7 +131,7 @@ export default function SignupForm() {
             toggleOnClick={() => setShowPassword((p) => !p)}
           />
 
-          <InputComponent
+          <InputTextComponent
             label="Confirm password"
             type={showConfirmPassword ? "text" : "password"}
             placeholder="•••••••••••"

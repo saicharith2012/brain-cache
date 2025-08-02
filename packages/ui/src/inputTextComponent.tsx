@@ -8,7 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   toggleOnClick?: () => void;
 }
 
-const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
+const InputTextComponent = React.forwardRef<HTMLInputElement, InputProps>(
   (
     { label, error, endIcon, toggleOnClick, isSubmitted, className, ...rest },
     ref
@@ -41,5 +41,5 @@ const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-InputComponent.displayName = "InputComponent";
-export default InputComponent;
+InputTextComponent.displayName = "InputTextComponent";
+export default InputTextComponent;

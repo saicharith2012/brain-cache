@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Tag } from "../types/global";
 import { FieldErrors, UseFormSetValue } from "react-hook-form";
 import { ContentFormData } from "@repo/common/config";
-import InputComponent from "@repo/ui/inputComponent";
+import InputTextComponent from "@repo/ui/inputTextComponent"
 import CrossIcon from "@repo/ui/icons/CrossIcon";
 import getTagColor from "../lib/utils/getTagColor";
 import { TAG_COLOR_PALETTE } from "../lib/constants/colors";
@@ -100,7 +100,7 @@ export default function TagSelector({
         ))}
 
         <div className="relative w-full" ref={wrapperRef}>
-          <InputComponent
+          <InputTextComponent
             type="text"
             placeholder="Type to add..."
             onFocus={() => setIsDropDownOpen(true)}

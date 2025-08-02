@@ -5,7 +5,7 @@ import {
   TweetSchema,
   YoutubeSchema,
 } from "@repo/common/config";
-import InputComponent from "@repo/ui/inputComponent";
+import InputTextComponent from "@repo/ui/inputTextComponent";
 
 interface CommonFieldsProps {
   register: UseFormRegister<ContentFormData>;
@@ -15,7 +15,7 @@ interface CommonFieldsProps {
 export default function CommonFields({ register, errors }: CommonFieldsProps) {
   return (
     <>
-      <InputComponent
+      <InputTextComponent
         label="Title"
         type="text"
         {...register("title")}
@@ -23,7 +23,7 @@ export default function CommonFields({ register, errors }: CommonFieldsProps) {
         error={errors.title?.message}
       />
 
-      <InputComponent
+      <InputTextComponent
         label="Link"
         type="text"
         {...register("link")}

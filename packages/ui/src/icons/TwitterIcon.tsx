@@ -13,7 +13,7 @@ export default function TwitterIcon(props: IconProps) {
         fill="#6a7282"
         fillRule="nonzero"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth={props.strokeWidth || "2"}
         strokeLinecap="butt"
         strokeLinejoin="miter"
         strokeMiterlimit="10"

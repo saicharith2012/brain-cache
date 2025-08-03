@@ -32,7 +32,7 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
       <div className={`flex flex-col ${className}`}>
         {label && <label className="my-1 font-semibold">{label}</label>}
 
-        <div className="relative w-full max-w-md border rounded-md overflow-hidden">
+        <div className="relative w-full max-w-md border border-gray-200 rounded-lg overflow-hidden">
           <input
             ref={ref}
             type="file"

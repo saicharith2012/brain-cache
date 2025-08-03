@@ -17,7 +17,7 @@ const InputTextComponent = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={`flex flex-col ${className}`}>
         {label && <label className="my-1 font-semibold">{label}</label>}
         <div
-          className={`relative p-2 border rounded-lg focus-within:outline-1`}
+          className={`relative p-2 border border-gray-200 rounded-lg focus-within:outline-1`}
         >
           <input
             ref={ref}

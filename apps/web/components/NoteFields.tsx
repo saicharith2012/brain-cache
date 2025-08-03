@@ -8,15 +8,15 @@ interface NoteFieldsProps {
 
 export default function NoteFields({ register, errors }: NoteFieldsProps) {
   return (
-    <>
+    <div className="w-full">
       <textarea
         {...register("content")}
         placeholder="Write you note..."
-        className="border p-2 rounded min-h-[100px]"
+        className="w-full border border-gray-200 p-2 rounded-lg min-h-[150px] focus-within:outline-1"
       />
       {errors.content && (
         <p className="text-red-500 py-1">{errors.content.message}</p>
       )}
-    </>
+    </div>
   );
 }

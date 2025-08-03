@@ -6,4 +6,14 @@
 
 @theme {
     --font-roboto: "Roboto", sans-serif;
+    --color-indianred-100: rgba(205, 92, 92, 0.1);
+    --color-indianred-200: rgba(205, 92, 92, 0.3);
+    --color-indianred-600: rgba(205, 92, 92, 1);
+    --color-twtblue-100: rgba(29, 161, 242, 0.1);
+    --color-twtblue-200: rgba(29, 161, 242, 0.3);
+    --color-twtblue-600: rgb(29, 161, 242);
+    --color-seagreen-100: rgba(46, 139, 87, 0.1);
+    --color-seagreen-200: rgba(46, 139, 87, 0.3);
+    --color-seagreen-600: rgba(46, 139, 87, 1);
+
 }

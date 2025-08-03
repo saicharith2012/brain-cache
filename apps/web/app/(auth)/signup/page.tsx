@@ -74,7 +74,7 @@ export default function SignupForm() {
         Create your account.
       </div>
 
-      <div className="h-[580px]">
+      <div className="h-[620px]">
         <Button
           onClick={() => {
             startGoogleSigninTransition(async () => {
@@ -96,7 +96,7 @@ export default function SignupForm() {
           <hr className="opacity-30 w-[50%]" />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
           <InputTextComponent
             label="Email"
             type="text"

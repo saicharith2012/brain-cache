@@ -70,7 +70,7 @@ export default function SigninForm() {
   return (
     <div>
       <div className="text-3xl font-bold mb-6 text-center">Welcome.</div>
-      <div className="h-[380px]">
+      <div className="h-[420px]">
         <Button
           onClick={() => {
             startGoogleSigninTransition(async () => {
@@ -91,7 +91,7 @@ export default function SigninForm() {
           <hr className="opacity-30 w-[50%]" />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
           <InputTextComponent
             label="Username"
             type="text"

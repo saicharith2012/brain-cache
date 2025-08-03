@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    remotePatterns: [new URL("https://lh3.googleusercontent.com/a/**")]
+    remotePatterns: [new URL("https://lh3.googleusercontent.com/a/**"), new URL("https://iad.microlink.io/**")]
   }
 };
 

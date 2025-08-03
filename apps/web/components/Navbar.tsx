@@ -20,7 +20,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="fixed top-0 left-64 right-0 flex items-center justify-end gap-4 p-4 h-18 [&_button]:font-medium">
+    <div className="fixed top-0 left-64 right-0 flex items-center justify-end gap-4 px-4 py-3 [&_button]:font-medium bg-white z-101 border-b-1 border-b-gray-100 shadow-inner box-border">
       <Button
         text="Share brain"
         variant="secondary"

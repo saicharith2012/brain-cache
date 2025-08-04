@@ -33,8 +33,8 @@ export default function Content({ data, tags }: { data: ContentWithTags[], tags:
         {data.map((item) => (
           <div key={item.id}>
             <Card
-              title={item.title}
-              link={item.link}
+              title={item.title || ""}
+              link={item.link || ""}
               type={item.type}
               tags={item.contentTags}
             />

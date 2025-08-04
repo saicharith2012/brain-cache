@@ -13,7 +13,7 @@ export interface CardProps {
 export interface CreateContentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  tags: Tag[]
+  tags: Tag[];
 }
 
 export interface TypeSelectorProps {
@@ -24,8 +24,8 @@ export interface TypeSelectorProps {
 // interfaces for server actions
 export interface ContentWithTags {
   id: string;
-  title: string;
-  link: string;
+  title?: string;
+  link?: string | null;
   type: ContentType;
   createdAt: Date;
   userId: string;
@@ -35,12 +35,24 @@ export interface ContentWithTags {
       color: string;
     };
   }[];
+  note?: {
+    contentData: string;
+  };
+  document?: {
+    filePath: string;
+    fileType: string;
+  };
 }
 
 export interface GetAllDocumentsResponse {
   success: true;
   message: string;
   contents: ContentWithTags[];
+}
+
+export interface AddDocumentResponse {
+  success: true;
+  message: string;
 }
 
 export interface Tag {
@@ -52,7 +64,7 @@ export interface Tag {
 export interface GetAllTagsResponse {
   success: true;
   message: string;
-  tags: Tag[]
+  tags: Tag[];
 }
 
 export interface ActionError {

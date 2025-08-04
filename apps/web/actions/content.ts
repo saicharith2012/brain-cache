@@ -1,14 +1,24 @@
-import { addContentSchema, AddContentSchema } from "@repo/common/config";
+"use server";
+import {
+  VideoTweetLinkData,
+  videoTweetLinkSchema,
+} from "@repo/common/config";
 import prisma from "@repo/db/client";
-import { ActionError, GetAllDocumentsResponse } from "../types/global";
+import {
+  ActionError,
+  AddDocumentResponse,
+  GetAllDocumentsResponse,
+  GetAllTagsResponse,
+} from "../types/global";
 import getTagColor from "../lib/utils/getTagColor";
 
-export async function addDocument(data: AddContentSchema, userId: string) {
+
+export async function addVideoTweetLink(data: VideoTweetLinkData, userId: string):Promise<AddDocumentResponse | ActionError> {
   try {
-    const parsedData = addContentSchema.safeParse(data);
+    const parsedData = videoTweetLinkSchema.safeParse(data);
 
     if (!parsedData.success) {
-      return { error: parsedData.error.issues[0]?.message };
+      return { error: parsedData.error.issues[0]?.message || ""};
     }
 
     const { link, type, title, tags } = parsedData.data;
@@ -107,6 +117,34 @@ export async function getAllDocuments(
   } catch (error) {
     return {
       error: `${error instanceof Error ? error.message : "Error while fetching documents."}`,
+    };
+  }
+}
+
+export async function getAllTags(
+  userId: string
+): Promise<GetAllTagsResponse | ActionError> {
+  try {
+    const tags = await prisma.tag.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        title: true,
+        color: true,
+      },
+    });
+
+    return {
+      success: true,
+      message: "successfully fetched tags.",
+      tags,
+    };
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error ? error.message : "Error while fetching tags.",
     };
   }
 }

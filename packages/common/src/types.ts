@@ -93,6 +93,10 @@ const documentSchema = addContentBaseSchema.extend({
 
 export type DocumentSchema = z.infer<typeof documentSchema>;
 
+export const videoTweetLinkSchema = z.discriminatedUnion("type", [youtubeSchema, tweetSchema, linkSchema])
+
+export type VideoTweetLinkData = z.infer<typeof videoTweetLinkSchema>
+
 export const contentSchema = z.discriminatedUnion("type", [
   youtubeSchema,
   tweetSchema,

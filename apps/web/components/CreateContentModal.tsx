@@ -1,7 +1,7 @@
 "use client";
 
 import { FormProvider, useForm } from "react-hook-form";
-import { CreateContentModalProps } from "../types/global";
+import { ActionError, CreateContentModalProps } from "../types/global";
 import CrossIcon from "@repo/ui/icons/CrossIcon";
 import { ContentFormData, contentSchema } from "@repo/common/config";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +12,9 @@ import NoteFields from "./NoteFields";
 import DocumentFields from "./DocumentFields";
 import { Button } from "@repo/ui/button";
 import TagSelector from "./TagSelector";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
+import { addVideoTweetLink } from "../actions/content";
+import { useSession } from "next-auth/react";
 
 // controlled component
 export default function CreateContentModal({
@@ -20,6 +22,7 @@ export default function CreateContentModal({
   onClose,
   tags,
 }: CreateContentModalProps) {
+  const session = useSession();
   const form = useForm<ContentFormData>({
     resolver: zodResolver(contentSchema),
     defaultValues: { type: "youtube" },
@@ -37,9 +40,41 @@ export default function CreateContentModal({
   } = form;
 
   const type = watch("type");
+  const [isPending, startTransition] = useTransition();
 
   const onSubmit = (data: ContentFormData) => {
-    console.log(data);
+    startTransition(async () => {
+      try {
+        if (
+          data.type === "youtube" ||
+          data.type === "tweet" ||
+          data.type === "link"
+        ) {
+          console.log(data);
+          if (!session.data?.user.id) {
+            return;
+          }
+          const addVideoTweetLinkResponse = await addVideoTweetLink(
+            data,
+            session.data?.user.id
+          );
+
+          if ((addVideoTweetLinkResponse as ActionError)?.error) {
+            throw new Error((addVideoTweetLinkResponse as ActionError).error);
+          }
+
+          console.log(addVideoTweetLinkResponse)
+        } else if (data.type === "document" || data.type === "note") {
+          console.log(data);
+        }
+      } catch (error) {
+        console.error(
+          error instanceof Error
+            ? error.message
+            : "Error while uploading content."
+        );
+      }
+    });
     reset();
     onClose();
   };
@@ -61,7 +96,7 @@ export default function CreateContentModal({
   return (
     <div>
       {isOpen && (
-        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-100 ">
+        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-101 ">
           <div className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]">
             <div className="flex justify-end w-full mb-4">
               <div
@@ -116,6 +151,7 @@ export default function CreateContentModal({
                   type="submit"
                   size="lg"
                   className="mt-4 font-bold"
+                  loading={isPending}
                 />
               </form>
             </FormProvider>

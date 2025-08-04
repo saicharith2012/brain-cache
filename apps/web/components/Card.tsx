@@ -3,7 +3,6 @@ import { CardProps } from "../types/global";
 import { TAG_COLOR_PALETTE } from "../lib/constants/colors";
 import DeleteIcon from "@repo/ui/icons/DeleteIcon";
 import WebIcon from "@repo/ui/icons/WebIcon";
-import OpenIcon from "@repo/ui/icons/OpenIcon";
 import { Tweet } from "react-tweet";
 import ReactPlayer from "react-player";
 import mql from "@microlink/mql";
@@ -92,10 +91,7 @@ export default function Card(props: CardProps) {
 
       <div className="absolute flex gap-2 right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
         <div className="rounded-full bg-gray-200 hover:bg-gray-300 focus:bg-gray-400 p-1.5">
-          <OpenIcon size="xl" />
-        </div>
-        <div className="rounded-full bg-gray-200 hover:bg-gray-300 focus:bg-gray-400 p-1.5">
-          <DeleteIcon size="xl" strokeWidth="2" />
+          <DeleteIcon size="lg" strokeWidth="2" />
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ import ReactPlayer from "react-player";
 import mql from "@microlink/mql";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { deleteDocument } from "../actions/content";
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
@@ -25,6 +26,22 @@ export default function Card(props: CardProps) {
       fetchUrlImage();
     }
   }, [props.type, props.link]);
+
+  async function handleDelete() {
+    try {
+      const response = await deleteDocument(props.id);
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      console.log(response);
+    } catch (error) {
+      console.error(
+        error instanceof Error ? error.message : "Internal Server Error"
+      );
+    }
+  }
 
   return (
     <div className="group relative bg-white rounded-xl border shadow-sm border-gray-100 min-w-72 max-w-80 h-fit transition-all duration-300 overflow-hidden">
@@ -55,14 +72,7 @@ export default function Card(props: CardProps) {
         {props.type === "link" && (
           <a href={props.link}>
             <div className={`relative w-full h-[160px]`}>
-              <div className="w-auto h-auto">
-                <Image
-                  src={imageUrl}
-                  alt="url image"
-                  className="w-full"
-                  fill
-                />
-              </div>
+              <Image src={imageUrl} alt="url image" className="object-cover" fill sizes="(max-width: 320px) 100vw, 320px"/>
               <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full">
                 <WebIcon size="lg" />
                 <div>Web</div>
@@ -89,10 +99,11 @@ export default function Card(props: CardProps) {
         ))}
       </div>
 
-      <div className="absolute flex gap-2 right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-        <div className="rounded-full bg-gray-200 hover:bg-gray-300 focus:bg-gray-400 p-1.5">
-          <DeleteIcon size="lg" strokeWidth="2" />
-        </div>
+      <div
+        className="absolute right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer rounded-full bg-gray-200 hover:bg-gray-300 focus:bg-gray-400 p-1.5"
+        onClick={handleDelete}
+      >
+        <DeleteIcon size="lg" strokeWidth="2" />
       </div>
     </div>
   );

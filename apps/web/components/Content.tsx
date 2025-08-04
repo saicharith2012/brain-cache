@@ -5,7 +5,13 @@ import Card from "./Card";
 import { useState } from "react";
 import CreateContentModal from "./CreateContentModal";
 
-export default function Content({ data, tags }: { data: ContentWithTags[], tags: Tag[] }) {
+export default function Content({
+  data,
+  tags,
+}: {
+  data: ContentWithTags[];
+  tags: Tag[];
+}) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
     <div>
@@ -33,6 +39,7 @@ export default function Content({ data, tags }: { data: ContentWithTags[], tags:
         {data.map((item) => (
           <div key={item.id}>
             <Card
+              id={item.id}
               title={item.title || ""}
               link={item.link || ""}
               type={item.type}

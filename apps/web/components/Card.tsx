@@ -8,7 +8,7 @@ import ReactPlayer from "react-player";
 import mql from "@microlink/mql";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { deleteDocument } from "../actions/content";
+import { deleteContent } from "../actions/content";
 import NoteIcon from "@repo/ui/icons/NoteIcon";
 
 export default function Card(props: CardProps) {
@@ -30,7 +30,7 @@ export default function Card(props: CardProps) {
 
   async function handleDelete() {
     try {
-      const response = await deleteDocument(props.id);
+      const response = await deleteContent(props.id);
 
       if (response.error) {
         throw new Error(response.error);

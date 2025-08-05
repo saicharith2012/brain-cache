@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import Sidebar from "../../components/Sidebar";
-import { getAllDocuments, getAllTags } from "../../actions/content";
+import { getAllContents, getAllTags } from "../../actions/content";
 import {
   GetAllDocumentsResponse,
   GetAllTagsResponse,
@@ -17,7 +17,7 @@ export default async function Dashboard() {
     redirect("/signin");
   }
 
-  const response1 = await getAllDocuments(session?.user.id);
+  const response1 = await getAllContents(session?.user.id);
   const contents = (response1 as GetAllDocumentsResponse).contents;
 
   const response2 = await getAllTags(session?.user.id);

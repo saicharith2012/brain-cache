@@ -141,7 +141,7 @@ async function tagCreation(tags: string[], userId: string) {
   return finalTags;
 }
 
-export async function getAllDocuments(
+export async function getAllContents(
   userId: string
 ): Promise<GetAllDocumentsResponse | ActionError> {
   try {
@@ -212,7 +212,7 @@ export async function getAllTags(
   }
 }
 
-export async function deleteDocument(docId: string) {
+export async function deleteContent(docId: string) {
   try {
     await prisma.content.delete({
       where: {

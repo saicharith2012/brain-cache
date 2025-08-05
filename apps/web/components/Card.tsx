@@ -9,6 +9,7 @@ import mql from "@microlink/mql";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { deleteDocument } from "../actions/content";
+import NoteIcon from "@repo/ui/icons/NoteIcon";
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
@@ -16,7 +17,7 @@ export default function Card(props: CardProps) {
   useEffect(() => {
     if (props.type === "link") {
       async function fetchUrlImage() {
-        const { status, data } = await mql(props.link, { screenshot: true });
+        const { status, data } = await mql(props.link!, { screenshot: true });
 
         if (status === "success" && data.screenshot?.url) {
           setImageUrl(data.screenshot?.url);
@@ -52,7 +53,7 @@ export default function Card(props: CardProps) {
             <ReactPlayer src={props.link} />
             <div className="px-3 pt-3">
               <div className="text-base mb-1">
-                {props.title.charAt(0).toUpperCase() + props.title.slice(1)}
+                {props.title!.charAt(0).toUpperCase() + props.title!.slice(1)}
               </div>
             </div>
           </div>
@@ -62,7 +63,7 @@ export default function Card(props: CardProps) {
         {props.type === "tweet" && (
           <div className="light [&>div]:!m-0 [&>div]:!border-0 [&>div]:!rounded-none [&>div]:hover:!bg-white [&>div]:hover:!cursor-pointer [&>div>article]:!px-3 [&>div>article]:!pt-3 [&>div>article]:!pb-1 ">
             <Tweet
-              id={props.link.split("/")[props.link.split("/").length - 1]}
+              id={props.link!.split("/")[props.link!.split("/").length - 1]}
               apiUrl=""
             />
           </div>
@@ -72,7 +73,13 @@ export default function Card(props: CardProps) {
         {props.type === "link" && (
           <a href={props.link}>
             <div className={`relative w-full h-[160px]`}>
-              <Image src={imageUrl} alt="url image" className="object-cover" fill sizes="(max-width: 320px) 100vw, 320px"/>
+              <Image
+                src={imageUrl}
+                alt="url image"
+                className="object-cover"
+                fill
+                sizes="(max-width: 320px) 100vw, 320px"
+              />
               <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full">
                 <WebIcon size="lg" />
                 <div>Web</div>
@@ -80,13 +87,25 @@ export default function Card(props: CardProps) {
             </div>
             <div className="px-3 pt-3 flex flex-col gap-4">
               <div className="text-base mb-1">
-                {props.title.charAt(0).toUpperCase() + props.title.slice(1)}
+                {props.title!.charAt(0).toUpperCase() + props.title!.slice(1)}
               </div>
               <div className="text-gray-700 text-[13px]">
-                {props.link.replace("https://", "").split("/")[0]}
+                {props.link!.replace("https://", "").split("/")[0]}
               </div>
             </div>
           </a>
+        )}
+
+        {/* embedding a note */}
+        {props.type === "note" && (
+          <div className="relative w-full h-fit pt-12 px-4 pb-4 bg-gray-50">
+            <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full">
+              <NoteIcon size="lg"/>
+              <div>Note</div>
+            </div>
+
+            <div>{props.note}</div>
+          </div>
         )}
       </div>
 

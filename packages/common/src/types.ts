@@ -77,14 +77,14 @@ const linkSchema = addContentBaseSchema.extend({
 
 export type LinkSchema = z.infer<typeof linkSchema>;
 
-const noteSchema = addContentBaseSchema.extend({
+export const noteSchema = addContentBaseSchema.extend({
   type: z.literal(ContentType.note),
   content: z.string().min(1, "Enter something."),
 });
 
 export type NoteSchema = z.infer<typeof noteSchema>;
 
-const documentSchema = addContentBaseSchema.extend({
+export const documentSchema = addContentBaseSchema.extend({
   type: z.literal(ContentType.document),
   file: z
     .instanceof(File, {message: "Upload a document (pdf, doc or docx)"})

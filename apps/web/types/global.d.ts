@@ -2,12 +2,14 @@ import { ContentType } from "@repo/db/client";
 
 // interfaces for component props
 export interface CardProps {
-  title: string;
-  link: string;
+  id: string;
+  title?: string;
+  link?: string;
   type: ContentType;
   tags: {
     tag: { title: string; color: string };
   }[];
+  note?: string,
 }
 
 export interface CreateContentModalProps {
@@ -24,7 +26,7 @@ export interface TypeSelectorProps {
 // interfaces for server actions
 export interface ContentWithTags {
   id: string;
-  title?: string;
+  title?: string | null;
   link?: string | null;
   type: ContentType;
   createdAt: Date;
@@ -37,11 +39,11 @@ export interface ContentWithTags {
   }[];
   note?: {
     contentData: string;
-  };
+  } | null;
   document?: {
     filePath: string;
     fileType: string;
-  };
+  } | null;
 }
 
 export interface GetAllDocumentsResponse {

@@ -13,7 +13,7 @@ import DocumentFields from "./DocumentFields";
 import { Button } from "@repo/ui/button";
 import TagSelector from "./TagSelector";
 import { useEffect, useTransition } from "react";
-import { addVideoTweetLink } from "../actions/content";
+import { addNote, addVideoTweetLink } from "../actions/content";
 import { useSession } from "next-auth/react";
 
 // controlled component
@@ -45,15 +45,16 @@ export default function CreateContentModal({
   const onSubmit = (data: ContentFormData) => {
     startTransition(async () => {
       try {
+        if (!session.data?.user.id) {
+          return;
+        }
+        // console.log(data);
+
         if (
           data.type === "youtube" ||
           data.type === "tweet" ||
           data.type === "link"
         ) {
-          console.log(data);
-          if (!session.data?.user.id) {
-            return;
-          }
           const addVideoTweetLinkResponse = await addVideoTweetLink(
             data,
             session.data?.user.id
@@ -63,8 +64,16 @@ export default function CreateContentModal({
             throw new Error((addVideoTweetLinkResponse as ActionError).error);
           }
 
-          console.log(addVideoTweetLinkResponse)
-        } else if (data.type === "document" || data.type === "note") {
+          console.log(addVideoTweetLinkResponse);
+        } else if (data.type === "note") {
+          const addNoteResponse = await addNote(data, session.data.user.id);
+
+          if ((addNoteResponse as ActionError)?.error) {
+            throw new Error((addNoteResponse as ActionError).error);
+          }
+
+          console.log(addNoteResponse);
+        } else if (data.type === "document") {
           console.log(data);
         }
       } catch (error) {

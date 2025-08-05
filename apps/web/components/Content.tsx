@@ -13,6 +13,7 @@ export default function Content({
   tags: Tag[];
 }) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // console.log(data)
   return (
     <div>
       <CreateContentModal
@@ -44,6 +45,7 @@ export default function Content({
               link={item.link || ""}
               type={item.type}
               tags={item.contentTags}
+              note={item.note?.contentData}
             />
           </div>
         ))}

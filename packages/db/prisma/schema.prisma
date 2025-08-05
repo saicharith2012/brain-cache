@@ -48,21 +48,42 @@ model Link {
 }
 
 model Content {
-  id          String       @id @default(uuid())
-  title       String
-  link        String?       @unique
+  id          String           @id @default(uuid())
+  title       String?
+  link        String?          @unique
   type        ContentType
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime         @default(now())
   userId      String
-  user        User         @relation(fields: [userId], references: [id])
+  user        User             @relation(fields: [userId], references: [id])
   contentTags ContentTag[]
+  note        NoteContent?
+  document    DocumentContent?
+}
+
+model NoteContent {
+  id          String   @id @default(uuid())
+  contentData String
+  contentId   String   @unique
+  content     Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
+}
+
+model DocumentContent {
+  id        String   @id @default(uuid())
+  filePath  String
+  fileType  String
+  contentId String   @unique
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }
 
 model ContentTag {
   contentId String
   tagId     String
 
-  content Content @relation(fields: [contentId], references: [id])
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
   tag     Tag     @relation(fields: [tagId], references: [id])
 
   @@id([contentId, tagId]) // Composite primary key

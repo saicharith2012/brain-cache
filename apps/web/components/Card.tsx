@@ -45,7 +45,7 @@ export default function Card(props: CardProps) {
   }
 
   return (
-    <div className="group relative bg-white rounded-xl border shadow-sm border-gray-100 min-w-72 max-w-80 h-fit transition-all duration-300 overflow-hidden">
+    <div className="break-inside-avoid group relative bg-white rounded-xl border shadow-sm border-gray-100 min-w-80 max-w-80 h-fit mb-3 transition-all duration-300 overflow-hidden">
       <div className="">
         {/* embedding a youtube video */}
         {props.type === "youtube" && (

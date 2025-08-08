@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import signup from "../../../actions/signup";
 import { signUpFormSchema, SignUpFormSchema } from "../../../config";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import InputTextComponent from "@repo/ui/inputTextComponent";
 import { Button } from "@repo/ui/button";
 import EyeIcon from "@repo/ui/icons/EyeIcon";
@@ -14,7 +14,6 @@ import GoogleIcon from "@repo/ui/icons/GoogleIcon";
 
 export default function SignupForm() {
   const router = useRouter();
-  const session = useSession();
   const {
     handleSubmit,
     register,
@@ -29,11 +28,6 @@ export default function SignupForm() {
     setFocus("email");
   }, [setFocus]);
 
-  useEffect(() => {
-    if (session.data) {
-      router.push("/dashboard");
-    }
-  }, [session, router]);
 
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();

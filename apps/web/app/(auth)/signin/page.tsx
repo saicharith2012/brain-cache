@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, useTransition } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { signInSchema, SignInSchema } from "@repo/common/config";
 import { useRouter } from "next/navigation";
 import InputTextComponent from "@repo/ui/inputTextComponent";
@@ -13,7 +13,7 @@ import EyeSlashIcon from "@repo/ui/icons/EyeSlashIcon";
 
 export default function SigninForm() {
   const router = useRouter();
-  const session = useSession();
+
   const {
     handleSubmit,
     register,
@@ -32,12 +32,6 @@ export default function SigninForm() {
   useEffect(() => {
     setFocus("username");
   }, [setFocus]);
-
-  useEffect(() => {
-    if (session.data) {
-      router.push("/dashboard");
-    }
-  }, [session, router]);
 
   const onSubmit = (data: SignInSchema) => {
     const { username, password } = data;

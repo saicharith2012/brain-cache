@@ -166,6 +166,9 @@ export async function getAllContents(
           },
         },
       },
+      orderBy: {
+        createdAt: "desc"
+      }
     });
 
     if (!contents) {

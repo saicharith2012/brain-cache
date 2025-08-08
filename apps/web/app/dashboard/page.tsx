@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import Sidebar from "../../components/Sidebar";
 import { getAllContents, getAllTags } from "../../actions/content";
 import {
   GetAllDocumentsResponse,
@@ -26,7 +25,6 @@ export default async function Dashboard() {
   return (
     <div>
       <Navbar />
-      <Sidebar />
       {/* {JSON.stringify(contents)} */}
       <Content data={contents} tags={tags}/>
     </div>

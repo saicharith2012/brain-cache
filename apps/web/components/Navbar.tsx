@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import Logo from "./Logo";
 
 export default function Navbar() {
   const router = useRouter();
@@ -20,27 +21,30 @@ export default function Navbar() {
   }
 
   return (
-    <div className="fixed top-0 left-64 right-0 flex items-center justify-end gap-4 px-4 py-3 [&_button]:font-medium bg-white z-101 border-b-1 border-b-gray-100 shadow-inner box-border">
-      <Button
-        text="Share brain"
-        variant="secondary"
-        size="md"
-        startIcon={<ShareIcon size="lg" />}
-      />
-      <Button
-        text="Sign out"
-        variant="primary"
-        size="md"
-        onClick={signOutUser}
-        loading={isPending}
-      />
-      <div className="w-fit h-fit rounded-full overflow-hidden border-2 border-black ml-3 cursor-pointer">
-        <Image
-          src={session.data?.user.image || "/unknown-image.jpg"}
-          alt="user profile"
-          width={36}
-          height={36}
+    <div className="fixed top-0 left-0 right-0 flex justify-between px-6 py-4 [&_button]:font-medium bg-white z-101 border-b-1 border-b-gray-100 shadow-inner box-border">
+      <Logo size="md" />
+      <div className="flex gap-4">
+        <Button
+          text="Share brain"
+          variant="secondary"
+          size="md"
+          startIcon={<ShareIcon size="lg" />}
         />
+        <Button
+          text="Sign out"
+          variant="primary"
+          size="md"
+          onClick={signOutUser}
+          loading={isPending}
+        />
+        <div className="w-fit h-fit rounded-full overflow-hidden border-2 border-black ml-3 cursor-pointer">
+          <Image
+            src={session.data?.user.image || "/unknown-image.jpg"}
+            alt="user profile"
+            width={36}
+            height={36}
+          />
+        </div>
       </div>
     </div>
   );

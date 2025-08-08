@@ -34,7 +34,7 @@ export default function Logo({ className, size }: LogoProps) {
 
   return (
     <div
-      className={`${className} flex items-center cursor-pointer pb-8 pl-2`}
+      className={`${className} flex items-center cursor-pointer`}
       onClick={handleClick}
     >
       <Image

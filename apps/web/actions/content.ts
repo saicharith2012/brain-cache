@@ -1,5 +1,7 @@
 "use server";
 import {
+  docMetadataSchema,
+  DocMetadataSchema,
   noteSchema,
   NoteSchema,
   VideoTweetLinkData,
@@ -90,7 +92,7 @@ export async function addNote(
     });
 
     if (!newDocument) {
-      throw new Error("Error while creating a new document.");
+      throw new Error("Error while creating a new note.");
     }
 
     return { success: true, message: "Document successfully added." };
@@ -100,6 +102,58 @@ export async function addNote(
         error instanceof Error
           ? error.message
           : "Error while creating new note.",
+    };
+  }
+}
+
+export async function addDocument(
+  data: DocMetadataSchema,
+  userId: string,
+  key: string
+): Promise<AddDocumentResponse | ActionError> {
+  try {
+    const parsedData = docMetadataSchema.safeParse(data);
+
+    if (!parsedData.success) {
+      return { error: parsedData.error.issues[0]?.message || "" };
+    }
+
+    const { type, fileType, tags } = parsedData.data;
+
+    const finalTags = await tagCreation(tags, userId);
+
+    const content = await prisma.content.create({
+      data: {
+        type,
+        userId,
+        contentTags: {
+          createMany: {
+            data: finalTags.map((tag) => ({ tagId: tag.id })),
+          },
+        },
+        document: {
+          create: {
+            filePath: key,
+            fileType: fileType,
+          },
+        },
+      },
+    });
+
+    if (!content) {
+      throw new Error("Error while saving document metadata to the db.");
+    }
+
+    return {
+      success: true,
+      message: "Added the document successfully.",
+    };
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Error while uploading document.",
     };
   }
 }
@@ -167,8 +221,8 @@ export async function getAllContents(
         },
       },
       orderBy: {
-        createdAt: "desc"
-      }
+        createdAt: "desc",
+      },
     });
 
     if (!contents) {

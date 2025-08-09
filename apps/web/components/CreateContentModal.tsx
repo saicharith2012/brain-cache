@@ -13,8 +13,9 @@ import DocumentFields from "./DocumentFields";
 import { Button } from "@repo/ui/button";
 import TagSelector from "./TagSelector";
 import { useEffect, useTransition } from "react";
-import { addNote, addVideoTweetLink } from "../actions/content";
+import { addDocument, addNote, addVideoTweetLink } from "../actions/content";
 import { useSession } from "next-auth/react";
+import { generatePresignedUrl } from "../actions/generatePresignedUrl";
 
 // controlled component
 export default function CreateContentModal({
@@ -74,7 +75,38 @@ export default function CreateContentModal({
 
           console.log(addNoteResponse);
         } else if (data.type === "document") {
-          console.log(data);
+          if (!data.file) {
+            console.log("no file found");
+            return;
+          }
+
+          const { uploadUrl, key } = await generatePresignedUrl({
+            fileName: data.file.name,
+            fileSize: data.file.size,
+            fileType: "application/pdf",
+          });
+
+          const res = await fetch(uploadUrl, {
+            method: "PUT",
+            body: data.file,
+            headers: { "Content-Type": data.file.type },
+          });
+
+          if (!res.ok) {
+            throw new Error("Document upload failed.");
+          }
+
+          const response = await addDocument(
+            { type: data.type, tags: data.tags, fileType: data.file.type },
+            session.data.user.id,
+            key
+          );
+
+          if ((response as ActionError).error) {
+            throw new Error((response as ActionError).error);
+          }
+
+          console.log(response);
         }
       } catch (error) {
         console.error(

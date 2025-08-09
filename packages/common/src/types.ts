@@ -45,7 +45,7 @@ export const addContentBaseSchema = z.object({
   type: z.nativeEnum(ContentType, {
     errorMap: () => ({ message: "Invalid content type" }),
   }),
-  tags: z.array(z.string()).min(1, "Adding atleast one tag would be helpful")
+  tags: z.array(z.string()).min(1, "Adding atleast one tag would be helpful"),
 });
 
 const youtubeSchema = addContentBaseSchema.extend({
@@ -87,15 +87,11 @@ export type NoteSchema = z.infer<typeof noteSchema>;
 export const documentSchema = addContentBaseSchema.extend({
   type: z.literal(ContentType.document),
   file: z
-    .instanceof(File, {message: "Upload a document (pdf, doc or docx)"})
+    .instanceof(File, { message: "Upload a document (pdf)" })
     .refine((file) => file.size < 5 * 1024 * 1024, "File must be < 5MB"),
 });
 
 export type DocumentSchema = z.infer<typeof documentSchema>;
-
-export const videoTweetLinkSchema = z.discriminatedUnion("type", [youtubeSchema, tweetSchema, linkSchema])
-
-export type VideoTweetLinkData = z.infer<typeof videoTweetLinkSchema>
 
 export const contentSchema = z.discriminatedUnion("type", [
   youtubeSchema,
@@ -106,3 +102,27 @@ export const contentSchema = z.discriminatedUnion("type", [
 ]);
 
 export type ContentFormData = z.infer<typeof contentSchema>;
+
+// schema for input validation exclusively for server actions
+export const videoTweetLinkSchema = z.discriminatedUnion("type", [
+  youtubeSchema,
+  tweetSchema,
+  linkSchema,
+]);
+
+export type VideoTweetLinkData = z.infer<typeof videoTweetLinkSchema>;
+
+export const docMetadataSchema = addContentBaseSchema.extend({
+  type: z.literal(ContentType.document),
+  fileType: z.string()
+});
+
+export type DocMetadataSchema = z.infer<typeof docMetadataSchema>
+
+export const fileSchema = z.object({
+  fileName: z.string().min(1),
+  fileType: z.literal("application/pdf"),
+  fileSize: z.number().max(5 * 1024 * 1024, "File must be under 5MB"),
+});
+
+export type FileSchema = z.infer<typeof fileSchema>;

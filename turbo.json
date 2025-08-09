@@ -4,7 +4,15 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["NEXTAUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET"],
+      "env": [
+        "NEXTAUTH_SECRET",
+        "GOOGLE_ID",
+        "GOOGLE_SECRET",
+        "AWS_S3_BUCKET_NAME",
+        "AWS_REGION",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
@@ -17,7 +25,15 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["NEXTAUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET"]
+      "env": [
+        "NEXTAUTH_SECRET",
+        "GOOGLE_ID",
+        "GOOGLE_SECRET",
+        "AWS_S3_BUCKET_NAME",
+        "AWS_REGION",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY"
+      ]
     }
   }
 }

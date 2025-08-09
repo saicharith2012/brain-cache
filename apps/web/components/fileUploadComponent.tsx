@@ -37,6 +37,7 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
             ref={ref}
             type="file"
             className={`absolute inset-0 opacity-0 cursor-pointer z-10 h-full w-full`}
+            accept="application/pdf"
             onChange={(e) => {
               const file = e.target.files?.[0];
 
@@ -44,11 +45,15 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
 
               if (file.size > maxFileSizeInMB * 1024 * 1024) {
                 setErrorMessage("File size exceeds 5MB limit.");
-                e.target.value = ""
+                e.target.value = "";
                 setFileName("No File Chosen");
                 return;
+              } else if (file.type !== "application/pdf") {
+                setErrorMessage("The uploaded file is not a pdf.");
+                e.target.value = "";
+                setFileName("No File Chosen");
               } else {
-                setErrorMessage("")
+                setErrorMessage("");
               }
 
               const name = onFileUpload(e);

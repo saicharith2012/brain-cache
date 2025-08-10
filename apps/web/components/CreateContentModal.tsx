@@ -97,7 +97,12 @@ export default function CreateContentModal({
           }
 
           const response = await addDocument(
-            { type: data.type, tags: data.tags, fileType: data.file.type },
+            {
+              type: data.type,
+              tags: data.tags,
+              fileType: data.file.type,
+              title: data.title,
+            },
             session.data.user.id,
             key
           );
@@ -108,6 +113,8 @@ export default function CreateContentModal({
 
           console.log(response);
         }
+        reset();
+        onClose();
       } catch (error) {
         console.error(
           error instanceof Error
@@ -116,17 +123,13 @@ export default function CreateContentModal({
         );
       }
     });
-    reset();
-    onClose();
   };
 
   useEffect(() => {
-    if (type === "youtube" || type === "tweet" || type === "link") {
+    if (type === "youtube" || type === "tweet" || type === "link" || type === "document") {
       setFocus("title");
     } else if (type === "note") {
       setFocus("content");
-    } else if (type === "document") {
-      setFocus("file");
     }
   }, [setFocus, type, isOpen]);
 
@@ -181,7 +184,7 @@ export default function CreateContentModal({
                 )}
 
                 {type === ContentType.document && (
-                  <DocumentFields errors={errors} setValue={setValue} />
+                  <DocumentFields errors={errors} setValue={setValue} register={register}/>
                 )}
 
                 <TagSelector tags={tags} setValue={setValue} errors={errors} />

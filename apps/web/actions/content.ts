@@ -118,13 +118,14 @@ export async function addDocument(
       return { error: parsedData.error.issues[0]?.message || "" };
     }
 
-    const { type, fileType, tags } = parsedData.data;
+    const { type, fileType, title, tags } = parsedData.data;
 
     const finalTags = await tagCreation(tags, userId);
 
     const content = await prisma.content.create({
       data: {
         type,
+        title,
         userId,
         contentTags: {
           createMany: {

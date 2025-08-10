@@ -86,6 +86,7 @@ export type NoteSchema = z.infer<typeof noteSchema>;
 
 export const documentSchema = addContentBaseSchema.extend({
   type: z.literal(ContentType.document),
+  title: z.string().min(1, "Title is required."),
   file: z
     .instanceof(File, { message: "Upload a document (pdf)" })
     .refine((file) => file.size < 5 * 1024 * 1024, "File must be < 5MB"),
@@ -114,6 +115,7 @@ export type VideoTweetLinkData = z.infer<typeof videoTweetLinkSchema>;
 
 export const docMetadataSchema = addContentBaseSchema.extend({
   type: z.literal(ContentType.document),
+  title: z.string().min(1, "Title is required."),
   fileType: z.string()
 });
 

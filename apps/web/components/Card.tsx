@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { deleteContent } from "../actions/content";
 import NoteIcon from "@repo/ui/icons/NoteIcon";
+import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
@@ -100,11 +101,28 @@ export default function Card(props: CardProps) {
         {props.type === "note" && (
           <div className="relative w-full h-fit pt-12 px-4 pb-4 bg-gray-50">
             <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full">
-              <NoteIcon size="lg"/>
+              <NoteIcon size="lg" />
               <div>Note</div>
             </div>
 
             <div>{props.note}</div>
+          </div>
+        )}
+
+        {/* embedding a document */}
+        {props.type === "document" && (
+          <div>
+            <div className="relative h-[160px] w-full bg-gray-50 flex items-center justify-center cursor-pointer">
+              <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full">
+                <DocumentIcon size="lg" strokeWidth="1.5" />
+                <div>Doc</div>
+              </div>
+            </div>
+            <div className="px-3 pt-3">
+              <div className="text-base mb-1">
+                {props.title!.charAt(0).toUpperCase() + props.title!.slice(1)}
+              </div>
+            </div>
           </div>
         )}
       </div>

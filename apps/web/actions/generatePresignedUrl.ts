@@ -9,6 +9,7 @@ import {
   awsSecretAccessKey,
 } from "../config";
 import { FileSchema, fileSchema } from "@repo/common/config";
+import { nanoid } from "nanoid";
 
 const s3Client = new S3Client({
   region: awsRegion,
@@ -21,7 +22,7 @@ const s3Client = new S3Client({
 export async function generatePresignedUrl(input: FileSchema) {
   const parsedData = fileSchema.parse(input);
 
-  const key = `uploads/${Date.now()}-${parsedData.fileName}}`;
+  const key = `uploads/${Date.now()}-${nanoid()}}`;
 
   const command = new PutObjectCommand({
     Bucket: awsS3BucketName!,

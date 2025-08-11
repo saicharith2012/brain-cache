@@ -1,5 +1,5 @@
 "use client";
-import { CardProps } from "../types/global";
+import { ActionError, CardProps, GetDocumentPresignedUrlResponse } from "../types/global";
 import { TAG_COLOR_PALETTE } from "../lib/constants/colors";
 import DeleteIcon from "@repo/ui/icons/DeleteIcon";
 import WebIcon from "@repo/ui/icons/WebIcon";
@@ -11,6 +11,7 @@ import Image from "next/image";
 import { deleteContent } from "../actions/content";
 import NoteIcon from "@repo/ui/icons/NoteIcon";
 import DocumentIcon from "@repo/ui/icons/DocumentIcon";
+import { getDocumentPresignedUrl } from "../actions/generatePresignedUrls";
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
@@ -41,6 +42,24 @@ export default function Card(props: CardProps) {
     } catch (error) {
       console.error(
         error instanceof Error ? error.message : "Internal Server Error"
+      );
+    }
+  }
+
+  async function openDocument() {
+    try {
+      const response = await getDocumentPresignedUrl(props.id);
+
+      if ((response as ActionError).error) {
+        throw new Error((response as ActionError).error);
+      }
+
+      window.open((response as GetDocumentPresignedUrlResponse).url, "_blank");
+    } catch (error) {
+      console.log(
+        error instanceof Error
+          ? error.message
+          : "Error while fetching the document"
       );
     }
   }
@@ -112,11 +131,18 @@ export default function Card(props: CardProps) {
         {/* embedding a document */}
         {props.type === "document" && (
           <div>
-            <div className="relative h-[160px] w-full bg-gray-50 flex items-center justify-center cursor-pointer">
-              <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full">
+            <div className="relative h-[160px] w-full bg-gray-50 flex items-center justify-center">
+              <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full z-105 cursor-default">
                 <DocumentIcon size="lg" strokeWidth="1.5" />
                 <div>Doc</div>
               </div>
+              <div
+                className="absolute inset-0 cursor-pointer"
+                onClick={openDocument}
+              ></div>
+              <span className="text-3xl font-semibold text-center text-gray-300">
+                Click to view
+              </span>
             </div>
             <div className="px-3 pt-3">
               <div className="text-base mb-1">

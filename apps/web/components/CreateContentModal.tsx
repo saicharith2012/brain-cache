@@ -1,7 +1,11 @@
 "use client";
 
 import { FormProvider, useForm } from "react-hook-form";
-import { ActionError, CreateContentModalProps } from "../types/global";
+import {
+  ActionError,
+  CreateContentModalProps,
+  GenerateUploadPresignedUrlResponse,
+} from "../types/global";
 import CrossIcon from "@repo/ui/icons/CrossIcon";
 import { ContentFormData, contentSchema } from "@repo/common/config";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +19,7 @@ import TagSelector from "./TagSelector";
 import { useEffect, useTransition } from "react";
 import { addDocument, addNote, addVideoTweetLink } from "../actions/content";
 import { useSession } from "next-auth/react";
-import { generatePresignedUrl } from "../actions/generatePresignedUrl";
+import { generateUploadPresignedUrl } from "../actions/generatePresignedUrls";
 
 // controlled component
 export default function CreateContentModal({
@@ -80,11 +84,17 @@ export default function CreateContentModal({
             return;
           }
 
-          const { uploadUrl, key } = await generatePresignedUrl({
+          const presignedUrlResponse = await generateUploadPresignedUrl({
             fileName: data.file.name,
             fileSize: data.file.size,
             fileType: "application/pdf",
           });
+
+          if ((presignedUrlResponse as ActionError).error) {
+            throw new Error((presignedUrlResponse as ActionError).error);
+          }
+
+          const {uploadUrl, key} = presignedUrlResponse as GenerateUploadPresignedUrlResponse
 
           const res = await fetch(uploadUrl, {
             method: "PUT",
@@ -126,7 +136,12 @@ export default function CreateContentModal({
   };
 
   useEffect(() => {
-    if (type === "youtube" || type === "tweet" || type === "link" || type === "document") {
+    if (
+      type === "youtube" ||
+      type === "tweet" ||
+      type === "link" ||
+      type === "document"
+    ) {
       setFocus("title");
     } else if (type === "note") {
       setFocus("content");
@@ -184,7 +199,11 @@ export default function CreateContentModal({
                 )}
 
                 {type === ContentType.document && (
-                  <DocumentFields errors={errors} setValue={setValue} register={register}/>
+                  <DocumentFields
+                    errors={errors}
+                    setValue={setValue}
+                    register={register}
+                  />
                 )}
 
                 <TagSelector tags={tags} setValue={setValue} errors={errors} />

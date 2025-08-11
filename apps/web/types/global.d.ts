@@ -9,7 +9,7 @@ export interface CardProps {
   tags: {
     tag: { title: string; color: string };
   }[];
-  note?: string,
+  note?: string;
 }
 
 export interface CreateContentModalProps {
@@ -67,6 +67,15 @@ export interface GetAllTagsResponse {
   success: true;
   message: string;
   tags: Tag[];
+}
+
+export interface GenerateUploadPresignedUrlResponse {
+  uploadUrl: string;
+  key: string;
+}
+
+export interface GetDocumentPresignedUrlResponse {
+  url: string;
 }
 
 export interface ActionError {

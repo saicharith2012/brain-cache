@@ -17,10 +17,10 @@ export default async function Dashboard() {
   }
 
   const response1 = await getAllContents(session?.user.id);
-  const contents = (response1 as GetAllDocumentsResponse).contents;
+  const contents = (response1 as GetAllDocumentsResponse).contents || [];
 
   const response2 = await getAllTags(session?.user.id);
-  const tags = (response2 as GetAllTagsResponse).tags;
+  const tags = (response2 as GetAllTagsResponse).tags || [];
 
   return (
     <div>

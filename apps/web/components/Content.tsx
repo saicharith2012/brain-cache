@@ -2,8 +2,8 @@
 import PlusIcon from "@repo/ui/icons/PlusIcon";
 import { ContentWithTags, Tag } from "../types/global";
 import Card from "./Card";
-import { useState } from "react";
 import CreateContentModal from "./CreateContentModal";
+import { useAppStore } from "../lib/store/store";
 
 export default function Content({
   data,
@@ -12,22 +12,18 @@ export default function Content({
   data: ContentWithTags[];
   tags: Tag[];
 }) {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { openModal } = useAppStore();
   // console.log(data)
   return (
     <div>
       <CreateContentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
         tags={tags}
       />
       <div className="flex py-4 sm:p-12">
         <div className="md:columns-1 lg:columns-2 xl:columns-3 2xl:columns-4 gap-3 w-fit [&>div]:w-fit mx-auto">
           <div
             className="break-inside-avoid w-80 min-w-80 max-w-80 h-72 p-6 mb-4 flex flex-col shadow-sm hover:shadow-lg transition-all duration-300 border-2 border-gray-300 hover:border-black border-dashed hover:scale-103 rounded-lg cursor-pointer"
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
+            onClick={openModal}
           >
             <div className="opacity-80 my-3">
               <PlusIcon size="6xl" />

@@ -13,8 +13,6 @@ export interface CardProps {
 }
 
 export interface CreateContentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
   tags: Tag[];
 }
 

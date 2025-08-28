@@ -16,22 +16,22 @@ import NoteFields from "./NoteFields";
 import DocumentFields from "./DocumentFields";
 import { Button } from "@repo/ui/button";
 import TagSelector from "./TagSelector";
-import { useEffect, useTransition } from "react";
+import { useEffect, useRef, useTransition } from "react";
 import { addDocument, addNote, addVideoTweetLink } from "../actions/content";
 import { useSession } from "next-auth/react";
 import { generateUploadPresignedUrl } from "../actions/generatePresignedUrls";
+import { useAppStore } from "../lib/store/store";
 
 // controlled component
-export default function CreateContentModal({
-  isOpen,
-  onClose,
-  tags,
-}: CreateContentModalProps) {
+export default function CreateContentModal({ tags }: CreateContentModalProps) {
   const session = useSession();
   const form = useForm<ContentFormData>({
     resolver: zodResolver(contentSchema),
     defaultValues: { type: "youtube" },
   });
+
+  const { isModalOpen, closeModal } = useAppStore();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -94,7 +94,8 @@ export default function CreateContentModal({
             throw new Error((presignedUrlResponse as ActionError).error);
           }
 
-          const {uploadUrl, key} = presignedUrlResponse as GenerateUploadPresignedUrlResponse
+          const { uploadUrl, key } =
+            presignedUrlResponse as GenerateUploadPresignedUrlResponse;
 
           const res = await fetch(uploadUrl, {
             method: "PUT",
@@ -124,7 +125,7 @@ export default function CreateContentModal({
           console.log(response);
         }
         reset();
-        onClose();
+        closeModal();
       } catch (error) {
         console.error(
           error instanceof Error
@@ -134,6 +135,22 @@ export default function CreateContentModal({
       }
     });
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        reset()
+        closeModal();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [closeModal, reset]);
 
   useEffect(() => {
     if (
@@ -146,7 +163,7 @@ export default function CreateContentModal({
     } else if (type === "note") {
       setFocus("content");
     }
-  }, [setFocus, type, isOpen]);
+  }, [setFocus, type, isModalOpen]);
 
   useEffect(() => {
     clearErrors();
@@ -154,15 +171,18 @@ export default function CreateContentModal({
 
   return (
     <div>
-      {isOpen && (
-        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-105 ">
-          <div className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]">
+      {isModalOpen && (
+        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-105">
+          <div
+            ref={containerRef}
+            className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]"
+          >
             <div className="flex justify-end w-full mb-4">
               <div
                 className="cursor-pointer"
                 onClick={() => {
                   reset();
-                  onClose();
+                  closeModal();
                 }}
               >
                 <CrossIcon size="2xl" />

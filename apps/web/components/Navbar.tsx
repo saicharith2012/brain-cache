@@ -1,17 +1,19 @@
 "use client";
 
 import { Button } from "@repo/ui/button";
-import ShareIcon from "@repo/ui/icons/ShareIcon";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import Logo from "./Logo";
+import PlusIcon from "@repo/ui/icons/PlusIcon";
+import { useAppStore } from "../lib/store/store";
 
 export default function Navbar() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const session = useSession();
+  const { openModal } = useAppStore();
 
   function signOutUser() {
     startTransition(async () => {
@@ -25,10 +27,11 @@ export default function Navbar() {
       <Logo size="md" />
       <div className="flex gap-4">
         <Button
-          text="Share brain"
+          text="Add memory"
           variant="secondary"
           size="md"
-          startIcon={<ShareIcon size="lg" />}
+          startIcon={<PlusIcon size="lg" />}
+          onClick={openModal}
         />
         <Button
           text="Sign out"

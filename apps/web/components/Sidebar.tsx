@@ -1,10 +1,11 @@
 "use client";
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import BrainIcon from "@repo/ui/icons/BrainIcon";
 import BotIcon from "@repo/ui/icons/BotIcon";
 import ChevronLeft from "@repo/ui/icons/ChevronLeft";
 import ChevronRight from "@repo/ui/icons/ChevronRight";
 import { motion } from "motion/react";
+import { useAppStore } from "../lib/store/store";
 
 const sidebarItems: { icon: ReactElement; title: string }[] = [
   { icon: <BrainIcon size="2xl" strokeWidth="1.5" />, title: "Memories" },
@@ -47,7 +48,7 @@ const sidebarItemsParentVariant = {
 };
 
 export default function Sidebar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { isSidebarOpen, toggleSidebar } = useAppStore();
   return (
     <motion.div
       initial={false}
@@ -69,7 +70,7 @@ export default function Sidebar() {
             Dashboard
           </motion.div>
           <div
-            onClick={() => setIsSidebarOpen((prev) => !prev)}
+            onClick={toggleSidebar}
             aria-label="sidebar-toggle"
             className="rounded-full hover:bg-gray-100 active:bg-gray-200 transition-colors duration-300 shadow-[0_1px_1px_rgba(0,0,0,0.05),0_4px_6px_rgba(34,42,53,0.04),0_24px_68px_rgba(47,48,55,0.05),0_2px_3px_rgba(0,0,0,0.04)] flex items-center justify-center p-2 cursor-pointer"
           >
@@ -80,7 +81,10 @@ export default function Sidebar() {
             )}
           </div>
         </div>
-        <motion.div variants={sidebarItemsParentVariant} className="flex flex-col gap-1.5">
+        <motion.div
+          variants={sidebarItemsParentVariant}
+          className="flex flex-col gap-1.5"
+        >
           {sidebarItems.map((item, index) => (
             <div
               key={index}

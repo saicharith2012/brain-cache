@@ -155,7 +155,7 @@ export default function CreateContentModal({
   return (
     <div>
       {isOpen && (
-        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-101 ">
+        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-105 ">
           <div className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]">
             <div className="flex justify-end w-full mb-4">
               <div

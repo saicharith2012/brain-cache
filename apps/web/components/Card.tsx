@@ -132,7 +132,7 @@ export default function Card(props: CardProps) {
         {props.type === "document" && (
           <div>
             <div className="relative h-[160px] w-full bg-gray-50 flex items-center justify-center">
-              <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full z-105 cursor-default">
+              <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full z-101 cursor-default">
                 <DocumentIcon size="lg" strokeWidth="1.5" />
                 <div>Doc</div>
               </div>

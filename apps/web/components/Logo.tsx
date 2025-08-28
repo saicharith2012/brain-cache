@@ -11,7 +11,7 @@ interface LogoProps {
 }
 
 const LogoImageStyles: Record<LogoSize, { height: number; width: number }> = {
-  md: { height: 32, width: 40 },
+  md: { height: 30, width: 40 },
   lg: { height: 48, width: 60 },
 };
 
@@ -34,12 +34,12 @@ export default function Logo({ className, size }: LogoProps) {
 
   return (
     <div
-      className={`${className} flex items-center cursor-pointer`}
+      className={`${className} flex gap-2 items-center cursor-pointer`}
       onClick={handleClick}
     >
       <Image
         src="/braincache-logo.png"
-        className={`mr-2 w-auto h-auto`}
+        className={`w-auto h-auto`}
         alt="logo image"
         width={LogoImageStyles[size].width}
         height={LogoImageStyles[size].height}

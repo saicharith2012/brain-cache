@@ -21,6 +21,7 @@
     "@repo/ui": "workspace:*",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
+    "motion": "^12.23.12",
     "nanoid": "^5.1.5",
     "next": "^15.3.0",
     "next-auth": "^4.24.11",

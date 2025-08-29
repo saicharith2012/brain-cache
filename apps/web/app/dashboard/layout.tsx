@@ -4,7 +4,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="pt-16 pl-64 relative">
+    <div>
       {children}
     </div>
   );

@@ -26,9 +26,9 @@ export default async function Dashboard() {
   return (
     <div>
       <Navbar />
-      <Sidebar/>
+      <Sidebar />
       {/* {JSON.stringify(contents)} */}
-      <Content data={contents} tags={tags}/>
+      <Content data={contents} tags={tags} />
     </div>
   );
 }

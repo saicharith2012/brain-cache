@@ -57,7 +57,7 @@ export default function Sidebar() {
       transition={{
         duration: 0.3,
       }}
-      className={`h-screen bg-white shadow border-black/30 fixed top-16 left-0 p-2`}
+      className={`h-screen bg-white shadow border-black/30 fixed top-16 left-0 p-2 z-106`}
     >
       <div className="flex flex-col gap-2">
         <div
@@ -88,10 +88,17 @@ export default function Sidebar() {
           {sidebarItems.map((item, index) => (
             <div
               key={index}
-              className="flex gap-4 items-center rounded-md px-3 py-2 hover:bg-gray-100 focus:bg-gray-200 cursor-pointer transition-all duration-150"
+              className="relative group flex gap-4 items-center rounded-md px-3 py-2 hover:bg-gray-100 focus:bg-gray-200 cursor-pointer transition-all duration-150"
             >
-              <div className="text-black">{item.icon}</div>
-
+              <div className=" text-black">{item.icon}</div>
+              {!isSidebarOpen && (
+                <div
+                  className="absolute top-[20%] left-[110%] opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap px-2 py-0.5 bg-gray-50 border rounded-lg z-110 pointer-events-none"
+                  aria-label="tooltip"
+                >
+                  {item.title}
+                </div>
+              )}{" "}
               <motion.div
                 variants={sidebarTitleVariants}
                 className="text-black text-base whitespace-nowrap overflow-hidden text-ellipsis"

@@ -142,7 +142,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        reset()
+        reset();
         closeModal();
       }
     };
@@ -172,7 +172,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
   return (
     <div>
       {isModalOpen && (
-        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-105">
+        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-110">
           <div
             ref={containerRef}
             className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]"

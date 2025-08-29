@@ -9,7 +9,7 @@ interface Store {
 }
 
 export const useAppStore = create<Store>((set) => ({
-  isSidebarOpen: true,
+  isSidebarOpen: false,
   toggleSidebar: () => set((s) => ({ isSidebarOpen: !s.isSidebarOpen })),
   isModalOpen: false,
   openModal: () => set({ isModalOpen: true }),

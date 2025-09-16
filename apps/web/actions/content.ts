@@ -139,6 +139,11 @@ export async function addDocument(
             fileType: fileType,
           },
         },
+        ContentEmbedding: {
+          create: {
+            status: "pending"
+          }
+        }
       },
     });
 

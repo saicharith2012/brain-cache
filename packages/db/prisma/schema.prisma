@@ -122,8 +122,8 @@ model ContentEmbedding {
   contentId    String          @unique
   content      Content         @relation(fields: [contentId], references: [id], onDelete: Cascade)
   status       EmbeddingStatus @default(pending)
-  model        String
-  chunksCount  Int             @default(0)
+  model        String?
+  chunksCount  Int?             @default(0)
   lastIndexAt  DateTime?
   errorMessage String?
   createdAt    DateTime        @default(now())

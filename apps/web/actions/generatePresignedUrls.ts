@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -91,6 +92,28 @@ export async function getDocumentPresignedUrl(
         error instanceof Error
           ? error.message
           : "Error while creating get document presigned url.",
+    };
+  }
+}
+
+export async function deleteDocumentFromS3(
+  key: string
+): Promise<{ message: string } | ActionError> {
+  try {
+    const deleteCommand = new DeleteObjectCommand({
+      Bucket: awsS3BucketName,
+      Key: key,
+    });
+
+    await s3Client.send(deleteCommand);
+
+    return { message: "deleted from s3 successfully." };
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Error while deleting document from s3.",
     };
   }
 }

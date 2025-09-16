@@ -7,7 +7,7 @@ import {
   VideoTweetLinkData,
   videoTweetLinkSchema,
 } from "@repo/common/config";
-import prisma from "@repo/db/client";
+import prisma, { ContentType } from "@repo/db/client";
 import {
   ActionError,
   AddDocumentMemoryResponse,
@@ -16,6 +16,7 @@ import {
   GetAllTagsResponse,
 } from "../types/global";
 import getTagColor from "../lib/utils/getTagColor";
+import { deleteDocumentFromS3 } from "./generatePresignedUrls";
 
 export async function addVideoTweetLink(
   data: VideoTweetLinkData,
@@ -141,9 +142,9 @@ export async function addDocument(
         },
         ContentEmbedding: {
           create: {
-            status: "pending"
-          }
-        }
+            status: "pending",
+          },
+        },
       },
     });
 
@@ -154,7 +155,7 @@ export async function addDocument(
     return {
       success: true,
       message: "Added the document successfully.",
-      content
+      content,
     };
   } catch (error) {
     return {
@@ -277,11 +278,32 @@ export async function getAllTags(
   }
 }
 
-export async function deleteContent(docId: string) {
+export async function deleteContent(memoryId: string) {
   try {
+    const memory = await prisma.content.findUnique({
+      where: {
+        id: memoryId,
+      },
+      include: {
+        document: {
+          select: {
+            filePath: true,
+          },
+        },
+      },
+    });
+
+    if (memory?.type === ContentType.document && memory.document?.filePath) {
+      const response = await deleteDocumentFromS3(memory?.document?.filePath);
+
+      if ((response as ActionError).error) {
+        throw new Error((response as ActionError).error);
+      }
+    }
+
     await prisma.content.delete({
       where: {
-        id: docId,
+        id: memoryId,
       },
     });
 

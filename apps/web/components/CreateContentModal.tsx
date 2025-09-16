@@ -3,6 +3,7 @@
 import { FormProvider, useForm } from "react-hook-form";
 import {
   ActionError,
+  AddDocumentMemoryResponse,
   CreateContentModalProps,
   GenerateUploadPresignedUrlResponse,
 } from "../types/global";
@@ -21,6 +22,7 @@ import { addDocument, addNote, addVideoTweetLink } from "../actions/content";
 import { useSession } from "next-auth/react";
 import { generateUploadPresignedUrl } from "../actions/generatePresignedUrls";
 import { useAppStore } from "../lib/store/store";
+import { startIngestion } from "../actions/ingestion";
 
 // controlled component
 export default function CreateContentModal({ tags }: CreateContentModalProps) {
@@ -122,7 +124,19 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             throw new Error((response as ActionError).error);
           }
 
-          console.log(response);
+          const { userId, id, type, createdAt } = (
+            response as AddDocumentMemoryResponse
+          ).content;
+
+          startIngestion({
+            userId,
+            contentId: id,
+            fileType: type,
+            filePath: key,
+            createdAt,
+          });
+
+          // console.log(response);
         }
         reset();
         closeModal();

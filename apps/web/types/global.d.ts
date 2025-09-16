@@ -50,7 +50,18 @@ export interface GetAllDocumentsResponse {
   contents: ContentWithTags[];
 }
 
-export interface AddDocumentResponse {
+export interface AddDocumentMemoryResponse {
+  success: true;
+  message: string;
+  content: {
+    type: ContentType;
+    id: string;
+    userId: string;
+    createdAt: Date;
+  };
+}
+
+export interface AddMemoryResponse {
   success: true;
   message: string;
 }

@@ -10,7 +10,8 @@ import {
 import prisma from "@repo/db/client";
 import {
   ActionError,
-  AddDocumentResponse,
+  AddDocumentMemoryResponse,
+  AddMemoryResponse,
   GetAllDocumentsResponse,
   GetAllTagsResponse,
 } from "../types/global";
@@ -19,7 +20,7 @@ import getTagColor from "../lib/utils/getTagColor";
 export async function addVideoTweetLink(
   data: VideoTweetLinkData,
   userId: string
-): Promise<AddDocumentResponse | ActionError> {
+): Promise<AddMemoryResponse | ActionError> {
   try {
     const parsedData = videoTweetLinkSchema.safeParse(data);
 
@@ -62,7 +63,7 @@ export async function addVideoTweetLink(
 export async function addNote(
   data: NoteSchema,
   userId: string
-): Promise<AddDocumentResponse | ActionError> {
+): Promise<AddMemoryResponse | ActionError> {
   try {
     const parsedData = noteSchema.safeParse(data);
 
@@ -110,7 +111,7 @@ export async function addDocument(
   data: DocMetadataSchema,
   userId: string,
   key: string
-): Promise<AddDocumentResponse | ActionError> {
+): Promise<AddDocumentMemoryResponse | ActionError> {
   try {
     const parsedData = docMetadataSchema.safeParse(data);
 
@@ -148,6 +149,7 @@ export async function addDocument(
     return {
       success: true,
       message: "Added the document successfully.",
+      content
     };
   } catch (error) {
     return {

@@ -8,14 +8,14 @@ import {
   awsS3BucketName,
   awsSecretAccessKey,
   googleGenaiApiKey,
-  qdrantUrl,
+  qdrantCollectionName,
 } from "./config.js";
 import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
-import { QdrantVectorStore } from "@langchain/qdrant";
-import { url } from "inspector";
+import { client } from "@repo/qdrantdb/client";
+import prisma from "@repo/db/client";
 
 const s3Client = new S3Client({
   region: awsRegion,
@@ -46,14 +46,14 @@ const ingestionWorker = new Worker(
     // fetching the pdf as a stream
     const stream = response.Body as Readable;
 
-    const chunks = [];
+    const texts = [];
 
-    for await (const chunk of stream) {
-      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    for await (const text of stream) {
+      texts.push(Buffer.isBuffer(text) ? text : Buffer.from(text));
     }
 
     // parsing the pdf
-    const fileBlob = new Blob(chunks, { type: "application/pdf" });
+    const fileBlob = new Blob(texts, { type: "application/pdf" });
 
     const loader = new WebPDFLoader(fileBlob);
     const docs = await loader.load();
@@ -64,18 +64,12 @@ const ingestionWorker = new Worker(
       chunkOverlap: 200,
     });
 
-    const texts = await textSplitter.createDocuments(
+    const chunks = await textSplitter.createDocuments(
       docs.map((doc) => doc.pageContent)
     );
 
-    texts.forEach((text, index) => {
-      ((text.metadata.chunkIndex = index),
-        (text.metadata.sourceType = "document"),
-        (text.metadata.contentId = job.data.contentId));
-    });
-
-    // console.log(texts[0]);
-    const textsForEmbeddings = texts.map((text) => text.pageContent);
+    console.log(chunks[0]);
+    const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
 
     // creating vector embeddings
     const embeddings = new GoogleGenerativeAIEmbeddings({
@@ -85,10 +79,50 @@ const ingestionWorker = new Worker(
     });
 
     const vectors = await embeddings.embedDocuments(textsForEmbeddings);
-    // console.log(vectors[0])
+    console.log(vectors[0]);
 
     // storing in qdrant vector store
-    
+    if (!client.collectionExists(qdrantCollectionName!)) {
+      throw new Error(
+        `collection ${qdrantCollectionName} does not exists on the vector store`
+      );
+    }
+
+    console.log("inserting into qdrant db...");
+
+    const points = chunks.map((chunk, index) => ({
+      id: `${job.data.contentId}`,
+      vector: vectors[index]!,
+      payload: {
+        type: "document",
+        chunkIndex: index,
+        chunkText: chunk.pageContent,
+      },
+    }));
+
+    console.log(points[0])
+
+
+    await client.upsert(qdrantCollectionName!, {
+      wait: true,
+      points,
+    });
+
+    console.log("successfully stored the vectors inside qdb");
+
+    // updating the embedding status on database
+    await prisma.contentEmbedding.update({
+      where: {
+        contentId: job.data.contentId,
+      },
+      data: {
+        status: "ready",
+        model: "text-embedding-004",
+        chunksCount: chunks.length,
+      },
+    });
+
+    console.log("successfully updated the ingestion status on db");
   },
   { connection: redisClient }
 );
@@ -97,8 +131,18 @@ ingestionWorker.on("completed", (job) => {
   console.log(`Job ${job.id} has finished.`);
 });
 
-ingestionWorker.on("failed", (job, err) => {
-  console.log(`job ${job?.id} has failed with error: ${err.message}`);
+ingestionWorker.on("failed", async (job, err) => {
+  console.log(`job ${job?.id} has failed with error: ${err}`);
+  // update ingestion status on db upon failure
+  await prisma.contentEmbedding.update({
+    where: {
+      contentId: job?.data.contentId,
+    },
+    data: {
+      status: "failed",
+      errorMessage: err.message,
+    },
+  });
 });
 
 console.log("Ingestion worker has started, listening for jobs...");

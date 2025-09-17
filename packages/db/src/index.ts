@@ -1,8 +1,7 @@
-import {
-  PrismaClient,
-  ContentType,
-  Content
-} from "./generated/prisma/client.js";
+import pkg from "./generated/prisma/client.js";
+
+const { PrismaClient, ContentType } = pkg;
+type Content = pkg.Content;
 
 const prismaClientSingleton = () => {
   return new PrismaClient();

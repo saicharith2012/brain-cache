@@ -54,7 +54,7 @@ export async function pdfIngest(Key: string) {
     docs.map((doc) => doc.pageContent)
   );
 
-  console.log(chunks[0]);
+  // console.log(chunks[0]);
 
   return chunks;
 }

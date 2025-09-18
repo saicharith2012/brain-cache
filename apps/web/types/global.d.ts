@@ -72,9 +72,17 @@ export interface AddNoteMemoryResponse {
   };
 }
 
-export interface AddMemoryResponse {
+export interface AddVideoTweetLinkMemoryResponse {
   success: true;
   message: string;
+  content: {
+    type: $Enums.ContentType;
+    link: string | null;
+    title: string | null;
+    id: string;
+    userId: string;
+    createdAt: Date;
+  };
 }
 
 export interface Tag {

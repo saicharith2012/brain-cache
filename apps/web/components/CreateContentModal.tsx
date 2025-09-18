@@ -5,6 +5,7 @@ import {
   ActionError,
   AddDocumentMemoryResponse,
   AddNoteMemoryResponse,
+  AddVideoTweetLinkMemoryResponse,
   CreateContentModalProps,
   GenerateUploadPresignedUrlResponse,
 } from "../types/global";
@@ -72,7 +73,23 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             throw new Error((addVideoTweetLinkResponse as ActionError).error);
           }
 
-          console.log(addVideoTweetLinkResponse);
+          const { type, link, userId, createdAt, id, title } = (
+            addVideoTweetLinkResponse as AddVideoTweetLinkMemoryResponse
+          ).content;
+
+          startIngestion({
+            userId,
+            contentId: id,
+            fileType: type,
+            title: title || "",
+            link: link || "",
+            createdAt,
+          });
+
+          console.log(
+            (addVideoTweetLinkResponse as AddVideoTweetLinkMemoryResponse)
+              .message
+          );
         } else if (data.type === "note") {
           const addNoteResponse = await addNote(data, session.data.user.id);
 

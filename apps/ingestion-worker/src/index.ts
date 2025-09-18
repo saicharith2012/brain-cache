@@ -1,5 +1,5 @@
 import { redisClient } from "@repo/redis/client";
-import { Worker } from "bullmq";
+import { Worker, Job } from "bullmq";
 import { googleGenaiApiKey, qdrantCollectionName } from "./config.js";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
@@ -8,20 +8,34 @@ import prisma from "@repo/db/client";
 import { v4 as uuid } from "uuid";
 import { pdfIngest } from "./lib/handlers/pdfIngest.js";
 import { noteIngest } from "./lib/handlers/noteIngest.js";
+import { videoIngest } from "./lib/handlers/videoIngest.js";
+import {ContentType} from "@repo/db/client"
+
+export interface IngestionJobPayload {
+  userId: string;
+  contentId: string;
+  filePath?: string;
+  fileType: string;
+  createdAt: Date;
+  title?: string;
+  link?: string;
+}
 
 const ingestionWorker = new Worker(
   "ingestion-queue",
-  async (job) => {
+  async (job: Job<IngestionJobPayload>) => {
     console.log(
       `Processing job ${job.id} for memory ${JSON.stringify(job.data.contentId)}`
     );
 
-    let chunks = []
+    let chunks;
 
-    if (job.data.fileType === "document") {
-      chunks = await pdfIngest(job.data.filePath);
+    if (job.data.fileType === ContentType.document) {
+      chunks = await pdfIngest(job.data.filePath!);
     } else if (job.data.fileType === "note") {
       chunks = await noteIngest(job.data.contentId);
+    } else if (job.data.fileType === "youtube") {
+      chunks = await videoIngest(job.data.link!)
     } else {
       throw new Error("Invalid file type.");
     }
@@ -40,7 +54,7 @@ const ingestionWorker = new Worker(
     });
 
     const vectors = await embeddings.embedDocuments(textsForEmbeddings);
-    console.log(vectors[0]);
+    // console.log(vectors[0]);
 
     // storing in qdrant vector store
     if (!client.collectionExists(qdrantCollectionName!)) {
@@ -59,6 +73,7 @@ const ingestionWorker = new Worker(
         userId: job.data.userId,
         chunkText: chunk.pageContent,
         contentId: job.data.contentId,
+        title: job.data.title || ""
       },
     }));
 

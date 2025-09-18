@@ -11,8 +11,8 @@ import prisma, { ContentType } from "@repo/db/client";
 import {
   ActionError,
   AddDocumentMemoryResponse,
-  AddMemoryResponse,
   AddNoteMemoryResponse,
+  AddVideoTweetLinkMemoryResponse,
   GetAllDocumentsResponse,
   GetAllTagsResponse,
 } from "../types/global";
@@ -23,7 +23,7 @@ import { deleteEmbeddings } from "./ingestion";
 export async function addVideoTweetLink(
   data: VideoTweetLinkData,
   userId: string
-): Promise<AddMemoryResponse | ActionError> {
+): Promise<AddVideoTweetLinkMemoryResponse | ActionError> {
   try {
     const parsedData = videoTweetLinkSchema.safeParse(data);
 
@@ -47,6 +47,11 @@ export async function addVideoTweetLink(
             data: finalTags.map((tag) => ({ tagId: tag.id })),
           },
         },
+        ContentEmbedding: {
+          create: {
+            status: "pending",
+          },
+        },
       },
     });
 
@@ -55,7 +60,7 @@ export async function addVideoTweetLink(
     }
 
     // return response
-    return { success: true, message: "Document successfully added." };
+    return { success: true, message: "Document successfully added.", content };
   } catch (error) {
     return {
       error: `${error instanceof Error ? error.message : "Error while creating a new document"}`,

@@ -6,7 +6,6 @@ const ingestionQueue = new Queue("ingestion-queue", {
   connection: redisClient,
 });
 
-
 // ingestion job payload structure
 export interface IngestionJobPayload {
   userId: string;
@@ -14,6 +13,8 @@ export interface IngestionJobPayload {
   filePath?: string;
   fileType: typeof ContentType;
   createdAt: Date;
+  title?: string;
+  link?: string;
 }
 
 export async function addIngestionJob({
@@ -22,6 +23,8 @@ export async function addIngestionJob({
   filePath,
   fileType,
   createdAt,
+  title,
+  link,
 }: IngestionJobPayload) {
   const ingestionData: IngestionJobPayload = {
     userId,
@@ -29,8 +32,10 @@ export async function addIngestionJob({
     filePath,
     fileType,
     createdAt,
+    title,
+    link,
   };
 
-  await ingestionQueue.add("ingestMemory", ingestionData)
-  console.log("Ingestion Job added to queue")
+  await ingestionQueue.add("ingestMemory", ingestionData);
+  console.log("Ingestion Job added to queue");
 }

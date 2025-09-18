@@ -1,30 +1,12 @@
 import { redisClient } from "@repo/redis/client";
-import { Readable } from "stream";
 import { Worker } from "bullmq";
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import {
-  awsAccessKeyId,
-  awsRegion,
-  awsS3BucketName,
-  awsSecretAccessKey,
-  googleGenaiApiKey,
-  qdrantCollectionName,
-} from "./config.js";
-import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { googleGenaiApiKey, qdrantCollectionName } from "./config.js";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
 import { client } from "@repo/qdrantdb/client";
 import prisma from "@repo/db/client";
-import {v4 as uuid} from "uuid"
-
-const s3Client = new S3Client({
-  region: awsRegion,
-  credentials: {
-    accessKeyId: awsAccessKeyId!,
-    secretAccessKey: awsSecretAccessKey!,
-  },
-});
+import { v4 as uuid } from "uuid";
+import { pdfIngest } from "./lib/handlers/pdfIngest.js";
 
 const ingestionWorker = new Worker(
   "ingestion-queue",
@@ -33,43 +15,8 @@ const ingestionWorker = new Worker(
       `Processing job ${job.id} for memory ${JSON.stringify(job.data.contentId)}`
     );
 
-    const response = await s3Client.send(
-      new GetObjectCommand({
-        Bucket: awsS3BucketName,
-        Key: job.data.filePath,
-      })
-    );
+    const chunks = await pdfIngest(job.data.filePath);
 
-    if (!response.Body) {
-      throw new Error("no body in s3 response");
-    }
-
-    // fetching the pdf as a stream
-    const stream = response.Body as Readable;
-
-    const texts = [];
-
-    for await (const text of stream) {
-      texts.push(Buffer.isBuffer(text) ? text : Buffer.from(text));
-    }
-
-    // parsing the pdf
-    const fileBlob = new Blob(texts, { type: "application/pdf" });
-
-    const loader = new WebPDFLoader(fileBlob);
-    const docs = await loader.load();
-
-    // chunking
-    const textSplitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 1000,
-      chunkOverlap: 200,
-    });
-
-    const chunks = await textSplitter.createDocuments(
-      docs.map((doc) => doc.pageContent)
-    );
-
-    console.log(chunks[0]);
     const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
 
     // creating vector embeddings
@@ -95,7 +42,7 @@ const ingestionWorker = new Worker(
       id: uuid(), // qdrant has a restriction on IDs
       vector: vectors[index]!,
       payload: {
-        type: "document",
+        type: job.data.fileType,
         chunkIndex: index,
         chunkText: chunk.pageContent,
         contentId: job.data.contentId,

@@ -7,7 +7,7 @@ import {
 } from "../../config.js";
 import { Readable } from "stream";
 import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { textSplitter } from "../textSplitter.js";
 
 const s3Client = new S3Client({
   region: awsRegion,
@@ -45,11 +45,6 @@ export async function pdfIngest(Key: string) {
   const docs = await loader.load();
 
   // chunking
-  const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-    chunkOverlap: 200,
-  });
-
   const chunks = await textSplitter.createDocuments(
     docs.map((doc) => doc.pageContent)
   );

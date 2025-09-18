@@ -1,1 +1,1 @@
-{"root":["./src/config.ts","./src/index.ts","./src/lib/handlers/noteIngest.ts","./src/lib/handlers/pdfIngest.ts","./src/lib/handlers/videoIngest.ts"],"version":"5.8.2"}
+{"root":["./src/config.ts","./src/index.ts","./src/lib/textSplitter.ts","./src/lib/handlers/noteIngest.ts","./src/lib/handlers/pdfIngest.ts","./src/lib/handlers/tweetIngest.ts","./src/lib/handlers/videoIngest.ts"],"version":"5.8.2"}

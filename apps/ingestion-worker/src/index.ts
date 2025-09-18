@@ -9,7 +9,8 @@ import { v4 as uuid } from "uuid";
 import { pdfIngest } from "./lib/handlers/pdfIngest.js";
 import { noteIngest } from "./lib/handlers/noteIngest.js";
 import { videoIngest } from "./lib/handlers/videoIngest.js";
-import {ContentType} from "@repo/db/client"
+import { ContentType } from "@repo/db/client";
+import { tweetIngest } from "./lib/handlers/tweetIngest.js";
 
 export interface IngestionJobPayload {
   userId: string;
@@ -32,10 +33,12 @@ const ingestionWorker = new Worker(
 
     if (job.data.fileType === ContentType.document) {
       chunks = await pdfIngest(job.data.filePath!);
-    } else if (job.data.fileType === "note") {
+    } else if (job.data.fileType === ContentType.note) {
       chunks = await noteIngest(job.data.contentId);
-    } else if (job.data.fileType === "youtube") {
-      chunks = await videoIngest(job.data.link!)
+    } else if (job.data.fileType === ContentType.youtube) {
+      chunks = await videoIngest(job.data.link!);
+    } else if (job.data.fileType === ContentType.tweet) {
+      chunks = await tweetIngest(job.data.link!);
     } else {
       throw new Error("Invalid file type.");
     }
@@ -73,7 +76,7 @@ const ingestionWorker = new Worker(
         userId: job.data.userId,
         chunkText: chunk.pageContent,
         contentId: job.data.contentId,
-        title: job.data.title || ""
+        title: job.data.title || "",
       },
     }));
 

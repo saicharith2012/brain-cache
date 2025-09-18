@@ -7,6 +7,7 @@ import { client } from "@repo/qdrantdb/client";
 import prisma from "@repo/db/client";
 import { v4 as uuid } from "uuid";
 import { pdfIngest } from "./lib/handlers/pdfIngest.js";
+import { noteIngest } from "./lib/handlers/noteIngest.js";
 
 const ingestionWorker = new Worker(
   "ingestion-queue",
@@ -15,7 +16,19 @@ const ingestionWorker = new Worker(
       `Processing job ${job.id} for memory ${JSON.stringify(job.data.contentId)}`
     );
 
-    const chunks = await pdfIngest(job.data.filePath);
+    let chunks = []
+
+    if (job.data.fileType === "document") {
+      chunks = await pdfIngest(job.data.filePath);
+    } else if (job.data.fileType === "note") {
+      chunks = await noteIngest(job.data.contentId);
+    } else {
+      throw new Error("Invalid file type.");
+    }
+
+    if (!chunks || chunks?.length === 0) {
+      throw new Error("no data in memory.");
+    }
 
     const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
 
@@ -43,7 +56,7 @@ const ingestionWorker = new Worker(
       vector: vectors[index]!,
       payload: {
         type: job.data.fileType,
-        chunkIndex: index,
+        userId: job.data.userId,
         chunkText: chunk.pageContent,
         contentId: job.data.contentId,
       },

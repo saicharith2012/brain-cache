@@ -61,6 +61,17 @@ export interface AddDocumentMemoryResponse {
   };
 }
 
+export interface AddNoteMemoryResponse {
+  success: true;
+  message: string;
+  noteMemory: {
+    type: ContentType;
+    id: string;
+    userId: string;
+    createdAt: Date;
+  };
+}
+
 export interface AddMemoryResponse {
   success: true;
   message: string;

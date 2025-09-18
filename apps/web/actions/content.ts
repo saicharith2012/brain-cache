@@ -12,6 +12,7 @@ import {
   ActionError,
   AddDocumentMemoryResponse,
   AddMemoryResponse,
+  AddNoteMemoryResponse,
   GetAllDocumentsResponse,
   GetAllTagsResponse,
 } from "../types/global";
@@ -65,7 +66,7 @@ export async function addVideoTweetLink(
 export async function addNote(
   data: NoteSchema,
   userId: string
-): Promise<AddMemoryResponse | ActionError> {
+): Promise<AddNoteMemoryResponse | ActionError> {
   try {
     const parsedData = noteSchema.safeParse(data);
 
@@ -77,7 +78,7 @@ export async function addNote(
 
     const finalTags = await tagCreation(tags, userId);
 
-    const newDocument = await prisma.content.create({
+    const noteMemory = await prisma.content.create({
       data: {
         type,
         userId,
@@ -91,14 +92,23 @@ export async function addNote(
             contentData: content,
           },
         },
+        ContentEmbedding: {
+          create: {
+            status: "pending",
+          },
+        },
       },
     });
 
-    if (!newDocument) {
+    if (!noteMemory) {
       throw new Error("Error while creating a new note.");
     }
 
-    return { success: true, message: "Document successfully added." };
+    return {
+      success: true,
+      message: "Document successfully added.",
+      noteMemory,
+    };
   } catch (error) {
     return {
       error:
@@ -300,12 +310,12 @@ export async function deleteContent(memoryId: string) {
       if ((response1 as ActionError).error) {
         throw new Error((response1 as ActionError).error);
       }
+    }
 
-      const response2 = await deleteEmbeddings(memoryId);
+    const response2 = await deleteEmbeddings(memoryId);
 
-      if ((response2 as ActionError).error) {
-        throw new Error((response2 as ActionError).error);
-      }
+    if ((response2 as ActionError).error) {
+      throw new Error((response2 as ActionError).error);
     }
 
     await prisma.content.delete({

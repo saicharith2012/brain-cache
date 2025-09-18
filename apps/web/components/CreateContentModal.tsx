@@ -4,6 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import {
   ActionError,
   AddDocumentMemoryResponse,
+  AddNoteMemoryResponse,
   CreateContentModalProps,
   GenerateUploadPresignedUrlResponse,
 } from "../types/global";
@@ -79,7 +80,18 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             throw new Error((addNoteResponse as ActionError).error);
           }
 
-          console.log(addNoteResponse);
+          const { type, id, userId, createdAt } = (
+            addNoteResponse as AddNoteMemoryResponse
+          ).noteMemory;
+
+          startIngestion({
+            userId,
+            contentId: id,
+            fileType: type,
+            createdAt,
+          });
+
+          console.log((addNoteResponse as AddNoteMemoryResponse).message);
         } else if (data.type === "document") {
           if (!data.file) {
             console.log("no file found");
@@ -136,7 +148,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             createdAt,
           });
 
-          // console.log(response);
+          console.log((response as AddDocumentMemoryResponse).message);
         }
         reset();
         closeModal();

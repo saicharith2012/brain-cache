@@ -11,7 +11,6 @@ const ingestionQueue = new Queue("ingestion-queue", {
 export interface IngestionJobPayload {
   userId: string;
   contentId: string;
-  content?: string;
   filePath?: string;
   fileType: typeof ContentType;
   createdAt: Date;

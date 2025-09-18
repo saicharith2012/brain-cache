@@ -11,6 +11,7 @@ import { noteIngest } from "./lib/handlers/noteIngest.js";
 import { videoIngest } from "./lib/handlers/videoIngest.js";
 import { ContentType } from "@repo/db/client";
 import { tweetIngest } from "./lib/handlers/tweetIngest.js";
+import { linkIngest } from "./lib/handlers/linkIngest.js";
 
 export interface IngestionJobPayload {
   userId: string;
@@ -39,6 +40,8 @@ const ingestionWorker = new Worker(
       chunks = await videoIngest(job.data.link!);
     } else if (job.data.fileType === ContentType.tweet) {
       chunks = await tweetIngest(job.data.link!);
+    } else if (job.data.fileType === ContentType.link) {
+      chunks = await linkIngest(job.data.link!);
     } else {
       throw new Error("Invalid file type.");
     }

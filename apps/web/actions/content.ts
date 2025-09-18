@@ -17,6 +17,7 @@ import {
 } from "../types/global";
 import getTagColor from "../lib/utils/getTagColor";
 import { deleteDocumentFromS3 } from "./generatePresignedUrls";
+import { deleteEmbeddings } from "./ingestion";
 
 export async function addVideoTweetLink(
   data: VideoTweetLinkData,
@@ -294,10 +295,16 @@ export async function deleteContent(memoryId: string) {
     });
 
     if (memory?.type === ContentType.document && memory.document?.filePath) {
-      const response = await deleteDocumentFromS3(memory?.document?.filePath);
+      const response1 = await deleteDocumentFromS3(memory?.document?.filePath);
 
-      if ((response as ActionError).error) {
-        throw new Error((response as ActionError).error);
+      if ((response1 as ActionError).error) {
+        throw new Error((response1 as ActionError).error);
+      }
+
+      const response2 = await deleteEmbeddings(memoryId);
+
+      if ((response2 as ActionError).error) {
+        throw new Error((response2 as ActionError).error);
       }
     }
 

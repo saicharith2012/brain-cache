@@ -13,7 +13,7 @@ export interface IngestionJobPayload {
   contentId: string;
   content?: string;
   filePath?: string;
-  fileType: ContentType;
+  fileType: typeof ContentType;
   createdAt: Date;
 }
 

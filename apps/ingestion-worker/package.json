@@ -28,6 +28,7 @@
     "@repo/redis": "workspace:*",
     "bullmq": "^5.58.5",
     "dotenv": "^17.2.2",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.1",
+    "uuid": "^13.0.0"
   }
 }

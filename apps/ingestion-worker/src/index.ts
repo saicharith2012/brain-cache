@@ -16,6 +16,7 @@ import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
 import { client } from "@repo/qdrantdb/client";
 import prisma from "@repo/db/client";
+import {v4 as uuid} from "uuid"
 
 const s3Client = new S3Client({
   region: awsRegion,
@@ -91,17 +92,17 @@ const ingestionWorker = new Worker(
     console.log("inserting into qdrant db...");
 
     const points = chunks.map((chunk, index) => ({
-      id: `${job.data.contentId}`,
+      id: uuid(), // qdrant has a restriction on IDs
       vector: vectors[index]!,
       payload: {
         type: "document",
         chunkIndex: index,
         chunkText: chunk.pageContent,
+        contentId: job.data.contentId,
       },
     }));
 
-    console.log(points[0])
-
+    console.log(points[0]);
 
     await client.upsert(qdrantCollectionName!, {
       wait: true,

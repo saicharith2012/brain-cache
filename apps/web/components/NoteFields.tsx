@@ -12,7 +12,7 @@ export default function NoteFields({ register, errors }: NoteFieldsProps) {
       <textarea
         {...register("content")}
         placeholder="Write you note..."
-        className="w-full border border-gray-200 p-2 rounded-lg min-h-[150px] focus-within:outline-1"
+        className="w-full border border-gray-200 p-2 rounded-lg min-h-[150px] focus-within:outline-1 focus-within:outline-gray-400"
       />
       {errors.content && (
         <p className="text-red-500 py-1">{errors.content.message}</p>

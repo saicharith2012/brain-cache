@@ -7,7 +7,7 @@ import {
   GetAllTagsResponse,
 } from "../../types/global";
 import Content from "../../components/Content";
-import Navbar from "../../components/Navbar";
+import Topbar from "../../components/Topbar";
 import Sidebar from "../../components/Sidebar";
 
 export default async function Dashboard() {
@@ -25,7 +25,7 @@ export default async function Dashboard() {
 
   return (
     <div>
-      <Navbar />
+      <Topbar />
       <Sidebar />
       {/* {JSON.stringify(contents)} */}
       <Content data={contents} tags={tags} />

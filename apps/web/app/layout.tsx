@@ -8,7 +8,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="min-h-screen">
       <SessionProvider>
         <body className="font-roboto text-sm tracking-[0.005em]">
           {children}

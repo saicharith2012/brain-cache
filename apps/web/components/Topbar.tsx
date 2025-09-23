@@ -9,7 +9,7 @@ import Logo from "./Logo";
 import PlusIcon from "@repo/ui/icons/PlusIcon";
 import { useAppStore } from "../lib/store/store";
 
-export default function Navbar() {
+export default function Topbar() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const session = useSession();

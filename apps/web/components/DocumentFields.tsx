@@ -1,6 +1,6 @@
 import { ContentFormData, DocumentSchema } from "@repo/common/config";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import FileUploadComponent from "./fileUploadComponent";
+import FileUploadComponent from "./FileUploadComponent";
 import { ChangeEvent } from "react";
 import InputTextComponent from "@repo/ui/inputTextComponent";
 

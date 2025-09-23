@@ -17,6 +17,7 @@ export default function Content({
   return (
     <div className={`h-full w-full pt-16 ${isSidebarOpen ? "pl-58" : "pl-16"}`}>
       <CreateContentModal tags={tags} />
+      
       <div className="flex py-12 sm:p-12">
         <div
           className={`${isSidebarOpen ? "md:columns-1 lg:columns-2 xl:columns-3 2xl:columns-4" : "sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5"} gap-3 w-fit [&>div]:w-fit mx-auto`}

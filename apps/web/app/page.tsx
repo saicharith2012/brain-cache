@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@repo/ui/button";
 import { redirect } from "next/navigation";
 import Logo from "../components/Logo";

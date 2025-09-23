@@ -25,6 +25,7 @@ import { useSession } from "next-auth/react";
 import { generateUploadPresignedUrl } from "../actions/generatePresignedUrls";
 import { useAppStore } from "../lib/store/store";
 import { startIngestion } from "../actions/ingestion";
+import { motion } from "motion/react";
 
 // controlled component
 export default function CreateContentModal({ tags }: CreateContentModalProps) {
@@ -215,7 +216,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
   return (
     <div>
       {isModalOpen && (
-        <div className="w-screen h-screen bg-black/40 fixed top-0 left-0 flex justify-center items-center z-110">
+        <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="w-screen h-screen bg-black/40 backdrop-blur-sm fixed top-0 left-0 flex justify-center items-center z-110">
           <div
             ref={containerRef}
             className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]"
@@ -284,7 +285,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
 
             {/* {JSON.stringify(tags)} */}
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

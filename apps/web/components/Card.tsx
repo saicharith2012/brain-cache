@@ -12,6 +12,7 @@ import { deleteContent } from "../actions/content";
 import NoteIcon from "@repo/ui/icons/NoteIcon";
 import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 import { getDocumentPresignedUrl } from "../actions/generatePresignedUrls";
+import {motion} from "motion/react"
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
@@ -65,7 +66,7 @@ export default function Card(props: CardProps) {
   }
 
   return (
-    <div className="break-inside-avoid group relative bg-white rounded-xl border shadow-sm border-gray-100 min-w-80 max-w-80 h-fit mb-3 transition-all duration-300 overflow-hidden">
+    <motion.div className="break-inside-avoid group relative bg-white rounded-xl border shadow-sm border-gray-100 min-w-80 max-w-80 h-fit mb-3 transition-all duration-300 overflow-hidden">
       <div className="">
         {/* embedding a youtube video */}
         {props.type === "youtube" && (
@@ -168,6 +169,6 @@ export default function Card(props: CardProps) {
       >
         <DeleteIcon size="lg" strokeWidth="2" />
       </div>
-    </div>
+    </motion.div>
   );
 }

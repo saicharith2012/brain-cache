@@ -31,17 +31,25 @@ export default function Content({
   }, [isModalOpen]);
 
   return (
-    <div className={`h-full w-full pt-16 ${isSidebarOpen ? "pl-58" : "pl-16"}`}>
+    <div
+      className={`h-full w-full pt-16 ${isSidebarOpen ? "pl-58" : "pl-16"} z-0`}
+      style={{
+        backgroundImage:
+          "radial-gradient(circle at 0.5px 0.5px, #000000 0.5px, transparent 0)",
+        backgroundSize: "8px 8px",
+        backgroundRepeat: "repeat",
+      }}
+    >
       <CreateContentModal tags={tags} />
 
-      <div className={`flex flex-col py-12 sm:p-12`}>
-        <Navbar/>
+      <div className={`relative flex flex-col py-12 sm:p-12 sm:pb-24`}>
+        <Navbar />
         <motion.div
           layout
           className={`sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-3 w-fit [&>div]:w-fit mx-auto`}
         >
           <div
-            className="break-inside-avoid w-80 min-w-80 max-w-80 h-72 p-6 mb-4 flex flex-col shadow-sm hover:shadow-lg transition-all duration-300 border-2 border-gray-300 hover:border-black border-dashed hover:scale-103 rounded-lg cursor-pointer"
+            className="break-inside-avoid w-80 min-w-80 max-w-80 h-72 p-6 mb-4 flex flex-col shadow-sm hover:shadow-lg transition-all duration-300 border-2 border-gray-300 hover:border-black border-dashed hover:scale-103 rounded-lg cursor-pointer bg-white"
             onClick={openModal}
           >
             <div className="opacity-80 my-3">

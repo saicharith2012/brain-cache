@@ -31,21 +31,18 @@ const navItems = [
 ];
 
 const Navbar = () => {
-  const [hovered, setHovered] = useState<string | null>();
   const [current, setCurrent] = useState<string>("all");
   return (
-    <motion.div layout className="w-full pb-12">
+    <motion.div layout className="w-full pb-12 z-100">
       <motion.nav
         layout
-        className="w-fit mx-auto bg-gray-100 rounded-4xl px-2 py-1 flex"
+        className="w-fit mx-auto bg-gray-100 rounded-4xl px-1 py-1 flex z-110"
       >
         {navItems.map((item) => (
           <motion.div
             layout
             key={item.title}
-            onMouseEnter={() => setHovered(item.key)}
-            onMouseLeave={() => setHovered(null)}
-            className="w-full relative group text-center py-2 text-neutral-500 cursor-pointer px-8"
+            className="w-full relative group text-center py-2 text-neutral-500 cursor-pointer px-8 hover:bg-gray-200 rounded-full transition-colors duration-300"
             onClick={() => setCurrent(item.key)}
           >
             <motion.span
@@ -54,12 +51,6 @@ const Navbar = () => {
             >
               {item.title}
             </motion.span>
-            {hovered === item.key && (
-              <motion.div
-                layoutId="hover"
-                className="absolute inset-0 rounded-full w-full h-full bg-gray-200 z-100"
-              ></motion.div>
-            )}
             {current === item.key && (
               <motion.div
                 layoutId="current"

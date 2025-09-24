@@ -1,15 +1,23 @@
 "use client";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import BrainIcon from "@repo/ui/icons/BrainIcon";
 import BotIcon from "@repo/ui/icons/BotIcon";
 import ChevronLeft from "@repo/ui/icons/ChevronLeft";
 import ChevronRight from "@repo/ui/icons/ChevronRight";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useAppStore } from "../lib/store/store";
 
-const sidebarItems: { icon: ReactElement; title: string }[] = [
-  { icon: <BrainIcon size="2xl" strokeWidth="1.5" />, title: "Memories" },
-  { icon: <BotIcon size="2xl" strokeWidth="1.5" />, title: "Chat with brain" },
+const sidebarItems: { icon: ReactElement; key: string; title: string }[] = [
+  {
+    icon: <BotIcon size="2xl" strokeWidth="1.5" />,
+    key: "chat",
+    title: "Chat with brain",
+  },
+  {
+    icon: <BrainIcon size="2xl" strokeWidth="1.5" />,
+    key: "memories",
+    title: "Memories",
+  },
 ];
 
 const sidebarVariant = {
@@ -49,6 +57,7 @@ const sidebarItemsParentVariant = {
 
 export default function Sidebar() {
   const { isSidebarOpen, toggleSidebar } = useAppStore();
+  const [currentTab, setCurrentTab] = useState<string>("chat");
   return (
     <motion.div
       initial={false}
@@ -86,14 +95,15 @@ export default function Sidebar() {
           className="flex flex-col gap-1.5"
         >
           {sidebarItems.map((item, index) => (
-            <div
+            <motion.div
               key={index}
-              className="relative group flex gap-4 items-center rounded-md px-3 py-2 hover:bg-gray-100 focus:bg-gray-200 cursor-pointer transition-all duration-150"
+              className="relative group flex gap-4 items-center rounded-md px-3 py-2 cursor-pointer transition-all duration-300 z-[120] hover:bg-gray-100"
+              onClick={() => setCurrentTab(item.key)}
             >
-              <div className=" text-black">{item.icon}</div>
+              <motion.div className="text-black z-108">{item.icon}</motion.div>
               {!isSidebarOpen && (
                 <div
-                  className="absolute top-[20%] left-[110%] opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap px-2 py-0.5 bg-gray-50 border rounded-lg z-110 pointer-events-none"
+                  className="absolute top-[20%] left-[110%] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap px-2 py-0.5 bg-gray-50 border rounded-lg z-110 pointer-events-none"
                   aria-label="tooltip"
                 >
                   {item.title}
@@ -101,11 +111,19 @@ export default function Sidebar() {
               )}{" "}
               <motion.div
                 variants={sidebarTitleVariants}
-                className="text-black text-base whitespace-nowrap overflow-hidden text-ellipsis"
+                className="text-black text-base whitespace-nowrap overflow-hidden text-ellipsis z-108"
               >
                 {item.title}
               </motion.div>
-            </div>
+              <AnimatePresence>
+                {currentTab === item.key && (
+                  <motion.div
+                    layoutId="sidebar-current"
+                    className="absolute w-full h-full inset-0 bg-gray-200 rounded-lg z-100"
+                  ></motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
         </motion.div>
       </div>

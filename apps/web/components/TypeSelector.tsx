@@ -7,7 +7,7 @@ import NoteIcon from "@repo/ui/icons/NoteIcon";
 import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 
 const TYPES: {
-  type: ContentType;
+  type: string;
   bgColor: string;
   hoverBgColor: string;
   icon: React.ReactElement;

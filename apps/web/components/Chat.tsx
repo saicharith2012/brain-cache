@@ -1,9 +1,27 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "motion/react";
 import { Button } from "@repo/ui/button";
+import { useSession } from "next-auth/react";
+import { queryRetrieval } from "../actions/retrieval";
 
 export default function Chat() {
+  const queryRef = useRef<HTMLTextAreaElement>(null);
+  const { data } = useSession();
+  const userId = data?.user.id;
+
+  const handleClick = async () => {
+    if (!queryRef.current || !userId) {
+      return;
+    }
+    const response = await queryRetrieval({
+      query: queryRef.current?.value,
+      userId,
+    });
+    console.log(response);
+    queryRef.current.value = "";
+  };
+
   return (
     <motion.div
       layout
@@ -17,17 +35,24 @@ export default function Chat() {
         aria-label="chatbox"
       >
         <motion.textarea
+          ref={queryRef}
+          name="query"
           layout
           placeholder="Ask your brain"
           className="w-full min-h-[150px] focus-within:outline-none resize-none"
         />
-        <motion.div layout className="flex justify-end">
-          <Button variant="secondary" size="md" text="search" />
+        <motion.div layout className="flex justify-end gap-2">
+          <Button
+            variant="secondary"
+            size="md"
+            text="search"
+            onClick={() => handleClick()}
+          />
         </motion.div>
       </motion.div>
       <motion.div
         layout
-        className="w-4xl mx-auto flex-1"
+        className="w-4xl max-w-5/6 mx-auto flex-1"
         aria-label="response"
       ></motion.div>
     </motion.div>

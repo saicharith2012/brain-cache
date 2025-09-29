@@ -33,7 +33,8 @@
         "AWS_REGION",
         "AWS_ACCESS_KEY_ID",
         "AWS_SECRET_ACCESS_KEY",
-        "QDRANT_COLLECTION_NAME"
+        "QDRANT_COLLECTION_NAME",
+        "GOOGLE_API_KEY"
       ]
     }
   }

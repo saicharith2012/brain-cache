@@ -71,7 +71,7 @@ export default function Card(props: CardProps) {
         {/* embedding a youtube video */}
         {props.type === "youtube" && (
           <div>
-            <ReactPlayer src={props.link} />
+            <ReactPlayer src={props.link?.replace('youtube', "youtube-nocookie")} />
             <div className="px-3 pt-3">
               <div className="text-base mb-1">
                 {props.title!.charAt(0).toUpperCase() + props.title!.slice(1)}

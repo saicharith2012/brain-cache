@@ -154,7 +154,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             throw new Error((response as ActionError).error);
           }
 
-          const { userId, id, type, createdAt } = (
+          const { userId, id, type, createdAt, title } = (
             response as AddDocumentMemoryResponse
           ).content;
 
@@ -164,6 +164,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             fileType: type,
             filePath: key,
             createdAt,
+            title: title || "",
           });
 
           console.log((response as AddDocumentMemoryResponse).message);
@@ -216,7 +217,11 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
   return (
     <div>
       {isModalOpen && (
-        <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="w-screen h-screen bg-black/40 backdrop-blur-sm fixed top-0 left-0 flex justify-center items-center z-110">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="w-screen h-screen bg-black/40 backdrop-blur-sm fixed top-0 left-0 flex justify-center items-center z-110"
+        >
           <div
             ref={containerRef}
             className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]"

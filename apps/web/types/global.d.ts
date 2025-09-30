@@ -58,6 +58,7 @@ export interface AddDocumentMemoryResponse {
     id: string;
     userId: string;
     createdAt: Date;
+    title: string | null
   };
 }
 

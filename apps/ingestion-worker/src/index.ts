@@ -83,7 +83,7 @@ const ingestionWorker = new Worker(
       },
     }));
 
-    console.log(points[0]);
+    // console.log(points[0]);
 
     await client.upsert(qdrantCollectionName!, {
       wait: true,

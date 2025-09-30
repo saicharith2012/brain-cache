@@ -7,6 +7,7 @@ import { queryRetrieval } from "../actions/retrieval";
 
 export default function Chat() {
   const queryRef = useRef<HTMLTextAreaElement>(null);
+  const responseRef = useRef<HTMLDivElement>(null);
   const { data } = useSession();
   const userId = data?.user.id;
 
@@ -18,8 +19,12 @@ export default function Chat() {
       query: queryRef.current?.value,
       userId,
     });
-    console.log(response);
-    queryRef.current.value = "";
+
+    if (!responseRef.current) {
+      return;
+    }
+
+    responseRef.current.innerText = response || "";
   };
 
   return (
@@ -52,6 +57,7 @@ export default function Chat() {
       </motion.div>
       <motion.div
         layout
+        ref={responseRef}
         className="w-4xl max-w-5/6 mx-auto flex-1"
         aria-label="response"
       ></motion.div>

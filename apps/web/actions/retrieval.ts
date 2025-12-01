@@ -41,44 +41,31 @@ export async function queryRetrieval({
       with_vector: false,
     });
 
-    // console.log(chunks)
-
-    // assembling the prompt
-    // const prompt = `
-    // System: You are a helpful assistant answering based on the provided content.
-    // Context:
-    //        - ${chunks[0]?.payload?.chunkText}
-    //        - ${chunks[1]?.payload?.chunkText}
-    //        - ${chunks[2]?.payload?.chunkText}
-
-    // User query: ${query}
-    // `;
-
     const prompt = `
     System:
     You are Braincache, a personal assistant that helps users recall and summarize their stored memories.
 
     If the context is not relevant or insufficient, respond with something like "I don't find anything based on your saved memories." in your own words.
 
-    Context (from user's stored memories):
-           - ${chunks[0]?.payload?.chunkText}
-           - ${chunks[1]?.payload?.chunkText}
-           - ${chunks[2]?.payload?.chunkText}
+    Context along with sources (from user's stored memories):
+           - {title: ${chunks[0]?.payload?.title}, type: ${chunks[0]?.payload?.type}, content: ${chunks[0]?.payload?.chunkText}}
+           - {title: ${chunks[1]?.payload?.title}, type: ${chunks[1]?.payload?.type}, content: ${chunks[1]?.payload?.chunkText}}
+           - {title: ${chunks[2]?.payload?.title}, type: ${chunks[2]?.payload?.type}, content: ${chunks[2]?.payload?.chunkText}}
 
-    source: {title: ${chunks[0]?.payload?.title}, type: ${chunks[0]?.payload?.type}}
-    
+
     Each chunk includes text extracted from different sources like notes, documents, tweets, web pages, or YouTube transcriptions.
 
     Instructions:
-    - Inform the user about the source in first line.
     - Use the most relevant chunks to answer.
-    - Keep the answer in casual language and concise within 5-6 lines at maximum. Speak like a human.
+    - If multiple sources give different information, present all the info separately with the context they are presented in.
+    - Keep the answer in casual language and concise. Speak like a human.
     - Add some general context outside of memories if the answer feels incomplete.
-    - If multiple sources give different information, present them separately.
     
     User Question:
     ${query}
     `;
+
+    console.log(prompt);
 
     // sending to the LLM and getting response
     const ai = new GoogleGenAI({ apiKey: googleGenaiApiKey });

@@ -1,9 +1,14 @@
 "use server";
 import { TaskType } from "@google/generative-ai";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { googleGenaiApiKey, qdrantCollectionName } from "../config";
+import {
+  embeddingModel,
+  googleGenaiApiKey,
+  qdrantCollectionName,
+} from "../config";
 import { client } from "@repo/qdrantdb/client";
-import { GoogleGenAI } from "@google/genai";
+import { GenerateContentResponse, GoogleGenAI } from "@google/genai";
+import { ActionError } from "../types/global";
 
 export async function queryRetrieval({
   query,
@@ -12,11 +17,11 @@ export async function queryRetrieval({
   query: string;
   userId: string;
   type?: string;
-}) {
+}): Promise<AsyncGenerator<GenerateContentResponse> | ActionError> {
   // query embedding
   try {
     const embeddings = new GoogleGenerativeAIEmbeddings({
-      model: "text-embedding-004",
+      model: embeddingModel,
       taskType: TaskType.RETRIEVAL_QUERY,
       apiKey: googleGenaiApiKey,
     });
@@ -70,17 +75,24 @@ export async function queryRetrieval({
     // sending to the LLM and getting response
     const ai = new GoogleGenAI({ apiKey: googleGenaiApiKey });
 
-    const response = await ai.models.generateContent({
+    const response = await ai.models.generateContentStream({
       model: "gemini-2.5-flash",
       contents: prompt,
     });
 
-    return response.text;
+    return response;
   } catch (error) {
     console.log(
       error instanceof Error
         ? error.message
-        : "Error while searching the vector db."
+        : "Error while searching the brain."
     );
+
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Error while searching the brain.",
+    };
   }
 }

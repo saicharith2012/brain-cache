@@ -3,7 +3,6 @@ import React, { useRef } from "react";
 import { motion } from "motion/react";
 import { Button } from "@repo/ui/button";
 import { useSession } from "next-auth/react";
-import { queryRetrieval } from "../actions/retrieval";
 
 export default function Chat() {
   const queryRef = useRef<HTMLTextAreaElement>(null);
@@ -15,16 +14,28 @@ export default function Chat() {
     if (!queryRef.current || !userId) {
       return;
     }
-    const response = await queryRetrieval({
-      query: queryRef.current?.value,
-      userId,
-    });
-
+    
     if (!responseRef.current) {
       return;
     }
+    responseRef.current.innerText = ""
 
-    responseRef.current.innerText = response || "";
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      body: JSON.stringify({ query: queryRef.current.value, userId }),
+    });
+
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+
+    if (reader) {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        responseRef.current.innerText += decoder.decode(value, {stream: true});
+      }
+    }
   };
 
   return (
@@ -36,7 +47,7 @@ export default function Chat() {
     >
       <motion.div
         layout
-        className="w-4xl max-w-5/6 mx-auto p-2 bg-white rounded-md border border-gray-400"
+        className="w-4xl max-w-5/6 mx-auto p-4 bg-white rounded-2xl border border-gray-400"
         aria-label="chatbox"
       >
         <motion.textarea
@@ -55,10 +66,11 @@ export default function Chat() {
           />
         </motion.div>
       </motion.div>
+      
       <motion.div
         layout
         ref={responseRef}
-        className="w-4xl max-w-5/6 mx-auto flex-1"
+        className="w-4xl max-w-5/6 mx-auto flex-1 px-8 pt-8 bg-gray-50 rounded-2xl"
         aria-label="response"
       ></motion.div>
     </motion.div>

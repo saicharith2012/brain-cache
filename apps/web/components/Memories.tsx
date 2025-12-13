@@ -9,7 +9,7 @@ import { ContentWithTags } from "../types/global";
 export default function Memories({ data }: { data: ContentWithTags[] }) {
   const { openModal } = useAppStore();
   return (
-    <div id="memories" className={`relative flex flex-col py-12 sm:p-12`}>
+    <div id="memories" className={`relative flex flex-col py-12 sm:p-12 min-h-[calc(100vh-64px)]`}>
       <Navbar />
       <motion.div
         layout

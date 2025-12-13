@@ -11,7 +11,10 @@
         "AWS_S3_BUCKET_NAME",
         "AWS_REGION",
         "AWS_ACCESS_KEY_ID",
-        "AWS_SECRET_ACCESS_KEY"
+        "AWS_SECRET_ACCESS_KEY",
+        "QDRANT_COLLECTION_NAME",
+        "GOOGLE_API_KEY",
+        "EMBEDDING_MODEL"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
@@ -34,7 +37,8 @@
         "AWS_ACCESS_KEY_ID",
         "AWS_SECRET_ACCESS_KEY",
         "QDRANT_COLLECTION_NAME",
-        "GOOGLE_API_KEY"
+        "GOOGLE_API_KEY",
+        "EMBEDDING_MODEL"
       ]
     }
   }

@@ -26,3 +26,4 @@ export const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID
 export const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
 export const qdrantCollectionName = process.env.QDRANT_COLLECTION_NAME
 export const googleGenaiApiKey = process.env.GOOGLE_API_KEY
+export const embeddingModel = process.env.EMBEDDING_MODEL

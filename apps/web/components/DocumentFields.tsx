@@ -34,7 +34,7 @@ export default function DocumentFields({
 
           return "No file chosen";
         }}
-        label="Upload file (pdf only)"
+        label="Upload file (pdf under 5MB)"
         maxFileSizeInMB={5}
       />
     </>

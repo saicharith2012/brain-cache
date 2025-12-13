@@ -1,6 +1,6 @@
 import { redisClient } from "@repo/redis/client";
 import { Worker, Job } from "bullmq";
-import { googleGenaiApiKey, qdrantCollectionName } from "./config.js";
+import { embeddingModel, googleGenaiApiKey, qdrantCollectionName } from "./config.js";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
 import { client } from "@repo/qdrantdb/client";
@@ -54,7 +54,7 @@ const ingestionWorker = new Worker(
 
     // creating vector embeddings
     const embeddings = new GoogleGenerativeAIEmbeddings({
-      model: "text-embedding-004",
+      model: embeddingModel,
       taskType: TaskType.RETRIEVAL_DOCUMENT,
       apiKey: googleGenaiApiKey,
     });
@@ -99,7 +99,7 @@ const ingestionWorker = new Worker(
       },
       data: {
         status: "ready",
-        model: "text-embedding-004",
+        model: embeddingModel,
         chunksCount: chunks.length,
       },
     });

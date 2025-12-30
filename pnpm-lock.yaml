@@ -48,7 +48,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/redis
       bullmq:
-        specifier: ^5.58.5
+        specifier: ^5.66.2
         version: 5.66.2
       cheerio:
         specifier: ^1.1.2
@@ -68,9 +68,6 @@ importers:
       youtube-transcript-plus:
         specifier: ^1.1.2
         version: 1.1.2
-      youtubei.js:
-        specifier: ^15.1.1
-        version: 15.1.1
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -127,7 +124,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       bullmq:
-        specifier: ^5.58.5
+        specifier: ^5.66.2
         version: 5.66.2
       jsonwebtoken:
         specifier: ^9.0.2
@@ -290,7 +287,7 @@ importers:
   packages/redis:
     dependencies:
       ioredis:
-        specifier: ^5.7.0
+        specifier: ^5.8.2
         version: 5.8.2
     devDependencies:
       '@repo/typescript-config':
@@ -5009,7 +5006,8 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@bufbuild/protobuf@2.10.2': {}
+  '@bufbuild/protobuf@2.10.2':
+    optional: true
 
   '@cfworker/json-schema@4.1.1': {}
 
@@ -7507,6 +7505,7 @@ snapshots:
   jintr@3.3.1:
     dependencies:
       acorn: 8.15.0
+    optional: true
 
   jiti@2.6.1: {}
 
@@ -8813,6 +8812,7 @@ snapshots:
       '@bufbuild/protobuf': 2.10.2
       jintr: 3.3.1
       undici: 6.22.0
+    optional: true
 
   zod-to-json-schema@3.25.0(zod@3.25.76):
     dependencies:

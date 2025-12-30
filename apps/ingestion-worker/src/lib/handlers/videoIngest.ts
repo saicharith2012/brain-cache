@@ -1,30 +1,25 @@
-import { YoutubeLoader } from "@langchain/community/document_loaders/web/youtube";
 import { textSplitter } from "../textSplitter.js";
+import { fetchTranscript } from "youtube-transcript-plus";
 
 export async function videoIngest(link: string) {
-  const loader = YoutubeLoader.createFromUrl(link, {
-    language: "en",
-    addVideoInfo: true,
-  });
+  const transcriptResponse = await fetchTranscript(link);
 
-  const docs = await loader.load();
+  let transcript = "";
 
-  // console.log(docs)
+  transcriptResponse.forEach((item) => (transcript += " " + item.text));
+
+  let transcriptList: string[] = []
+  transcriptList.push(transcript)
 
   const chunks = await textSplitter.createDocuments(
-    docs.map(
-      (doc) =>
-        doc.pageContent +
-        " - title: " +
-        doc.metadata.title +
-        " by " +
-        doc.metadata.author
-    )
+    transcriptList.map((doc) => doc)
   );
 
   if (!chunks || chunks?.length === 0) {
     throw new Error("no data in memory.");
   }
+
+  console.log(chunks);
 
   const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
 

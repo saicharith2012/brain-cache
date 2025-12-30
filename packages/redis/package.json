@@ -14,7 +14,7 @@
     "@repo/typescript-config": "workspace:*"
   },
   "dependencies": {
-    "ioredis": "^5.7.0"
+    "ioredis": "^5.8.2"
   },
   "exports": {
     "./client": "./src/index.ts"

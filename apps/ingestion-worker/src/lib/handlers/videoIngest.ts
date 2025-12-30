@@ -9,11 +9,24 @@ export async function videoIngest(link: string) {
 
   const docs = await loader.load();
 
-  //   console.log(d
+  // console.log(docs)
 
   const chunks = await textSplitter.createDocuments(
-    docs.map((doc) => doc.pageContent + " - title: " + doc.metadata.title + " by " + doc.metadata.author)
+    docs.map(
+      (doc) =>
+        doc.pageContent +
+        " - title: " +
+        doc.metadata.title +
+        " by " +
+        doc.metadata.author
+    )
   );
 
-  return chunks;
+  if (!chunks || chunks?.length === 0) {
+    throw new Error("no data in memory.");
+  }
+
+  const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
+
+  return textsForEmbeddings;
 }

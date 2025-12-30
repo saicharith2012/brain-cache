@@ -14,5 +14,11 @@ export async function linkIngest(link: string) {
     `${docs[0].pageContent} from source: ${docs[0].metadata.source}`,
   ]);
 
-  return chunks;
+  if (!chunks || chunks?.length === 0) {
+    throw new Error("no data in memory.");
+  }
+
+  const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
+
+  return textsForEmbeddings;
 }

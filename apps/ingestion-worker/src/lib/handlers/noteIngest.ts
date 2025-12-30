@@ -15,6 +15,13 @@ export async function noteIngest(contentId: string) {
   let docs = [];
   docs.push(content?.contentData);
 
-  const chunks = textSplitter.createDocuments(docs);
-  return chunks;
+  const chunks = await textSplitter.createDocuments(docs);
+
+  if (!chunks || chunks?.length === 0) {
+    throw new Error("no data in memory.");
+  }
+
+  const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
+
+  return textsForEmbeddings;
 }

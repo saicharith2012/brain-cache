@@ -51,5 +51,11 @@ export async function pdfIngest(Key: string) {
 
   // console.log(chunks[0]);
 
-  return chunks;
+  if (!chunks || chunks?.length === 0) {
+    throw new Error("no data in memory.");
+  }
+
+  const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
+
+  return textsForEmbeddings;
 }

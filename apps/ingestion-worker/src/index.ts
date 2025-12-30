@@ -1,6 +1,10 @@
 import { redisClient } from "@repo/redis/client";
 import { Worker, Job } from "bullmq";
-import { embeddingModel, googleGenaiApiKey, qdrantCollectionName } from "./config.js";
+import {
+  embeddingModel,
+  googleGenaiApiKey,
+  qdrantCollectionName,
+} from "./config.js";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
 import { client } from "@repo/qdrantdb/client";
@@ -30,27 +34,21 @@ const ingestionWorker = new Worker(
       `Processing job ${job.id} for memory ${JSON.stringify(job.data.contentId)}`
     );
 
-    let chunks;
+    let textsForEmbeddings;
 
     if (job.data.fileType === ContentType.document) {
-      chunks = await pdfIngest(job.data.filePath!);
+      textsForEmbeddings = await pdfIngest(job.data.filePath!);
     } else if (job.data.fileType === ContentType.note) {
-      chunks = await noteIngest(job.data.contentId);
+      textsForEmbeddings = await noteIngest(job.data.contentId);
     } else if (job.data.fileType === ContentType.youtube) {
-      chunks = await videoIngest(job.data.link!);
+      textsForEmbeddings = await videoIngest(job.data.link!);
     } else if (job.data.fileType === ContentType.tweet) {
-      chunks = await tweetIngest(job.data.link!);
+      textsForEmbeddings = await tweetIngest(job.data.link!);
     } else if (job.data.fileType === ContentType.link) {
-      chunks = await linkIngest(job.data.link!);
+      textsForEmbeddings = await linkIngest(job.data.link!);
     } else {
       throw new Error("Invalid file type.");
     }
-
-    if (!chunks || chunks?.length === 0) {
-      throw new Error("no data in memory.");
-    }
-
-    const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
 
     // creating vector embeddings
     const embeddings = new GoogleGenerativeAIEmbeddings({
@@ -71,13 +69,13 @@ const ingestionWorker = new Worker(
 
     console.log("inserting into qdrant db...");
 
-    const points = chunks.map((chunk, index) => ({
+    const points = textsForEmbeddings.map((text, index) => ({
       id: uuid(), // qdrant has a restriction on IDs
       vector: vectors[index]!,
       payload: {
         type: job.data.fileType,
         userId: job.data.userId,
-        chunkText: chunk.pageContent,
+        chunkText: text,
         contentId: job.data.contentId,
         title: job.data.title || "",
       },
@@ -100,7 +98,7 @@ const ingestionWorker = new Worker(
       data: {
         status: "ready",
         model: embeddingModel,
-        chunksCount: chunks.length,
+        chunksCount: textsForEmbeddings.length,
       },
     });
 

@@ -19,5 +19,11 @@ export async function tweetIngest(link: string) {
 
   const chunks = await textSplitter.createDocuments(docs);
 
-  return chunks;
+  if (!chunks || chunks?.length === 0) {
+    throw new Error("no data in memory.");
+  }
+
+  const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
+
+  return textsForEmbeddings;
 }

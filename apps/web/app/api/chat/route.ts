@@ -37,6 +37,8 @@ export async function POST(req: Request) {
       with_vector: false,
     });
 
+    // console.log(chunks[0])
+
     const prompt = `
                 System:
                 You are Braincache, a personal assistant that helps users recall and summarize their stored memories.
@@ -52,10 +54,9 @@ export async function POST(req: Request) {
                 Each chunk includes text extracted from different sources like notes, documents, tweets, web pages, or YouTube transcriptions.
             
                 Instructions:
-                - Use the most relevant chunks to answer.
+                - Use the most relevant chunks to answer and mention the source at the start.
                 - If multiple sources give different information, present all the info separately with the context they are presented in.
-                - Keep the answer in casual language, with plain text format like in a chat and concise with 8-10 lines at maximum. Speak like a human.
-                - Add some general context outside of memories if the answer feels incomplete.
+                - Keep the answer in casual language, concise with 8-10 lines at maximum. Speak like a human.
                 
                 User Question:
                 ${query}
@@ -66,7 +67,7 @@ export async function POST(req: Request) {
     // sending to the LLM and getting response
     const ai = new GoogleGenAI({ apiKey: googleGenaiApiKey });
 
-    console.log("Streaming the response...");
+    // console.log("Streaming the response...");
 
     const encoder = new TextEncoder();
 

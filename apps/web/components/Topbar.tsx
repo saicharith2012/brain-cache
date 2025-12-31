@@ -23,7 +23,7 @@ export default function Topbar() {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 max-h-16 flex justify-between px-4 py-3 [&_button]:font-medium bg-white z-101 border-b-1 border-b-gray-100 shadow-inner box-border">
+    <div className="fixed top-0 left-0 right-0 max-h-16 flex justify-between px-4 py-3 [&_button]:font-medium bg-white z-101 border-b border-b-gray-100 shadow-inner box-border">
       <Logo size="md" />
       <div className="flex gap-4">
         <Button

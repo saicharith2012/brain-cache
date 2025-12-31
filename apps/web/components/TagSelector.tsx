@@ -155,7 +155,7 @@ export default function TagSelector({
           />
 
           {isDropDownOpen && (
-            <div className="absolute top-[38px] w-full flex flex-col max-h-[176px] overflow-y-auto bg-white border border-black/50 z-10">
+            <div className="absolute top-9.5 w-full flex flex-col max-h-44 overflow-y-auto bg-white border border-black/50 z-10">
               {/* Create New Tag Option */}
               {inputValue.trim() !== "" &&
                 !tags.some(

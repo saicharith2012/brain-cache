@@ -141,7 +141,7 @@ export default function Sidebar() {
                 onClick={(e) => onHandleClick(e, item.id)}
               >
                 <motion.div
-                  className="relative group flex gap-4 items-center rounded-md px-3 py-2 cursor-pointer transition-all duration-300 z-[120] hover:bg-gray-100"
+                  className="relative group flex gap-4 items-center rounded-md px-3 py-2 cursor-pointer transition-all duration-300 z-120 hover:bg-gray-100"
                   onClick={() => setCurrentTab(item.id)}
                 >
                   <motion.div className="text-black z-108">

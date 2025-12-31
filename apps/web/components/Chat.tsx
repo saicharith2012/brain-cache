@@ -14,11 +14,11 @@ export default function Chat() {
     if (!queryRef.current || !userId) {
       return;
     }
-    
+
     if (!responseRef.current) {
       return;
     }
-    responseRef.current.innerText = ""
+    responseRef.current.innerText = "";
 
     const response = await fetch("/api/chat", {
       method: "POST",
@@ -33,7 +33,9 @@ export default function Chat() {
         const { value, done } = await reader.read();
         if (done) break;
 
-        responseRef.current.innerText += decoder.decode(value, {stream: true});
+        responseRef.current.innerText += decoder.decode(value, {
+          stream: true,
+        });
       }
     }
   };
@@ -55,7 +57,7 @@ export default function Chat() {
           name="query"
           layout
           placeholder="Ask your brain"
-          className="w-full min-h-[150px] focus-within:outline-none resize-none"
+          className="w-full min-h-37.5 focus-within:outline-none resize-none"
         />
         <motion.div layout className="flex justify-end gap-2">
           <Button
@@ -66,7 +68,7 @@ export default function Chat() {
           />
         </motion.div>
       </motion.div>
-      
+
       <motion.div
         layout
         ref={responseRef}

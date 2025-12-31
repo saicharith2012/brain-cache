@@ -64,7 +64,7 @@ export default function SigninForm() {
   return (
     <div>
       <div className="text-3xl font-bold mb-6 text-center">Welcome.</div>
-      <div className="h-[420px]">
+      <div className="h-105">
         <Button
           onClick={() => {
             startGoogleSigninTransition(async () => {

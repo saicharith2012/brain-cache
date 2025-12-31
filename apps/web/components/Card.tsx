@@ -1,5 +1,9 @@
 "use client";
-import { ActionError, CardProps, GetDocumentPresignedUrlResponse } from "../types/global";
+import {
+  ActionError,
+  CardProps,
+  GetDocumentPresignedUrlResponse,
+} from "../types/global";
 import { TAG_COLOR_PALETTE } from "../lib/constants/colors";
 import DeleteIcon from "@repo/ui/icons/DeleteIcon";
 import WebIcon from "@repo/ui/icons/WebIcon";
@@ -12,7 +16,7 @@ import { deleteContent } from "../actions/content";
 import NoteIcon from "@repo/ui/icons/NoteIcon";
 import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 import { getDocumentPresignedUrl } from "../actions/generatePresignedUrls";
-import {motion} from "motion/react"
+import { motion } from "motion/react";
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
@@ -71,7 +75,9 @@ export default function Card(props: CardProps) {
         {/* embedding a youtube video */}
         {props.type === "youtube" && (
           <div>
-            <ReactPlayer src={props.link?.replace('youtube', "youtube-nocookie")} />
+            <ReactPlayer
+              src={props.link?.replace("youtube", "youtube-nocookie")}
+            />
             <div className="px-3 pt-3">
               <div className="text-base mb-1">
                 {props.title!.charAt(0).toUpperCase() + props.title!.slice(1)}
@@ -82,7 +88,7 @@ export default function Card(props: CardProps) {
 
         {/* embedding a tweet */}
         {props.type === "tweet" && (
-          <div className="light [&>div]:!m-0 [&>div]:!border-0 [&>div]:!rounded-none [&>div]:hover:!bg-white [&>div]:hover:!cursor-pointer [&>div>article]:!px-3 [&>div>article]:!pt-3 [&>div>article]:!pb-1 ">
+          <div className="light [&>div]:m-0! [&>div]:border-0! [&>div]:rounded-none! [&>div]:hover:bg-white! [&>div]:hover:cursor-pointer! [&>div>article]:px-3! [&>div>article]:pt-3! [&>div>article]:pb-1! ">
             <Tweet
               id={props.link!.split("/")[props.link!.split("/").length - 1]}
               apiUrl=""
@@ -93,7 +99,7 @@ export default function Card(props: CardProps) {
         {/* embedding a link */}
         {props.type === "link" && (
           <a href={props.link}>
-            <div className={`relative w-full h-[160px]`}>
+            <div className={`relative w-full h-40`}>
               <Image
                 src={imageUrl}
                 alt="url image"
@@ -132,7 +138,7 @@ export default function Card(props: CardProps) {
         {/* embedding a document */}
         {props.type === "document" && (
           <div>
-            <div className="relative h-[160px] w-full bg-gray-50 flex items-center justify-center">
+            <div className="relative h-40 w-full bg-gray-50 flex items-center justify-center">
               <div className="absolute top-2 right-2 flex items-center px-2 py-1 gap-1 bg-gray-100 rounded-full z-100 cursor-default">
                 <DocumentIcon size="lg" strokeWidth="1.5" />
                 <div>Doc</div>

@@ -224,7 +224,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
         >
           <div
             ref={containerRef}
-            className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-[400px]"
+            className=" bg-white rounded-lg p-4 flex flex-col items-center shadow-sm w-100"
           >
             <div className="flex justify-end w-full mb-4">
               <div

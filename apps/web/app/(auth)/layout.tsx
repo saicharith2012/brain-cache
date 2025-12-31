@@ -17,7 +17,7 @@ export default async function AuthLayout({
   return (
     <div className="relative w-screen h-screen flex justify-center items-center">
       <Logo size="lg" className="absolute top-12" />
-      <div className="w-[400px] border border-gray-50 p-8 rounded-xl shadow box-border">
+      <div className="w-100 border border-gray-50 p-8 rounded-xl shadow box-border">
         {children}
       </div>
     </div>

@@ -68,7 +68,7 @@ export default function SignupForm() {
         Create your account.
       </div>
 
-      <div className="h-[620px]">
+      <div className="h-155">
         <Button
           onClick={() => {
             startGoogleSigninTransition(async () => {

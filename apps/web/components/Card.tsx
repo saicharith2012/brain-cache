@@ -17,6 +17,7 @@ import NoteIcon from "@repo/ui/icons/NoteIcon";
 import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 import { getDocumentPresignedUrl } from "../actions/generatePresignedUrls";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
@@ -44,10 +45,12 @@ export default function Card(props: CardProps) {
       }
 
       console.log(response);
+      toast.success("Deleted memory successfully.");
     } catch (error) {
       console.error(
         error instanceof Error ? error.message : "Internal Server Error"
       );
+      toast.error("Failed to delete memory.");
     }
   }
 

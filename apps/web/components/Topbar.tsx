@@ -8,6 +8,7 @@ import { useTransition } from "react";
 import Logo from "./Logo";
 import PlusIcon from "@repo/ui/icons/PlusIcon";
 import { useAppStore } from "../lib/store/store";
+import { toast } from "sonner";
 
 export default function Topbar() {
   const router = useRouter();
@@ -19,11 +20,12 @@ export default function Topbar() {
     startTransition(async () => {
       await signOut();
       router.push("/signin");
+      toast.success("Signed out.")
     });
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 max-h-16 flex justify-between px-4 py-3 [&_button]:font-medium bg-white z-101 border-b border-b-gray-100 shadow-inner box-border">
+    <div className="fixed top-0 left-0 right-0 max-h-16 flex justify-between px-4 py-3 [&_button]:font-medium bg-white z-101 border-b border-b-gray-100 shadow-inner box-border overflow-x-hidden">
       <Logo size="md" />
       <div className="flex gap-4">
         <Button

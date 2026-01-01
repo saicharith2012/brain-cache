@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import "./globals.css";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ClientSessionProvider } from "./providers/ClientSessionProvider";
+import { Toaster } from "./components/ui/sonner";
 
 export default async function RootLayout({
   children,
@@ -15,6 +16,7 @@ export default async function RootLayout({
         <ClientSessionProvider session={session!}>
           {children}
         </ClientSessionProvider>
+        <Toaster />
       </body>
     </html>
   );

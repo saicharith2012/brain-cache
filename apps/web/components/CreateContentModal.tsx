@@ -26,6 +26,7 @@ import { generateUploadPresignedUrl } from "../actions/generatePresignedUrls";
 import { useAppStore } from "../lib/store/store";
 import { startIngestion } from "../actions/ingestion";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 // controlled component
 export default function CreateContentModal({ tags }: CreateContentModalProps) {
@@ -171,12 +172,14 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
         }
         reset();
         closeModal();
+        toast.success("Added memory successfully.")
       } catch (error) {
         console.error(
           error instanceof Error
-            ? error.message
-            : "Error while uploading content."
+          ? error.message
+          : "Error while uploading content."
         );
+        toast.error("Failed to add memory.")
       }
     });
   };

@@ -1,5 +1,14 @@
 import { z } from "zod";
-import { ContentType } from "@repo/db/client";
+
+export const ContentType  = {
+    document: "document",
+    tweet: "tweet",
+    youtube: "youtube",
+    link: "link",
+    note: "note",
+} as const
+
+export type ContentType = (typeof ContentType)[keyof typeof ContentType]
 
 // auth schemas
 export const signUpSchema = z.object({
@@ -128,3 +137,16 @@ export const fileSchema = z.object({
 });
 
 export type FileSchema = z.infer<typeof fileSchema>;
+
+
+// RAG system
+// ingestion job payload structure
+export interface IngestionJobPayload {
+  userId: string;
+  contentId: string;
+  filePath?: string;
+  fileType: ContentType
+  createdAt: Date;
+  title?: string;
+  link?: string;
+}

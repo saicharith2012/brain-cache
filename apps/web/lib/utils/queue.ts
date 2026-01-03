@@ -1,21 +1,10 @@
 import { Queue } from "bullmq";
 import { redisClient } from "@repo/redis/client";
-import { ContentType } from "@repo/db/client";
+import { IngestionJobPayload } from "@repo/common/config";
 
 const ingestionQueue = new Queue("ingestion-queue", {
   connection: redisClient,
 });
-
-// ingestion job payload structure
-export interface IngestionJobPayload {
-  userId: string;
-  contentId: string;
-  filePath?: string;
-  fileType: typeof ContentType;
-  createdAt: Date;
-  title?: string;
-  link?: string;
-}
 
 export async function addIngestionJob({
   userId,

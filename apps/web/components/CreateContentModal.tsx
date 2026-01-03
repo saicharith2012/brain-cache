@@ -13,7 +13,7 @@ import CrossIcon from "@repo/ui/icons/CrossIcon";
 import { ContentFormData, contentSchema } from "@repo/common/config";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TypeSelector from "./TypeSelector";
-import { ContentType } from "@repo/db/client";
+import { ContentType } from "@repo/common/config";
 import CommonFields from "./CommonFields";
 import NoteFields from "./NoteFields";
 import DocumentFields from "./DocumentFields";

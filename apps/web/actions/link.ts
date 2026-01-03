@@ -1,5 +1,6 @@
-import prisma, { Content } from "@repo/db/client";
+import prisma from "@repo/db/client";
 import random from "../lib/utils/random";
+import { ContentWithTags } from "types/global";
 
 export async function createLink(share: boolean, userId: string) {
   try {
@@ -51,7 +52,7 @@ export async function createLink(share: boolean, userId: string) {
 export async function shareLink(hash: string): Promise<
   | {
       success: true;
-      content: (Content & { contentTags: { tag: { title: string } }[] })[];
+      contents: ContentWithTags[]
       username: string;
     }
   | { error: string }
@@ -77,29 +78,39 @@ export async function shareLink(hash: string): Promise<
       throw new Error("User not found.");
     }
 
-    const content = await prisma.content.findMany({
+    const contents = await prisma.content.findMany({
       where: {
         userId: user.id,
       },
-
       include: {
         contentTags: {
           select: {
             tag: {
-              select: { title: true },
+              select: {
+                title: true,
+                color: true,
+              },
             },
           },
         },
+        note: {
+          select: {
+            contentData: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
-    if (!content) {
+    if (!contents) {
       throw new Error("Error while fetching content.");
     }
 
     return {
       success: true,
-      content,
+      contents,
       username: user.username || "null",
     };
   } catch (error) {

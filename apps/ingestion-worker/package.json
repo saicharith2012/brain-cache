@@ -26,6 +26,7 @@
     "@repo/db": "workspace:*",
     "@repo/qdrantdb": "workspace:*",
     "@repo/redis": "workspace:*",
+    "@repo/common": "workspace:*",
     "bullmq": "^5.66.2",
     "cheerio": "^1.1.2",
     "dotenv": "^17.2.2",

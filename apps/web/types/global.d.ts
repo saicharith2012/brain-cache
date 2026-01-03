@@ -1,4 +1,4 @@
-import { ContentType } from "@repo/db/client";
+import type { ContentType} from "@repo/common/config";
 
 // interfaces for component props
 export interface CardProps {

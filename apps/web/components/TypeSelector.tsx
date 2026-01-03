@@ -1,4 +1,4 @@
-import { ContentType } from "@repo/db/client";
+import { ContentType } from "@repo/common/config";
 import { TypeSelectorProps } from "../types/global";
 import YoutubeIcon from "@repo/ui/icons/YoutubeIcon";
 import TwitterIcon from "@repo/ui/icons/TwitterIcon";
@@ -6,13 +6,13 @@ import WebIcon from "@repo/ui/icons/WebIcon";
 import NoteIcon from "@repo/ui/icons/NoteIcon";
 import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 
-const TYPES: {
-  type: string;
+const TYPES: Array<{
+  type: ContentType;
   bgColor: string;
   hoverBgColor: string;
   icon: React.ReactElement;
   iconColor: string;
-}[] = [
+}> = [
   {
     type: ContentType.youtube,
     bgColor: "bg-indianred-200",

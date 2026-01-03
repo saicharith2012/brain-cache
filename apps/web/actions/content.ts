@@ -7,7 +7,8 @@ import {
   VideoTweetLinkData,
   videoTweetLinkSchema,
 } from "@repo/common/config";
-import prisma, { ContentType } from "@repo/db/client";
+import { ContentType } from "@repo/common/config";
+import prisma from "@repo/db/client";
 import {
   ActionError,
   AddDocumentMemoryResponse,

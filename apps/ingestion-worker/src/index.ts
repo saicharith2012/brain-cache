@@ -13,19 +13,11 @@ import { v4 as uuid } from "uuid";
 import { pdfIngest } from "./lib/handlers/pdfIngest.js";
 import { noteIngest } from "./lib/handlers/noteIngest.js";
 import { videoIngest } from "./lib/handlers/videoIngest.js";
-import { ContentType } from "@repo/db/client";
+import { ContentType, IngestionJobPayload } from "@repo/common/config";
 import { tweetIngest } from "./lib/handlers/tweetIngest.js";
 import { linkIngest } from "./lib/handlers/linkIngest.js";
 
-export interface IngestionJobPayload {
-  userId: string;
-  contentId: string;
-  filePath?: string;
-  fileType: string;
-  createdAt: Date;
-  title?: string;
-  link?: string;
-}
+
 
 const ingestionWorker = new Worker(
   "ingestion-queue",

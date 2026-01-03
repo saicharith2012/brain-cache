@@ -1,37 +1,13 @@
 // to navigate different types of memories in the dashboard
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "motion/react";
-
-const navItems = [
-  {
-    title: "All Memories",
-    key: "all",
-  },
-  {
-    title: "Videos",
-    key: "videos",
-  },
-  {
-    title: "Tweets",
-    key: "tweets",
-  },
-  {
-    title: "Web pages",
-    key: "pages",
-  },
-  {
-    title: "Notes",
-    key: "notes",
-  },
-  {
-    title: "Documents",
-    key: "documents",
-  },
-];
+import { navItems } from "lib/constants/navBarItems";
+import { useAppStore } from "lib/store/store";
 
 const Navbar = () => {
-  const [current, setCurrent] = useState<string>("all");
+  const { memoryTypeSelectedView, setMemoryType } = useAppStore();
+  // console.log(memoryTypeSelectedView);
   return (
     <motion.div layout className="w-full pb-12 z-100">
       <motion.nav
@@ -43,7 +19,7 @@ const Navbar = () => {
             layout
             key={item.title}
             className="w-full relative group text-center py-2 text-neutral-500 cursor-pointer px-8 hover:bg-gray-200 rounded-full transition-colors duration-300"
-            onClick={() => setCurrent(item.key)}
+            onClick={() => setMemoryType(item.key)}
           >
             <motion.span
               layout
@@ -51,7 +27,7 @@ const Navbar = () => {
             >
               {item.title}
             </motion.span>
-            {current === item.key && (
+            {memoryTypeSelectedView === item.key && (
               <motion.div
                 layoutId="current"
                 className="absolute inset-0 rounded-full w-full h-full bg-gray-300 z-105"

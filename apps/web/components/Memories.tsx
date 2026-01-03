@@ -1,15 +1,45 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { motion } from "motion/react";
 import { useAppStore } from "../lib/store/store";
 import PlusIcon from "@repo/ui/icons/PlusIcon";
 import Card from "./Card";
 import { ContentWithTags } from "../types/global";
+import { ContentType } from "@repo/common/config";
+import { MemoryViews } from "lib/constants/navBarItems";
 
 export default function Memories({ data }: { data: ContentWithTags[] }) {
-  const { openModal } = useAppStore();
+  const { openModal, memoryTypeSelectedView } = useAppStore();
+  const [memories, setMemories] = useState<ContentWithTags[]>([]);
+
+  useEffect(() => {
+    let memories;
+    if (memoryTypeSelectedView === MemoryViews.ALL) {
+      setMemories(data);
+    } else if (memoryTypeSelectedView === MemoryViews.VIDEOS) {
+      memories = data.filter((item) => item.type === ContentType.youtube);
+      setMemories(memories);
+    } else if (memoryTypeSelectedView === MemoryViews.TWEETS) {
+      memories = data.filter((item) => item.type === ContentType.tweet);
+      setMemories(memories);
+    } else if (memoryTypeSelectedView === MemoryViews.PAGES) {
+      memories = data.filter((item) => item.type === ContentType.link);
+      setMemories(memories);
+    } else if (memoryTypeSelectedView === MemoryViews.NOTES) {
+      memories = data.filter((item) => item.type === ContentType.note);
+      setMemories(memories);
+    } else if (memoryTypeSelectedView === MemoryViews.DOCUMENTS) {
+      memories = data.filter((item) => item.type === ContentType.document);
+      setMemories(memories);
+    }
+  }, [memoryTypeSelectedView, data]);
+
   return (
-    <div id="memories" className={`relative flex flex-col py-12 sm:p-12 min-h-[calc(100vh-64px)]`}>
+    <div
+      id="memories"
+      className={`relative flex flex-col py-12 sm:p-12 min-h-[calc(100vh-64px)]`}
+    >
       <Navbar />
       <motion.div
         layout
@@ -28,15 +58,15 @@ export default function Memories({ data }: { data: ContentWithTags[] }) {
         </div>
 
         <motion.div layout>
-          {data.map((item) => (
-            <motion.div layout key={item.id}>
+          {memories.map((memory) => (
+            <motion.div layout key={memory.id}>
               <Card
-                id={item.id}
-                title={item.title || ""}
-                link={item.link || ""}
-                type={item.type}
-                tags={item.contentTags}
-                note={item.note?.contentData}
+                id={memory.id}
+                title={memory.title || ""}
+                link={memory.link || ""}
+                type={memory.type}
+                tags={memory.contentTags}
+                note={memory.note?.contentData}
               />
             </motion.div>
           ))}

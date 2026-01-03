@@ -14,11 +14,17 @@
   "type": "module",
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.15.30"
+    "@types/node": "^22.15.30",
+    "@types/pg": "^8.16.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.10.1",
-    "prisma": "^6.10.1"
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "@prisma/client-runtime-utils": "^7.2.0",
+    "@prisma/config": "^7.2.0",
+    "dotenv": "^17.2.3",
+    "pg": "^8.16.3",
+    "prisma": "^7.2.0"
   },
   "exports": {
     "./client": "./src/index.ts"

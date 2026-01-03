@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum ContentType {
@@ -58,7 +57,7 @@ model Account {
 
 model Tag {
   id          String       @id @default(uuid())
-  title       String       
+  title       String
   contentTags ContentTag[]
   color       String       @default("amber")
   userId      String
@@ -123,7 +122,7 @@ model ContentEmbedding {
   content      Content         @relation(fields: [contentId], references: [id], onDelete: Cascade)
   status       EmbeddingStatus @default(pending)
   model        String?
-  chunksCount  Int?             @default(0)
+  chunksCount  Int?            @default(0)
   lastIndexAt  DateTime?
   errorMessage String?
   createdAt    DateTime        @default(now())

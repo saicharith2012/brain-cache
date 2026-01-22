@@ -27,7 +27,6 @@ model User {
   email         String    @unique
   username      String?   @unique
   password      String?
-  links         Link[]
   contents      Content[]
   accounts      Account[] // Added relation field for Account
   name          String?
@@ -64,13 +63,6 @@ model Tag {
   user        User         @relation(fields: [userId], references: [id])
 
   @@unique([title, userId])
-}
-
-model Link {
-  id     String @id @default(uuid())
-  hash   String @unique
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Content {

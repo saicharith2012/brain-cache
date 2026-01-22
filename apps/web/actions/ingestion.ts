@@ -1,8 +1,9 @@
 "use server";
 import { qdrantCollectionName } from "../config";
-import { addIngestionJob, IngestionJobPayload } from "../lib/utils/queue";
+import { addIngestionJob } from "../lib/utils/queue";
 import { client } from "@repo/qdrantdb/client";
 import { ActionError } from "../types/global";
+import { IngestionJobPayload } from "@repo/common/config";
 
 export async function startIngestion(memoryData: IngestionJobPayload) {
   await addIngestionJob(memoryData);

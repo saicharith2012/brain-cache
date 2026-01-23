@@ -14,22 +14,23 @@ import {
   AddDocumentMemoryResponse,
   AddNoteMemoryResponse,
   AddVideoTweetLinkMemoryResponse,
-  GetAllDocumentsResponse,
+  DeleteMemoryResponse,
+  GetAllMemoriesResponse,
   GetAllTagsResponse,
 } from "../types/global";
 import getTagColor from "../lib/utils/getTagColor";
 import { deleteDocumentFromS3 } from "./generatePresignedUrls";
 import { deleteEmbeddings } from "./ingestion";
 
-export async function addVideoTweetLink(
+export async function addVideoTweetLinkMemory(
   data: VideoTweetLinkData,
-  userId: string
-): Promise<AddVideoTweetLinkMemoryResponse | ActionError> {
+  userId: string,
+): Promise<AddVideoTweetLinkMemoryResponse> {
   try {
     const parsedData = videoTweetLinkSchema.safeParse(data);
 
     if (!parsedData.success) {
-      return { error: parsedData.error.issues[0]?.message || "" };
+      throw new Error(parsedData.error.issues[0]?.message);
     }
 
     const { link, type, title, tags } = parsedData.data;
@@ -37,7 +38,7 @@ export async function addVideoTweetLink(
     const finalTags = await tagCreation(tags, userId);
 
     // create the content along with entries in the ContentTag table
-    const content = await prisma.content.create({
+    const memory = await prisma.content.create({
       data: {
         title,
         link,
@@ -56,35 +57,36 @@ export async function addVideoTweetLink(
       },
     });
 
-    if (!content) {
+    if (!memory) {
       throw new Error("Error while creating a new document.");
     }
 
     // return response
-    return { success: true, message: "Document successfully added.", content };
+    return { success: true, message: "Document successfully added.", memory };
   } catch (error) {
     return {
+      success: false,
       error: `${error instanceof Error ? error.message : "Error while creating a new document"}`,
     };
   }
 }
 
-export async function addNote(
+export async function addNoteMemory(
   data: NoteSchema,
-  userId: string
-): Promise<AddNoteMemoryResponse | ActionError> {
+  userId: string,
+): Promise<AddNoteMemoryResponse> {
   try {
     const parsedData = noteSchema.safeParse(data);
 
     if (!parsedData.success) {
-      return { error: parsedData.error.issues[0]?.message || "" };
+      throw new Error(parsedData.error.issues[0]?.message);
     }
 
     const { content, type, tags } = parsedData.data;
 
     const finalTags = await tagCreation(tags, userId);
 
-    const noteMemory = await prisma.content.create({
+    const memory = await prisma.content.create({
       data: {
         type,
         userId,
@@ -106,17 +108,18 @@ export async function addNote(
       },
     });
 
-    if (!noteMemory) {
+    if (!memory) {
       throw new Error("Error while creating a new note.");
     }
 
     return {
       success: true,
       message: "Document successfully added.",
-      noteMemory,
+      memory,
     };
   } catch (error) {
     return {
+      success: false,
       error:
         error instanceof Error
           ? error.message
@@ -125,23 +128,23 @@ export async function addNote(
   }
 }
 
-export async function addDocument(
+export async function addDocumentMemory(
   data: DocMetadataSchema,
   userId: string,
-  key: string
-): Promise<AddDocumentMemoryResponse | ActionError> {
+  key: string,
+): Promise<AddDocumentMemoryResponse> {
   try {
     const parsedData = docMetadataSchema.safeParse(data);
 
     if (!parsedData.success) {
-      return { error: parsedData.error.issues[0]?.message || "" };
+      throw new Error(parsedData.error.issues[0]?.message);
     }
 
     const { type, fileType, title, tags } = parsedData.data;
 
     const finalTags = await tagCreation(tags, userId);
 
-    const content = await prisma.content.create({
+    const memory = await prisma.content.create({
       data: {
         type,
         title,
@@ -165,17 +168,18 @@ export async function addDocument(
       },
     });
 
-    if (!content) {
+    if (!memory) {
       throw new Error("Error while saving document metadata to the db.");
     }
 
     return {
       success: true,
       message: "Added the document successfully.",
-      content,
+      memory,
     };
   } catch (error) {
     return {
+      success: false,
       error:
         error instanceof Error
           ? error.message
@@ -198,7 +202,7 @@ async function tagCreation(tags: string[], userId: string) {
 
   // create the missing ones
   const missingTagNames = tags?.filter(
-    (tagName) => !existingTagNames.has(tagName)
+    (tagName) => !existingTagNames.has(tagName),
   );
 
   await prisma.tag.createMany({
@@ -221,11 +225,11 @@ async function tagCreation(tags: string[], userId: string) {
   return finalTags;
 }
 
-export async function getAllContents(
-  userId: string
-): Promise<GetAllDocumentsResponse | ActionError> {
+export async function getAllMemories(
+  userId: string,
+): Promise<GetAllMemoriesResponse> {
   try {
-    const contents = await prisma.content.findMany({
+    const memories = await prisma.content.findMany({
       where: {
         userId,
       },
@@ -251,25 +255,24 @@ export async function getAllContents(
       },
     });
 
-    if (!contents) {
-      throw new Error("Error while fetching documents.");
+    if (!memories) {
+      throw new Error("Error while fetching memories.");
     }
 
     return {
       success: true,
-      message: "all documents successfully fetched.",
-      contents,
+      message: "all memories successfully fetched.",
+      memories,
     };
   } catch (error) {
     return {
-      error: `${error instanceof Error ? error.message : "Error while fetching documents."}`,
+      success: false,
+      error: `${error instanceof Error ? error.message : "Error while fetching memories."}`,
     };
   }
 }
 
-export async function getAllTags(
-  userId: string
-): Promise<GetAllTagsResponse | ActionError> {
+export async function getAllTags(userId: string): Promise<GetAllTagsResponse> {
   try {
     const tags = await prisma.tag.findMany({
       where: {
@@ -289,13 +292,16 @@ export async function getAllTags(
     };
   } catch (error) {
     return {
+      success: false,
       error:
         error instanceof Error ? error.message : "Error while fetching tags.",
     };
   }
 }
 
-export async function deleteContent(memoryId: string) {
+export async function deleteMemory(
+  memoryId: string,
+): Promise<DeleteMemoryResponse> {
   try {
     const memory = await prisma.content.findUnique({
       where: {
@@ -330,9 +336,10 @@ export async function deleteContent(memoryId: string) {
       },
     });
 
-    return { success: true, message: "Document successfully deleted." };
+    return { success: true, message: "Deleted memory successfully." };
   } catch (error) {
     return {
+      success: false,
       error: `${error instanceof Error ? error.message : "Error while deleting document."}`,
     };
   }

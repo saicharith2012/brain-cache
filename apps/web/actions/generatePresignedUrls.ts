@@ -32,7 +32,7 @@ const s3Client = new S3Client({
 
 export async function generateUploadPresignedUrl(
   input: FileSchema
-): Promise<GenerateUploadPresignedUrlResponse | ActionError> {
+): Promise<GenerateUploadPresignedUrlResponse> {
   try {
     const parsedData = fileSchema.parse(input);
 
@@ -46,9 +46,10 @@ export async function generateUploadPresignedUrl(
 
     const url = await getSignedUrl(s3Client, command, { expiresIn: 60 });
 
-    return { uploadUrl: url, key };
+    return {success: true, uploadUrl: url, key };
   } catch (error) {
     return {
+      success: false,
       error:
         error instanceof Error
           ? error.message
@@ -88,6 +89,7 @@ export async function getDocumentPresignedUrl(
     return { url };
   } catch (error) {
     return {
+      success: false,
       error:
         error instanceof Error
           ? error.message
@@ -110,6 +112,7 @@ export async function deleteDocumentFromS3(
     return { message: "deleted from s3 successfully." };
   } catch (error) {
     return {
+      success: false,
       error:
         error instanceof Error
           ? error.message

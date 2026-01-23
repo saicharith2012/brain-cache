@@ -1,14 +1,6 @@
 "use client";
 
 import { FormProvider, useForm } from "react-hook-form";
-import {
-  ActionError,
-  AddDocumentMemoryResponse,
-  AddNoteMemoryResponse,
-  AddVideoTweetLinkMemoryResponse,
-  CreateContentModalProps,
-  GenerateUploadPresignedUrlResponse,
-} from "../types/global";
 import CrossIcon from "@repo/ui/icons/CrossIcon";
 import { ContentFormData, contentSchema } from "@repo/common/config";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,21 +12,31 @@ import DocumentFields from "./DocumentFields";
 import { Button } from "@repo/ui/button";
 import TagSelector from "./TagSelector";
 import { useEffect, useRef, useTransition } from "react";
-import { addDocument, addNote, addVideoTweetLink } from "../actions/content";
 import { useSession } from "next-auth/react";
 import { generateUploadPresignedUrl } from "../actions/generatePresignedUrls";
 import { useAppStore } from "../lib/store/store";
 import { startIngestion } from "../actions/ingestion";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { useTags } from "hooks/useTags";
+import {
+  useCreateDocumentMemory,
+  useCreateNoteMemory,
+  useCreateVTKMemory,
+} from "hooks/useCreateMemory";
 
 // controlled component
-export default function CreateContentModal({ tags }: CreateContentModalProps) {
+export default function CreateContentModal() {
   const session = useSession();
   const form = useForm<ContentFormData>({
     resolver: zodResolver(contentSchema),
     defaultValues: { type: "youtube" },
   });
+
+  const { data: tags } = useTags(session.data?.user.id || "");
+  const { mutateAsync: createVTKMemory } = useCreateVTKMemory();
+  const { mutateAsync: createNoteMemory } = useCreateNoteMemory();
+  const { mutateAsync: createDocumentMemory } = useCreateDocumentMemory();
 
   const { isModalOpen, closeModal } = useAppStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,24 +62,19 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
           return;
         }
         // console.log(data);
+        const userId = session.data?.user.id;
 
         if (
           data.type === "youtube" ||
           data.type === "tweet" ||
           data.type === "link"
         ) {
-          const addVideoTweetLinkResponse = await addVideoTweetLink(
+          const addVTKResponse = await createVTKMemory({
             data,
-            session.data?.user.id
-          );
+            userId,
+          });
 
-          if ((addVideoTweetLinkResponse as ActionError)?.error) {
-            throw new Error((addVideoTweetLinkResponse as ActionError).error);
-          }
-
-          const { type, link, userId, createdAt, id, title } = (
-            addVideoTweetLinkResponse as AddVideoTweetLinkMemoryResponse
-          ).content;
+          const { type, id, title, link, createdAt } = addVTKResponse.memory;
 
           startIngestion({
             userId,
@@ -88,20 +85,11 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             createdAt,
           });
 
-          console.log(
-            (addVideoTweetLinkResponse as AddVideoTweetLinkMemoryResponse)
-              .message
-          );
+          console.log(addVTKResponse.message);
         } else if (data.type === "note") {
-          const addNoteResponse = await addNote(data, session.data.user.id);
+          const addNoteResponse = await createNoteMemory({ data, userId });
 
-          if ((addNoteResponse as ActionError)?.error) {
-            throw new Error((addNoteResponse as ActionError).error);
-          }
-
-          const { type, id, userId, createdAt } = (
-            addNoteResponse as AddNoteMemoryResponse
-          ).noteMemory;
+          const { id, type, createdAt } = addNoteResponse.memory;
 
           startIngestion({
             userId,
@@ -110,7 +98,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             createdAt,
           });
 
-          console.log((addNoteResponse as AddNoteMemoryResponse).message);
+          console.log(addNoteResponse.message);
         } else if (data.type === "document") {
           if (!data.file) {
             console.log("no file found");
@@ -123,12 +111,11 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             fileType: "application/pdf",
           });
 
-          if ((presignedUrlResponse as ActionError).error) {
-            throw new Error((presignedUrlResponse as ActionError).error);
+          if (!presignedUrlResponse.success) {
+            throw new Error(presignedUrlResponse.error);
           }
 
-          const { uploadUrl, key } =
-            presignedUrlResponse as GenerateUploadPresignedUrlResponse;
+          const { uploadUrl, key } = presignedUrlResponse;
 
           const res = await fetch(uploadUrl, {
             method: "PUT",
@@ -140,24 +127,18 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             throw new Error("Document upload failed.");
           }
 
-          const response = await addDocument(
-            {
+          const addDocumentResponse = await createDocumentMemory({
+            data: {
               type: data.type,
               tags: data.tags,
               fileType: data.file.type,
               title: data.title,
             },
-            session.data.user.id,
-            key
-          );
+            userId,
+            key,
+          });
 
-          if ((response as ActionError).error) {
-            throw new Error((response as ActionError).error);
-          }
-
-          const { userId, id, type, createdAt, title } = (
-            response as AddDocumentMemoryResponse
-          ).content;
+          const {id, createdAt, title, type} = addDocumentResponse.memory
 
           startIngestion({
             userId,
@@ -168,18 +149,18 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
             title: title || "",
           });
 
-          console.log((response as AddDocumentMemoryResponse).message);
+          console.log(addDocumentResponse.message);
         }
         reset();
         closeModal();
-        toast.success("Added memory successfully.")
+        toast.success("Added memory successfully.");
       } catch (error) {
         console.error(
           error instanceof Error
-          ? error.message
-          : "Error while uploading content."
+            ? error.message
+            : "Error while uploading content.",
         );
-        toast.error("Failed to add memory.")
+        toast.error("Failed to add memory.");
       }
     });
   };
@@ -278,7 +259,7 @@ export default function CreateContentModal({ tags }: CreateContentModalProps) {
                   />
                 )}
 
-                <TagSelector tags={tags} setValue={setValue} errors={errors} />
+                <TagSelector tags={tags!} setValue={setValue} errors={errors} />
 
                 <Button
                   variant="primary"

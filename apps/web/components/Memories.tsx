@@ -8,32 +8,49 @@ import Card from "./Card";
 import { ContentWithTags } from "../types/global";
 import { ContentType } from "@repo/common/config";
 import { MemoryViews } from "lib/constants/navBarItems";
+import { useSession } from "next-auth/react";
+import { useMemories } from "hooks/useMemories";
 
-export default function Memories({ data }: { data: ContentWithTags[] }) {
+export default function Memories() {
   const { openModal, memoryTypeSelectedView } = useAppStore();
   const [memories, setMemories] = useState<ContentWithTags[]>([]);
 
+  const session = useSession();
+  const userId = session.data?.user.id as string | undefined;
+
+  // fetch memories
+  const { data, isLoading, error } = useMemories(userId!)
+
   useEffect(() => {
-    let memories;
+    if (!data) {
+      setMemories([]);
+      return;
+    }
+
     if (memoryTypeSelectedView === MemoryViews.ALL) {
       setMemories(data);
-    } else if (memoryTypeSelectedView === MemoryViews.VIDEOS) {
-      memories = data.filter((item) => item.type === ContentType.youtube);
-      setMemories(memories);
-    } else if (memoryTypeSelectedView === MemoryViews.TWEETS) {
-      memories = data.filter((item) => item.type === ContentType.tweet);
-      setMemories(memories);
-    } else if (memoryTypeSelectedView === MemoryViews.PAGES) {
-      memories = data.filter((item) => item.type === ContentType.link);
-      setMemories(memories);
-    } else if (memoryTypeSelectedView === MemoryViews.NOTES) {
-      memories = data.filter((item) => item.type === ContentType.note);
-      setMemories(memories);
-    } else if (memoryTypeSelectedView === MemoryViews.DOCUMENTS) {
-      memories = data.filter((item) => item.type === ContentType.document);
-      setMemories(memories);
+      return;
     }
+
+    let filtered = data;
+    if (memoryTypeSelectedView === MemoryViews.VIDEOS) {
+      filtered = data.filter((item) => item.type === ContentType.youtube);
+    } else if (memoryTypeSelectedView === MemoryViews.TWEETS) {
+      filtered = data.filter((item) => item.type === ContentType.tweet);
+    } else if (memoryTypeSelectedView === MemoryViews.PAGES) {
+      filtered = data.filter((item) => item.type === ContentType.link);
+    } else if (memoryTypeSelectedView === MemoryViews.NOTES) {
+      filtered = data.filter((item) => item.type === ContentType.note);
+    } else if (memoryTypeSelectedView === MemoryViews.DOCUMENTS) {
+      filtered = data.filter((item) => item.type === ContentType.document);
+    }
+
+    setMemories(filtered);
   }, [memoryTypeSelectedView, data]);
+
+  if (isLoading) return <p className="flex items-center justify-center py-12 sm:p-12 min-h-[calc(100vh-64px)]">Loading...</p>;
+
+  if (error) return;
 
   return (
     <div

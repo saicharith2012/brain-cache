@@ -32,6 +32,7 @@ export async function deleteEmbeddings(
     };
   } catch (error) {
     return {
+      success: false,
       error:
         error instanceof Error
           ? error.message

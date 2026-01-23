@@ -1,4 +1,4 @@
-import type { ContentType} from "@repo/common/config";
+import type { ContentType } from "@repo/common/config";
 
 // interfaces for component props
 export interface CardProps {
@@ -21,7 +21,6 @@ export interface TypeSelectorProps {
   onSelect: (type: ContentType) => void;
 }
 
-// interfaces for server actions
 export interface ContentWithTags {
   id: string;
   title?: string | null;
@@ -44,47 +43,52 @@ export interface ContentWithTags {
   } | null;
 }
 
-export interface GetAllDocumentsResponse {
-  success: true;
-  message: string;
-  contents: ContentWithTags[];
-}
+// interfaces for server actions
+export type GetAllMemoriesResponse =
+  | (ActionSuccess & {
+      memories: ContentWithTags[];
+    })
+  | ActionError;
 
-export interface AddDocumentMemoryResponse {
-  success: true;
-  message: string;
-  content: {
-    type: ContentType;
-    id: string;
-    userId: string;
-    createdAt: Date;
-    title: string | null
-  };
-}
+export type AddDocumentMemoryResponse =
+  | (ActionSuccess & {
+      memory: {
+        type: ContentType;
+        id: string;
+        userId: string;
+        createdAt: Date;
+        title: string | null;
+      };
+    })
+  | ActionError;
 
-export interface AddNoteMemoryResponse {
-  success: true;
-  message: string;
-  noteMemory: {
-    type: ContentType;
-    id: string;
-    userId: string;
-    createdAt: Date;
-  };
-}
+export type AddNoteMemoryResponse =
+  | (ActionSuccess & {
+      memory: {
+        type: ContentType;
+        id: string;
+        userId: string;
+        createdAt: Date;
+      };
+    })
+  | ActionError;
 
-export interface AddVideoTweetLinkMemoryResponse {
-  success: true;
-  message: string;
-  content: {
-    type: $Enums.ContentType;
-    link: string | null;
-    title: string | null;
-    id: string;
-    userId: string;
-    createdAt: Date;
-  };
-}
+export type AddVideoTweetLinkMemoryResponse =
+  | (ActionSuccess &{
+      memory: {
+        type: $Enums.ContentType;
+        link: string | null;
+        title: string | null;
+        id: string;
+        userId: string;
+        createdAt: Date;
+      };
+    })
+  | ActionError;
+
+export type DeleteMemoryResponse =
+  | ActionSuccess
+  | ActionError;
 
 export interface Tag {
   id?: string;
@@ -92,25 +96,29 @@ export interface Tag {
   color: string;
 }
 
-export interface GetAllTagsResponse {
-  success: true;
-  message: string;
-  tags: Tag[];
-}
+export type GetAllTagsResponse =
+  | (ActionSuccess & {
+      tags: Tag[];
+    })
+  | ActionError;
 
-export interface GenerateUploadPresignedUrlResponse {
-  uploadUrl: string;
-  key: string;
-}
+export type GenerateUploadPresignedUrlResponse =
+  | {
+      success: true;
+      uploadUrl: string;
+      key: string;
+    }
+  | ActionError;
 
 export interface GetDocumentPresignedUrlResponse {
   url: string;
 }
 
-export interface ActionError {
+export type ActionError = {
+  success: false;
   error: string;
-}
-export interface ActionSuccess {
+};
+export type ActionSuccess = {
   success: true;
   message: string;
-}
+};

@@ -1,8 +1,9 @@
 import { getServerSession } from "next-auth";
 import "./globals.css";
 import { authOptions } from "./api/auth/[...nextauth]/route";
-import { ClientSessionProvider } from "./providers/ClientSessionProvider";
-import { Toaster } from "./components/ui/sonner";
+import { ClientSessionProvider } from "../providers/ClientSessionProvider";
+import { Toaster } from "components/ui/sonner";
+import QueryProvider from "../providers/QueryProvider";
 
 export default async function RootLayout({
   children,
@@ -14,7 +15,7 @@ export default async function RootLayout({
     <html lang="en" className="min-h-screen">
       <body className="font-roboto text-sm tracking-[0.005em]">
         <ClientSessionProvider session={session!}>
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </ClientSessionProvider>
         <Toaster />
       </body>

@@ -12,15 +12,16 @@ import ReactPlayer from "react-player";
 import mql from "@microlink/mql";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { deleteContent } from "../actions/content";
 import NoteIcon from "@repo/ui/icons/NoteIcon";
 import DocumentIcon from "@repo/ui/icons/DocumentIcon";
 import { getDocumentPresignedUrl } from "../actions/generatePresignedUrls";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { useDeleteMemory } from "hooks/useDeleteMemory";
 
 export default function Card(props: CardProps) {
   const [imageUrl, setImageUrl] = useState("/default-webpage.jpg");
+  const {mutateAsync: deleteMemory} =  useDeleteMemory()
 
   useEffect(() => {
     if (props.type === "link") {
@@ -38,14 +39,9 @@ export default function Card(props: CardProps) {
 
   async function handleDelete() {
     try {
-      const response = await deleteContent(props.id);
-
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      console.log(response);
-      toast.success("Deleted memory successfully.");
+      const response = await deleteMemory({memoryId: props.id});
+      // console.log(response.message);
+      toast.success(response.message);
     } catch (error) {
       console.error(
         error instanceof Error ? error.message : "Internal Server Error"

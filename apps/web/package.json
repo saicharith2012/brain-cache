@@ -23,7 +23,6 @@
     "@repo/common": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/qdrantdb": "workspace:*",
-    "@repo/redis": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.19",
     "bcrypt": "^6.0.0",

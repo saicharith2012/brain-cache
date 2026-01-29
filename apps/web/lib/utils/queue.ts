@@ -1,9 +1,14 @@
 import { Queue } from "bullmq";
-import { redisClient } from "@repo/redis/client";
 import { IngestionJobPayload } from "@repo/common/config";
+import { redisHostname, redisPassword, redisPort, redisUsername } from "config";
 
 const ingestionQueue = new Queue("ingestion-queue", {
-  connection: redisClient,
+  connection: {
+    username: redisUsername,
+    password: redisPassword,
+    host: redisHostname,
+    port: redisPort,
+  },
 });
 
 export async function addIngestionJob({

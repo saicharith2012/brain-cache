@@ -28,7 +28,7 @@ importers:
         version: 0.24.1
       '@langchain/community':
         specifier: ^0.3.56
-        version: 0.3.59(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.962.0)(@aws-sdk/credential-provider-node@3.962.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.57.0)(deepmerge@4.3.1)(dotenv@17.2.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(zod@3.25.76))(@ibm-cloud/watsonx-ai@1.7.5)(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.2.18(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76))))(@qdrant/js-client-rest@1.16.2(typescript@5.8.2))(@smithy/util-utf8@2.3.0)(axios@1.13.2)(cheerio@1.1.2)(fast-xml-parser@5.2.5)(google-auth-library@10.5.0)(ibm-cloud-sdk-core@5.4.5)(ignore@5.3.2)(ioredis@5.8.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(mysql2@3.15.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(pdf-parse@1.1.4)(pg@8.16.3)(playwright@1.57.0)(weaviate-client@3.10.0)(ws@8.18.3)
+        version: 0.3.59(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.962.0)(@aws-sdk/credential-provider-node@3.962.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.57.0)(deepmerge@4.3.1)(dotenv@17.2.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(zod@3.25.76))(@ibm-cloud/watsonx-ai@1.7.5)(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.2.18(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76))))(@qdrant/js-client-rest@1.16.2(typescript@5.9.3))(@smithy/util-utf8@2.3.0)(axios@1.13.2)(cheerio@1.1.2)(fast-xml-parser@5.2.5)(google-auth-library@10.5.0)(ibm-cloud-sdk-core@5.4.5)(ignore@5.3.2)(ioredis@5.8.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(mysql2@3.15.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(pdf-parse@1.1.4)(pg@8.16.3)(playwright@1.57.0)(weaviate-client@3.10.0)(ws@8.18.3)
       '@langchain/core':
         specifier: ^0.3.76
         version: 0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76))
@@ -47,9 +47,6 @@ importers:
       '@repo/qdrantdb':
         specifier: workspace:*
         version: link:../../packages/qdrantdb
-      '@repo/redis':
-        specifier: workspace:*
-        version: link:../../packages/redis
       bullmq:
         specifier: ^5.66.2
         version: 5.66.4
@@ -114,9 +111,6 @@ importers:
       '@repo/qdrantdb':
         specifier: workspace:*
         version: link:../../packages/qdrantdb
-      '@repo/redis':
-        specifier: workspace:*
-        version: link:../../packages/redis
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -253,7 +247,7 @@ importers:
         version: 7.2.0
       '@prisma/client':
         specifier: ^7.2.0
-        version: 7.2.0(prisma@7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2)
+        version: 7.2.0(prisma@7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3)
       '@prisma/client-runtime-utils':
         specifier: ^7.2.0
         version: 7.2.0
@@ -268,7 +262,7 @@ importers:
         version: 8.16.3
       prisma:
         specifier: ^7.2.0
-        version: 7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2)
+        version: 7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -320,7 +314,10 @@ importers:
     dependencies:
       '@qdrant/js-client-rest':
         specifier: ^1.15.1
-        version: 1.16.2(typescript@5.8.2)
+        version: 1.16.2(typescript@5.9.3)
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -328,6 +325,9 @@ importers:
 
   packages/redis:
     dependencies:
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       ioredis:
         specifier: ^5.8.2
         version: 5.8.2
@@ -335,6 +335,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   packages/tailwind-config:
     devDependencies:
@@ -4518,6 +4521,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   ua-parser-js@1.0.41:
     resolution: {integrity: sha512-LbBDqdIC5s8iROCUjMbW1f5dJQTEFB1+KO9ogbvlb3nm9n4YHa5p4KTvFPWvh2Hs8gZMBuiB1/8+pdfe/tDPug==}
     hasBin: true
@@ -5554,7 +5562,7 @@ snapshots:
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
-  '@langchain/community@0.3.59(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.962.0)(@aws-sdk/credential-provider-node@3.962.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.57.0)(deepmerge@4.3.1)(dotenv@17.2.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(zod@3.25.76))(@ibm-cloud/watsonx-ai@1.7.5)(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.2.18(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76))))(@qdrant/js-client-rest@1.16.2(typescript@5.8.2))(@smithy/util-utf8@2.3.0)(axios@1.13.2)(cheerio@1.1.2)(fast-xml-parser@5.2.5)(google-auth-library@10.5.0)(ibm-cloud-sdk-core@5.4.5)(ignore@5.3.2)(ioredis@5.8.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(mysql2@3.15.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(pdf-parse@1.1.4)(pg@8.16.3)(playwright@1.57.0)(weaviate-client@3.10.0)(ws@8.18.3)':
+  '@langchain/community@0.3.59(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.962.0)(@aws-sdk/credential-provider-node@3.962.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.57.0)(deepmerge@4.3.1)(dotenv@17.2.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(zod@3.25.76))(@ibm-cloud/watsonx-ai@1.7.5)(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76)))(@langchain/google-genai@0.2.18(@langchain/core@0.3.80(openai@5.12.2(ws@8.18.3)(zod@3.25.76))))(@qdrant/js-client-rest@1.16.2(typescript@5.9.3))(@smithy/util-utf8@2.3.0)(axios@1.13.2)(cheerio@1.1.2)(fast-xml-parser@5.2.5)(google-auth-library@10.5.0)(ibm-cloud-sdk-core@5.4.5)(ignore@5.3.2)(ioredis@5.8.2)(jsonwebtoken@9.0.3)(lodash@4.17.21)(mysql2@3.15.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(pdf-parse@1.1.4)(pg@8.16.3)(playwright@1.57.0)(weaviate-client@3.10.0)(ws@8.18.3)':
     dependencies:
       '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.57.0)(deepmerge@4.3.1)(dotenv@17.2.3)(openai@5.12.2(ws@8.18.3)(zod@3.25.76))(zod@3.25.76)
       '@ibm-cloud/watsonx-ai': 1.7.5
@@ -5576,7 +5584,7 @@ snapshots:
       '@aws-sdk/client-s3': 3.962.0
       '@aws-sdk/credential-provider-node': 3.962.0
       '@browserbasehq/sdk': 2.6.0
-      '@qdrant/js-client-rest': 1.16.2(typescript@5.8.2)
+      '@qdrant/js-client-rest': 1.16.2(typescript@5.9.3)
       '@smithy/util-utf8': 2.3.0
       cheerio: 1.1.2
       fast-xml-parser: 5.2.5
@@ -5859,6 +5867,13 @@ snapshots:
       prisma: 7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2)
       typescript: 5.8.2
 
+  '@prisma/client@7.2.0(prisma@7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3)':
+    dependencies:
+      '@prisma/client-runtime-utils': 7.2.0
+    optionalDependencies:
+      prisma: 7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
+      typescript: 5.9.3
+
   '@prisma/config@7.2.0':
     dependencies:
       c12: 3.1.0
@@ -5890,6 +5905,29 @@ snapshots:
       remeda: 2.21.3
       std-env: 3.9.0
       valibot: 1.2.0(typescript@5.8.2)
+      zeptomatch: 2.0.2
+    transitivePeerDependencies:
+      - typescript
+    optional: true
+
+  '@prisma/dev@0.17.0(typescript@5.9.3)':
+    dependencies:
+      '@electric-sql/pglite': 0.3.2
+      '@electric-sql/pglite-socket': 0.0.6(@electric-sql/pglite@0.3.2)
+      '@electric-sql/pglite-tools': 0.2.7(@electric-sql/pglite@0.3.2)
+      '@hono/node-server': 1.19.6(hono@4.10.6)
+      '@mrleebo/prisma-ast': 0.12.1
+      '@prisma/get-platform': 6.8.2
+      '@prisma/query-plan-executor': 6.18.0
+      foreground-child: 3.3.1
+      get-port-please: 3.1.2
+      hono: 4.10.6
+      http-status-codes: 2.3.0
+      pathe: 2.0.3
+      proper-lockfile: 4.1.2
+      remeda: 2.21.3
+      std-env: 3.9.0
+      valibot: 1.2.0(typescript@5.9.3)
       zeptomatch: 2.0.2
     transitivePeerDependencies:
       - typescript
@@ -5952,10 +5990,10 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@qdrant/js-client-rest@1.16.2(typescript@5.8.2)':
+  '@qdrant/js-client-rest@1.16.2(typescript@5.9.3)':
     dependencies:
       '@qdrant/openapi-typescript-fetch': 1.2.6
-      typescript: 5.8.2
+      typescript: 5.9.3
       undici: 6.22.0
 
   '@qdrant/openapi-typescript-fetch@1.2.6': {}
@@ -8607,6 +8645,23 @@ snapshots:
       - magicast
       - react
       - react-dom
+    optional: true
+
+  prisma@7.2.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3):
+    dependencies:
+      '@prisma/config': 7.2.0
+      '@prisma/dev': 0.17.0(typescript@5.9.3)
+      '@prisma/engines': 7.2.0
+      '@prisma/studio-core': 0.9.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      mysql2: 3.15.3
+      postgres: 3.4.7
+    optionalDependencies:
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - '@types/react'
+      - magicast
+      - react
+      - react-dom
 
   process@0.11.10: {}
 
@@ -9156,6 +9211,8 @@ snapshots:
 
   typescript@5.8.2: {}
 
+  typescript@5.9.3: {}
+
   ua-parser-js@1.0.41: {}
 
   unbox-primitive@1.1.0:
@@ -9207,6 +9264,11 @@ snapshots:
   valibot@1.2.0(typescript@5.8.2):
     optionalDependencies:
       typescript: 5.8.2
+    optional: true
+
+  valibot@1.2.0(typescript@5.9.3):
+    optionalDependencies:
+      typescript: 5.9.3
 
   vimeo-video-element@1.6.3:
     dependencies:

@@ -1,9 +1,12 @@
-import { redisClient } from "@repo/redis/client";
 import { Worker, Job } from "bullmq";
 import {
   embeddingModel,
   googleGenaiApiKey,
   qdrantCollectionName,
+  redisHostname,
+  redisPassword,
+  redisPort,
+  redisUsername,
 } from "./config.js";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
@@ -17,13 +20,11 @@ import { ContentType, IngestionJobPayload } from "@repo/common/config";
 import { tweetIngest } from "./lib/handlers/tweetIngest.js";
 import { linkIngest } from "./lib/handlers/linkIngest.js";
 
-
-
 const ingestionWorker = new Worker(
   "ingestion-queue",
   async (job: Job<IngestionJobPayload>) => {
     console.log(
-      `Processing job ${job.id} for memory ${JSON.stringify(job.data.contentId)}`
+      `Processing job ${job.id} for memory ${JSON.stringify(job.data.contentId)}`,
     );
 
     let textsForEmbeddings;
@@ -55,7 +56,7 @@ const ingestionWorker = new Worker(
     // storing in qdrant vector store
     if (!client.collectionExists(qdrantCollectionName!)) {
       throw new Error(
-        `collection ${qdrantCollectionName} does not exists on the vector store`
+        `collection ${qdrantCollectionName} does not exists on the vector store`,
       );
     }
 
@@ -96,7 +97,14 @@ const ingestionWorker = new Worker(
 
     console.log("successfully updated the ingestion status on db");
   },
-  { connection: redisClient }
+  {
+    connection: {
+      username: redisUsername,
+      password: redisPassword,
+      host: redisHostname,
+      port: redisPort,
+    },
+  },
 );
 
 ingestionWorker.on("completed", (job) => {

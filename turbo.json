@@ -14,7 +14,11 @@
         "AWS_SECRET_ACCESS_KEY",
         "QDRANT_COLLECTION_NAME",
         "GOOGLE_API_KEY",
-        "EMBEDDING_MODEL"
+        "EMBEDDING_MODEL",
+        "REDIS_USERNAME",
+        "REDIS_PASSWORD",
+        "REDIS_HOSTNAME",
+        "REDIS_PORT"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
@@ -38,7 +42,11 @@
         "AWS_SECRET_ACCESS_KEY",
         "QDRANT_COLLECTION_NAME",
         "GOOGLE_API_KEY",
-        "EMBEDDING_MODEL"
+        "EMBEDDING_MODEL",
+        "REDIS_USERNAME",
+        "REDIS_PASSWORD",
+        "REDIS_HOSTNAME",
+        "REDIS_PORT"
       ]
     }
   }

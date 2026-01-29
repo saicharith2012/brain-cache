@@ -27,3 +27,7 @@ export const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
 export const qdrantCollectionName = process.env.QDRANT_COLLECTION_NAME
 export const googleGenaiApiKey = process.env.GOOGLE_API_KEY
 export const embeddingModel = process.env.EMBEDDING_MODEL
+export const redisUsername = process.env.REDIS_USERNAME
+export const redisPassword = process.env.REDIS_PASSWORD
+export const redisHostname = process.env.REDIS_HOSTNAME
+export const redisPort = Number(process.env.REDIS_PORT)

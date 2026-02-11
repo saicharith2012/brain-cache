@@ -19,7 +19,7 @@ export async function videoIngest(link: string) {
     throw new Error("no data in memory.");
   }
 
-  console.log(chunks);
+  // console.log(chunks);
 
   const textsForEmbeddings = chunks.map((chunk) => chunk.pageContent);
 

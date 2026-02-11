@@ -316,17 +316,21 @@ export async function deleteMemory(
       },
     });
 
+    if (!memory) {
+      throw new Error("Memory not found.");
+    }
+
     if (memory?.type === ContentType.document && memory.document?.filePath) {
       const response1 = await deleteDocumentFromS3(memory?.document?.filePath);
 
-      if ((response1 as ActionError).error) {
+      if (!response1.success) {
         throw new Error((response1 as ActionError).error);
       }
     }
 
     const response2 = await deleteEmbeddings(memoryId);
 
-    if ((response2 as ActionError).error) {
+    if (!response2.success) {
       throw new Error((response2 as ActionError).error);
     }
 

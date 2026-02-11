@@ -2,7 +2,7 @@
 import { qdrantCollectionName } from "../config";
 import { addIngestionJob } from "../lib/utils/queue";
 import { client } from "@repo/qdrantdb/client";
-import { ActionError } from "../types/global";
+import { ActionError, ActionSuccess } from "../types/global";
 import { IngestionJobPayload } from "@repo/common/config";
 
 export async function startIngestion(memoryData: IngestionJobPayload) {
@@ -11,7 +11,7 @@ export async function startIngestion(memoryData: IngestionJobPayload) {
 
 export async function deleteEmbeddings(
   memoryId: string
-): Promise<{ message: string } | ActionError> {
+): Promise<ActionSuccess | ActionError> {
   try {
     await client.delete(qdrantCollectionName!, {
       wait: true,
@@ -28,6 +28,7 @@ export async function deleteEmbeddings(
     });
 
     return {
+      success: true,
       message: "vector embeddings successfully deleted.",
     };
   } catch (error) {

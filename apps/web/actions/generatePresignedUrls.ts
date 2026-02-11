@@ -18,6 +18,7 @@ import { nanoid } from "nanoid";
 import prisma from "@repo/db/client";
 import {
   ActionError,
+  ActionSuccess,
   GenerateUploadPresignedUrlResponse,
   GetDocumentPresignedUrlResponse,
 } from "../types/global";
@@ -100,7 +101,7 @@ export async function getDocumentPresignedUrl(
 
 export async function deleteDocumentFromS3(
   key: string
-): Promise<{ message: string } | ActionError> {
+): Promise<ActionSuccess | ActionError> {
   try {
     const deleteCommand = new DeleteObjectCommand({
       Bucket: awsS3BucketName,
@@ -109,7 +110,7 @@ export async function deleteDocumentFromS3(
 
     await s3Client.send(deleteCommand);
 
-    return { message: "deleted from s3 successfully." };
+    return { success: true, message: "deleted from s3 successfully." };
   } catch (error) {
     return {
       success: false,

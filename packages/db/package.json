@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx prisma generate",
-    "dev": "npx prisma generate",
-    "postinstall": "npx prisma generate"
+    "build": "pnpm prisma generate",
+    "dev": "pnpm prisma generate"
   },
   "keywords": [],
   "author": "",

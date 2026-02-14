@@ -22,7 +22,6 @@ export default function OpenIcon(props: IconProps) {
         fontFamily="none"
         fontWeight="none"
         fontSize="none"
-        textAnchor="none"
         style={{mixBlendMode: "normal"}}
       >
         <g transform="scale(8,8)">

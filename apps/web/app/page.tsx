@@ -14,7 +14,7 @@ export default function Page() {
 
       <main className="text-center">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-          Welcome to Brain Cache
+          Welcome to Brain-Cache
         </h1>
         <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl">
           Your personal knowledge base. Store, organize, and retrieve your

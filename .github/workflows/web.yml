@@ -41,7 +41,7 @@ jobs:
       - name: Deploy via SSH
         run: |
           echo "${{secrets.SERVER_SSH_KEY}}" > ssh_key.pem
-          chmod 600 key.pem
+          chmod 600 ssh_key.pem
 
           ssh -o StrictHostKeyChecking=no -i ssh_key.pem ${{secrets.SERVER_USER}}@${{secrets.SERVER_HOST}} \
             "IMAGE_URI=saicharith2012/brain-cache-web:${{github.sha}} bash -s" < scripts/deploy/deploy-web.sh

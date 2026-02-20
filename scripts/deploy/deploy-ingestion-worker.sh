@@ -45,7 +45,6 @@ echo "Starting new container..."
 eval docker run -d \
   --name "$CONTAINER_NAME" \
   --restart unless-stopped \
-  -p "$PORT_MAPPING" \
   $ENV_ARGS \
   "$IMAGE_URI"
 

@@ -49,3 +49,5 @@ eval docker run -d \
   "$IMAGE_URI"
 
 echo "Deployment completed successfully."
+
+docker image prune -af

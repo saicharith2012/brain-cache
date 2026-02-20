@@ -18,7 +18,8 @@
         "REDIS_USERNAME",
         "REDIS_PASSWORD",
         "REDIS_HOSTNAME",
-        "REDIS_PORT"
+        "REDIS_PORT",
+        "DATABASE_URL"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
@@ -46,7 +47,8 @@
         "REDIS_USERNAME",
         "REDIS_PASSWORD",
         "REDIS_HOSTNAME",
-        "REDIS_PORT"
+        "REDIS_PORT",
+        "DATABASE_URL"
       ]
     }
   }

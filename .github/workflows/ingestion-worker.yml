@@ -4,13 +4,13 @@ on:
   push:
     branches: [master]
     paths:
-      - 'apps/ingestion-worker/**'
-      - 'packages/db/**'
-      - 'packages/qdrantdb/**'
-      - 'packages/common/**'
-      - 'docker/Dockerfile.ingestion-worker'
-      - '.github/workflows/ingestion-worker.yml'
-      - 'scripts/deploy/deploy-ingestion-worker.sh'
+      - "apps/ingestion-worker/**"
+      - "packages/db/**"
+      - "packages/qdrantdb/**"
+      - "packages/common/**"
+      - "docker/Dockerfile.ingestion-worker"
+      - ".github/workflows/ingestion-worker.yml"
+      - "scripts/deploy/deploy-ingestion-worker.sh"
 
 jobs:
   build-and-push:
@@ -25,7 +25,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Docker Buildx  
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push Docker image
@@ -35,7 +35,9 @@ jobs:
           file: ./docker/Dockerfile.ingestion-worker
           push: true
           tags: saicharith2012/brain-cache-ingestion-worker:${{github.sha}}
-      
+          build-args: |
+            DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
+
       - name: Deploy to VM
         uses: appleboy/ssh-action@v1.0.3
         with:

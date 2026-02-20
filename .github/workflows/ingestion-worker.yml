@@ -2,7 +2,7 @@ name: Deploying Ingestion Worker
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - 'apps/ingestion-worker/**'
       - 'packages/db/**'

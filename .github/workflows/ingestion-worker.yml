@@ -3,14 +3,6 @@ name: Deploying Ingestion Worker
 on:
   push:
     branches: [main]
-    paths:
-      - 'apps/ingestion-worker/**'
-      - 'packages/db/**'
-      - 'packages/qdrantdb/**'
-      - 'packages/common/**'
-      - 'docker/Dockerfile.ingestion-worker'
-      - '.github/workflows/ingestion-worker.yml'
-      - 'scripts/deploy/deploy-ingestion-worker.sh'
 
 jobs:
   build-and-push:

@@ -4,14 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'apps/web/**'
-      - 'packages/ui/**'
-      - 'packages/common/**'
-      - 'packages/tailwind-config/**'
-      - 'docker/Dockerfile.web'
-      - '.github/workflows/web.yml'
-      - 'scripts/deploy/deploy-web.sh'
 
 jobs:
   build-and-push:

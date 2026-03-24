@@ -56,11 +56,11 @@ const ingestionWorker = new Worker(
     // storing in qdrant vector store
     if (!client.collectionExists(qdrantCollectionName!)) {
       throw new Error(
-        `collection ${qdrantCollectionName} does not exists on the vector store`,
+        `Collection ${qdrantCollectionName} does not exists on the vector store`,
       );
     }
 
-    console.log("inserting into qdrant db...");
+    console.log("Inserting into qdrant db...");
 
     const points = textsForEmbeddings.map((text, index) => ({
       id: uuid(), // qdrant has a restriction on IDs
@@ -81,7 +81,7 @@ const ingestionWorker = new Worker(
       points,
     });
 
-    console.log("successfully stored the vectors inside qdb");
+    console.log("Successfully stored the vectors inside qdb");
 
     // updating the embedding status on database
     await prisma.contentEmbedding.update({
@@ -95,7 +95,7 @@ const ingestionWorker = new Worker(
       },
     });
 
-    console.log("successfully updated the ingestion status on db");
+    console.log("Successfully updated the ingestion status on db");
   },
   {
     connection: {
@@ -112,7 +112,7 @@ ingestionWorker.on("completed", (job) => {
 });
 
 ingestionWorker.on("failed", async (job, err) => {
-  console.log(`job ${job?.id} has failed with error: ${err}`);
+  console.log(`Job ${job?.id} has failed with error: ${err}`);
   // update ingestion status on db upon failure
   await prisma.contentEmbedding.update({
     where: {

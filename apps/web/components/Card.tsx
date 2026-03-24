@@ -97,7 +97,7 @@ export default function Card(props: CardProps) {
 
         {/* embedding a link */}
         {props.type === "link" && (
-          <a href={props.link}>
+          <a href={props.link} target="_blank" rel="noreferrer">
             <div className={`relative w-full h-40`}>
               <Image
                 src={imageUrl}

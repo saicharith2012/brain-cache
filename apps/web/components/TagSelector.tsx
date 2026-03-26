@@ -78,31 +78,37 @@ export default function TagSelector({
 
   return (
     <div className="w-full">
-      <label className="my-1 block text-sm font-semibold">
-        Add tags to your memory
+      <label htmlFor="tag-input" className="block mb-1.5 text-[13px] font-medium text-ink">
+        Tags
       </label>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-1.5">
         {selectedTags.map((tag, index) => (
           <div
             key={index}
-            className={`flex items-center gap-1 ${TAG_COLOR_PALETTE[tag.color]} px-2 py-1 rounded-lg text-sm`}
+            className={`flex items-center gap-1 ${TAG_COLOR_PALETTE[tag.color] ?? TAG_COLOR_PALETTE.gray} pl-1.5 pr-1 py-0.5 rounded-[8px] text-[13px] font-medium`}
           >
             {tag.title}
             <button
               type="button"
               onClick={() => handleTagRemove(tag)}
-              className={`text-${tag.color}-500 hover:text-${tag.color}-800 cursor-pointer`}
+              aria-label={`Remove tag ${tag.title}`}
+              className="opacity-60 hover:opacity-100 cursor-pointer rounded-[2px]"
             >
-              <CrossIcon size="lg" strokeWidth="2.5" />
+              <CrossIcon size="md" strokeWidth="3" />
             </button>
           </div>
         ))}
 
         <div className="relative w-full" ref={wrapperRef}>
           <InputTextComponent
+            id="tag-input"
             type="text"
-            placeholder="Type to add..."
+            placeholder="Type a tag and press Enter"
+            role="combobox"
+            aria-expanded={isDropDownOpen}
+            aria-controls="tag-options"
+            autoComplete="off"
             onFocus={() => setIsDropDownOpen(true)}
             value={inputValue}
             className="w-full h-fit"
@@ -155,7 +161,11 @@ export default function TagSelector({
           />
 
           {isDropDownOpen && (
-            <div className="absolute top-9.5 w-full flex flex-col max-h-44 overflow-y-auto bg-white border border-black/50 z-10">
+            <div
+              id="tag-options"
+              role="listbox"
+              className="absolute top-11 w-full flex flex-col max-h-44 overflow-y-auto bg-tissue border border-fold rounded-[10px] shadow-[0_12px_32px_-12px_rgba(26,32,51,0.3)] z-10 py-1 empty:hidden"
+            >
               {/* Create New Tag Option */}
               {inputValue.trim() !== "" &&
                 !tags.some(
@@ -167,8 +177,8 @@ export default function TagSelector({
                     tag.title.toLowerCase() === inputValue.trim().toLowerCase()
                 ) && (
                   <div
-                    className={`px-2 py-1.5 cursor-pointer hover:bg-gray-100 transition-colors duration-150 ${
-                      highlightedIndex === -1 ? "bg-gray-100" : ""
+                    className={`px-2 py-1.5 cursor-pointer hover:bg-ink/[0.05] transition-colors duration-150 ${
+                      highlightedIndex === -1 ? "bg-ink/[0.05]" : ""
                     } flex gap-1 items-center`}
                     onClick={() =>
                       handleTagAdd({
@@ -178,24 +188,24 @@ export default function TagSelector({
                     }
                   >
                     <div
-                      className={`${TAG_COLOR_PALETTE["gray"]} px-2 py-1 rounded-lg text-sm w-fit`}
+                      className={`${TAG_COLOR_PALETTE["gray"]} px-1.5 py-0.5 rounded-[8px] text-[13px] font-medium w-fit`}
                     >
                       {inputValue.trim()}
                     </div>
-                    <span className="text-gray-400">new tag</span>
+                    <span className="text-[13px] text-dim">Create tag</span>
                   </div>
                 )}
 
               {filteredTags.map((tag, index) => (
                 <div
                   key={index}
-                  className={`px-2 py-1.5 cursor-pointer hover:bg-gray-100 transition-colors duration-150 ${
-                    index === highlightedIndex ? "bg-gray-100" : ""
+                  className={`px-2 py-1.5 cursor-pointer hover:bg-ink/[0.05] transition-colors duration-150 ${
+                    index === highlightedIndex ? "bg-ink/[0.05]" : ""
                   }`}
                   onClick={() => handleTagAdd(tag)}
                 >
                   <div
-                    className={`${TAG_COLOR_PALETTE[tag.color]} px-2 py-1 rounded-lg text-sm w-fit `}
+                    className={`${TAG_COLOR_PALETTE[tag.color] ?? TAG_COLOR_PALETTE.gray} px-1.5 py-0.5 rounded-[8px] text-[13px] font-medium w-fit `}
                   >
                     {tag.title}
                   </div>

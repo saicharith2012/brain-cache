@@ -1,178 +1,226 @@
 "use client";
-import { ReactElement, useEffect, useState } from "react";
-import BrainIcon from "@repo/ui/icons/BrainIcon";
-import BotIcon from "@repo/ui/icons/BotIcon";
-import ChevronLeft from "@repo/ui/icons/ChevronLeft";
-import ChevronRight from "@repo/ui/icons/ChevronRight";
-import { AnimatePresence, motion } from "motion/react";
-import { useAppStore } from "../lib/store/store";
-import Link from "next/link";
+import { useMemo, useTransition } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { LogOutIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, XIcon, LayersIcon } from "lucide-react";
+import PlusIcon from "@repo/ui/icons/PlusIcon";
+import { useAppStore } from "lib/store/store";
+import { navItems } from "lib/constants/navBarItems";
+import { useMemories } from "hooks/useMemories";
+import Logo from "./Logo";
+import TypeIcon from "./TypeIcon";
+import ThemeToggle from "./ThemeToggle";
 
-const sidebarItems: {
-  icon: ReactElement;
-  title: string;
-  id: string;
-}[] = [
-  {
-    icon: <BotIcon size="2xl" strokeWidth="1.5" />,
-    title: "Chat with brain",
-    id: "chat",
-  },
-  {
-    icon: <BrainIcon size="2xl" strokeWidth="1.5" />,
-    title: "Memories",
-    id: "memories",
-  },
-];
-
-const sidebarVariant = {
-  open: {
-    width: "232px",
-  },
-  closed: {
-    width: "64px",
-  },
-};
-
-const sidebarTitleVariants = {
-  open: {
-    opacity: 1,
-    x: 0,
-  },
-  closed: {
-    opacity: 0,
-    x: -10,
-  },
-};
-
-const sidebarItemsParentVariant = {
-  open: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.2,
-    },
-  },
-  closed: {
-    transition: {
-      staggerChildren: 0.05,
-      staggerDirection: -1,
-    },
-  },
-};
-
+/**
+ * Left rail: brand, the main action, memory views with counts, theme and account.
+ * Desktop: expanded (232px) or collapsed to icons (64px).
+ * Mobile: a drawer opened from the top bar.
+ */
 export default function Sidebar() {
-  const { isSidebarOpen, toggleSidebar } = useAppStore();
-  const [currentTab, setCurrentTab] = useState<string>("chat");
+  const {
+    isSidebarOpen,
+    toggleSidebar,
+    isMobileNavOpen,
+    setMobileNavOpen,
+    openModal,
+    memoryTypeSelectedView,
+    setMemoryType,
+    activeTag,
+    setActiveTag,
+  } = useAppStore();
+  const session = useSession();
+  const router = useRouter();
+  const [isSigningOut, startTransition] = useTransition();
+  const { data } = useMemories(session.data?.user.id as string);
 
-  const onHandleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    id: string
-  ) => {
-    e.preventDefault();
-
-    const el = document.getElementById(id);
-    if (el) {
-      const navbarHeight = 64;
-      const y = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
-      window.scrollTo({ top: y, behavior: "smooth" });
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: data?.length ?? 0 };
+    for (const item of navItems) {
+      if (item.type) c[item.key] = data?.filter((m) => m.type === item.type).length ?? 0;
     }
-  };
+    return c;
+  }, [data]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setCurrentTab(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-50% 0px -50% 0px" }
-    );
+  // The busiest tags: each one is a cluster of connected memories.
+  const topTags = useMemo(() => {
+    const c = new Map<string, number>();
+    for (const m of data ?? []) for (const t of m.contentTags) c.set(t.tag.title, (c.get(t.tag.title) ?? 0) + 1);
+    return [...c.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 8);
+  }, [data]);
 
-    sidebarItems.forEach((item) => {
-      const el = document.getElementById(item.id);
-      if (el) observer.observe(el);
+  function signOutUser() {
+    startTransition(async () => {
+      await signOut({ redirect: false });
+      router.push("/signin");
+      toast.success("Signed out.");
     });
+  }
 
-    return () => observer.disconnect();
-  }, []);
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={false}
-        animate={isSidebarOpen ? "open" : "closed"}
-        variants={sidebarVariant}
-        transition={{
-          duration: 0.3,
-        }}
-        className={`h-screen bg-white shadow border-black/30 fixed top-16 left-0 p-2 z-106`}
-      >
-        <div className="flex flex-col gap-2">
-          <div
-            className={`flex ${isSidebarOpen ? "justify-between" : "justify-center"} items-center mb-2`}
+  // On mobile the drawer is always shown expanded.
+  const rail = (expanded: boolean, mobile: boolean) => (
+    <nav
+      aria-label="Dashboard"
+      className="h-full flex flex-col bg-tissue border-r border-fold"
+    >
+      <div className={`h-16 flex items-center shrink-0 ${expanded ? "justify-between pl-4 pr-2" : "justify-center"}`}>
+        {expanded && <Logo size="sm" />}
+        {mobile ? (
+          <button
+            type="button"
+            onClick={() => setMobileNavOpen(false)}
+            aria-label="Close menu"
+            className="size-10 grid place-items-center rounded-[10px] text-dim hover:text-ink hover:bg-ink/[0.06] cursor-pointer"
           >
-            <motion.div
-              variants={sidebarTitleVariants}
-              className={`text-black text-xl ${isSidebarOpen ? "ml-3" : "w-0"} font-semibold overflow-hidden`}
-            >
-              Dashboard
-            </motion.div>
-            <div
-              onClick={toggleSidebar}
-              aria-label="sidebar-toggle"
-              className="rounded-full hover:bg-gray-100 active:bg-gray-200 transition-colors duration-300 shadow-[0_1px_1px_rgba(0,0,0,0.05),0_4px_6px_rgba(34,42,53,0.04),0_24px_68px_rgba(47,48,55,0.05),0_2px_3px_rgba(0,0,0,0.04)] flex items-center justify-center p-2 cursor-pointer"
-            >
-              {isSidebarOpen ? (
-                <ChevronLeft size="2xl" strokeWidth="1.5" />
-              ) : (
-                <ChevronRight size="2xl" strokeWidth="1.5" />
-              )}
-            </div>
-          </div>
-          <motion.div
-            variants={sidebarItemsParentVariant}
-            className="flex flex-col gap-1.5"
+            <XIcon className="size-5" strokeWidth={1.75} />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            aria-expanded={expanded}
+            className="size-10 shrink-0 grid place-items-center rounded-[10px] text-dim hover:text-ink hover:bg-ink/[0.06] cursor-pointer"
           >
-            {sidebarItems.map((item, index) => (
-              <Link
-                key={index}
-                href={""}
-                onClick={(e) => onHandleClick(e, item.id)}
-              >
-                <motion.div
-                  className="relative group flex gap-4 items-center rounded-md px-3 py-2 cursor-pointer transition-all duration-300 z-120 hover:bg-gray-100"
-                  onClick={() => setCurrentTab(item.id)}
+            {expanded ? (
+              <PanelLeftCloseIcon className="size-5" strokeWidth={1.75} />
+            ) : (
+              <PanelLeftOpenIcon className="size-5" strokeWidth={1.75} />
+            )}
+          </button>
+        )}
+      </div>
+
+      <div className={`pt-2 pb-4 ${expanded ? "px-3" : "px-2"}`}>
+        <button
+          type="button"
+          onClick={openModal}
+          aria-label={expanded ? undefined : "Add memory"}
+          title={expanded ? undefined : "Add memory"}
+          className={`h-10 w-full inline-flex items-center gap-2 rounded-full bg-recall text-recall-ink font-semibold hover:brightness-95 cursor-pointer ${expanded ? "px-3" : "justify-center"}`}
+        >
+          <PlusIcon size="lg" />
+          {expanded && "Add memory"}
+        </button>
+      </div>
+
+      <div className={`flex-1 overflow-y-auto ${expanded ? "px-3" : "px-2"}`}>
+        {expanded && (
+          <p className="px-3 pb-1.5 text-[13px] text-dim">Views</p>
+        )}
+        <ul className="flex flex-col gap-0.5">
+          {navItems.map((item) => {
+            const active = memoryTypeSelectedView === item.key && !activeTag;
+            return (
+              <li key={item.key}>
+                <button
+                  type="button"
+                  onClick={() => setMemoryType(item.key)}
+                  aria-current={active ? "page" : undefined}
+                  aria-label={expanded ? undefined : `${item.title} (${counts[item.key]})`}
+                  title={expanded ? undefined : item.title}
+                  className={`w-full h-9 flex items-center gap-3 rounded-[10px] cursor-pointer transition-colors ${expanded ? "px-3" : "justify-center"} ${active ? "bg-ink/[0.07] text-ink" : "text-dim hover:text-ink hover:bg-ink/[0.04]"}`}
                 >
-                  <motion.div className="text-black z-108">
-                    {item.icon}
-                  </motion.div>
-                  {!isSidebarOpen && (
-                    <div
-                      className="absolute top-[20%] left-[110%] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap px-2 py-0.5 bg-gray-50 border rounded-lg z-110 pointer-events-none"
-                      aria-label="tooltip"
-                    >
-                      {item.title}
-                    </div>
-                  )}{" "}
-                  <motion.div
-                    variants={sidebarTitleVariants}
-                    className="text-black text-base whitespace-nowrap overflow-hidden text-ellipsis z-108"
-                  >
-                    {item.title}
-                  </motion.div>
-                  {currentTab === item.id && (
-                    <motion.div
-                      layoutId="sidebar-current"
-                      className="absolute w-full h-full inset-0 bg-gray-200 rounded-lg z-100"
-                    ></motion.div>
+                  {item.type ? (
+                    <TypeIcon type={item.type} />
+                  ) : (
+                    <LayersIcon className="size-4 shrink-0" strokeWidth={1.75} aria-hidden />
                   )}
-                </motion.div>
-              </Link>
-            ))}
-          </motion.div>
+                  {expanded && (
+                    <>
+                      <span className={`flex-1 text-left ${active ? "font-semibold" : ""}`}>
+                        {item.title}
+                      </span>
+                      {active && <span aria-hidden className="size-1.5 rounded-full bg-recall" />}
+                      <span className="text-[13px] tabular-nums text-dim">
+                        {counts[item.key]}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+
+        {expanded && topTags.length > 0 && (
+          <>
+            <p className="px-3 pt-5 pb-1.5 text-[13px] text-dim">Tags</p>
+            <ul className="flex flex-wrap gap-1.5 px-2">
+              {topTags.map(([tag, n]) => {
+                const on = activeTag === tag;
+                return (
+                  <li key={tag}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTag(on ? null : tag)}
+                      aria-pressed={on}
+                      className={`h-7 px-2.5 inline-flex items-center gap-1.5 rounded-full text-[13px] border cursor-pointer transition-colors ${on ? "border-recall bg-recall/15 text-ink font-semibold" : "border-fold text-dim hover:text-ink hover:border-ink/30"}`}
+                    >
+                      #{tag}
+                      <span className="tabular-nums opacity-70">{n}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
+      </div>
+
+      <div className={`border-t border-fold py-3 flex flex-col gap-1 ${expanded ? "px-3" : "px-2 items-center"}`}>
+        <ThemeToggle withLabel={expanded} />
+        <div className={`flex items-center gap-2.5 ${expanded ? "px-1 pt-1" : "flex-col pt-1"}`}>
+          <Image
+            src={session.data?.user.image || "/unknown-image.jpg"}
+            alt=""
+            width={32}
+            height={32}
+            className="size-8 rounded-full border border-fold object-cover"
+          />
+          {expanded && (
+            <span className="flex-1 min-w-0 truncate text-[14px] text-ink">
+              {session.data?.user.name || session.data?.user.email || "Your account"}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={signOutUser}
+            disabled={isSigningOut}
+            aria-label="Sign out"
+            title="Sign out"
+            className="size-9 grid place-items-center rounded-[10px] text-dim hover:text-ink hover:bg-ink/[0.06] cursor-pointer disabled:opacity-50"
+          >
+            <LogOutIcon className="size-[18px]" strokeWidth={1.75} />
+          </button>
         </div>
-      </motion.div>
-    </AnimatePresence>
+      </div>
+    </nav>
+  );
+
+  return (
+    <>
+      {/* desktop rail */}
+      <aside
+        className={`hidden md:block fixed inset-y-0 left-0 z-30 transition-[width] duration-200 ${isSidebarOpen ? "w-[232px]" : "w-16"}`}
+      >
+        {rail(isSidebarOpen, false)}
+      </aside>
+
+      {/* mobile drawer */}
+      {isMobileNavOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 bg-[#1a2033]/50"
+            onClick={() => setMobileNavOpen(false)}
+            aria-hidden
+          />
+          <aside className="absolute inset-y-0 left-0 w-[272px] max-w-[85vw]">
+            {rail(true, true)}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }

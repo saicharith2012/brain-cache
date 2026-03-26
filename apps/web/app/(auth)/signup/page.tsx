@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import signup from "../../../actions/signup";
 import { signUpFormSchema, SignUpFormSchema } from "../../../config";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import InputTextComponent from "@repo/ui/inputTextComponent";
 import { Button } from "@repo/ui/button";
@@ -64,33 +65,34 @@ export default function SignupForm() {
 
   return (
     <div>
-      <div className="text-2xl font-bold mb-6 text-center">
-        Create your account.
-      </div>
+      <h1 className="font-display font-semibold text-[32px] tracking-[-0.02em] text-ink">
+        Create your account
+      </h1>
+      <p className="mt-1.5 mb-7 text-dim">Start saving things you want to remember.</p>
 
-      <div className="h-155">
+      <div>
         <Button
           onClick={() => {
             startGoogleSigninTransition(async () => {
               signIn("google", { callbackUrl: "/dashboard" });
             });
           }}
-          text="Continue with google"
+          text="Continue with Google"
           size="md"
           variant="google"
           startIcon={<GoogleIcon size="xl" />}
           loading={isGoogleSigninPending}
           fullWidth={true}
-          className="my-2 font-semibold"
+          className="font-semibold"
         />
 
-        <div className="w-[95%] mx-auto my-5 text-black flex items-center">
-          <hr className="opacity-30 w-[50%]" />
-          <span className="text-sm px-2 opacity-50">or</span>
-          <hr className="opacity-30 w-[50%]" />
+        <div className="my-6 flex items-center gap-3 text-[13px] text-dim">
+          <span className="h-px flex-1 bg-fold" />
+          or
+          <span className="h-px flex-1 bg-fold" />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <InputTextComponent
             label="Email"
             type="text"
@@ -147,18 +149,20 @@ export default function SignupForm() {
             type="submit"
             text={isPending ? "Signing up" : "Sign up"}
             variant="primary"
-            size="md"
+            size="lg"
             loading={isPending}
-            className="my-2 font-semibold"
+            fullWidth
+            className="mt-3"
           />
-          {serverError && <p className="text-red-500 py-1">{serverError}</p>}
+          {serverError && (
+            <p role="alert" className="text-[14px] text-danger">
+              {serverError}
+            </p>
+          )}
 
-          <span
-            className="underline cursor-pointer inline text-center mt-3"
-            onClick={() => router.push("/signin")}
-          >
-            Already have an account? Sign in.
-          </span>
+          <p className="mt-4 text-center text-[14px] text-dim">
+            Already have an account? <Link href="/signin" className="text-ink font-semibold underline underline-offset-4">Sign in</Link>
+          </p>
         </form>
       </div>
     </div>

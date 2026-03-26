@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -6,36 +6,63 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isSubmitted?: boolean;
   endIcon?: React.ReactNode;
   toggleOnClick?: () => void;
+  toggleLabel?: string;
 }
 
 const InputTextComponent = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { label, error, endIcon, toggleOnClick, isSubmitted, className, ...rest },
+    {
+      label,
+      error,
+      endIcon,
+      toggleOnClick,
+      toggleLabel = "Show or hide",
+      isSubmitted,
+      className = "",
+      id,
+      ...rest
+    },
     ref
   ) => {
+    void isSubmitted; // accepted for API compatibility; errors show as soon as they exist
+    const autoId = useId();
+    const inputId = id || autoId;
+    const errorId = `${inputId}-error`;
+
     return (
-      <div className={`flex flex-col ${className}`}>
-        {label && <label className="my-1 font-semibold">{label}</label>}
+      <div className={`flex flex-col gap-1.5 ${className}`}>
+        {label && (
+          <label htmlFor={inputId} className="text-[13px] font-medium text-ink">
+            {label}
+          </label>
+        )}
         <div
-          className={`relative p-2 border border-gray-200 rounded-lg focus-within:outline-1 focus-within:outline-gray-400`}
+          className={`relative flex items-center h-10 bg-tissue border rounded-[8px] transition-colors focus-within:border-ink ${error ? "border-danger" : "border-fold hover:border-ink/40"}`}
         >
           <input
             ref={ref}
-            className={`group focus:outline-none ${endIcon ? "w-7/8" : "w-full"}`}
+            id={inputId}
+            aria-invalid={!!error || undefined}
+            aria-describedby={error ? errorId : undefined}
+            className="h-full w-full bg-transparent px-3 text-[15px] text-ink placeholder:text-dim/70 focus:outline-none disabled:opacity-60"
             {...rest}
           />
           {endIcon ? (
-            <div
-              className="absolute top-2 bottom-0 right-3 cursor-pointer"
+            <button
+              type="button"
+              aria-label={toggleLabel}
+              className="mr-2 p-1 rounded-[8px] text-dim hover:text-ink cursor-pointer"
               onClick={toggleOnClick}
             >
               {endIcon}
-            </div>
+            </button>
           ) : null}
         </div>
-        <span className={`text-sm text-red-500 ${(error && error !== "") ? "py-1" : ""}`}>
-          {error || (isSubmitted && error) ? error : ""}
-        </span>
+        {error ? (
+          <span id={errorId} className="text-[13px] text-danger">
+            {error}
+          </span>
+        ) : null}
       </div>
     );
   }

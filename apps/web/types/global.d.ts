@@ -10,6 +10,8 @@ export interface CardProps {
     tag: { title: string; color: string };
   }[];
   note?: string;
+  /** Used as a source by the latest answer. */
+  cited?: boolean;
 }
 
 export interface CreateContentModalProps {

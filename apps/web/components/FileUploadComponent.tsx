@@ -3,7 +3,6 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 interface FileUploadProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  isSubmitted?: boolean;
   maxFileSizeInMB: number;
   onFileUpload: (e: ChangeEvent<HTMLInputElement>) => string;
 }
@@ -13,7 +12,6 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
     {
       label,
       error,
-      isSubmitted,
       className,
       onFileUpload,
       maxFileSizeInMB,
@@ -21,7 +19,7 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
     },
     ref
   ) => {
-    const [fileName, setFileName] = useState("No file Chosen");
+    const [fileName, setFileName] = useState("");
     const [errorMessage, setErrorMessage] = useState(error);
 
     useEffect(() => {
@@ -29,14 +27,16 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
     }, [error]);
 
     return (
-      <div className={`flex flex-col ${className}`}>
-        {label && <label className="my-1 font-semibold">{label}</label>}
+      <div className={`flex flex-col gap-1.5 ${className ?? ""}`}>
+        {label && <span className="text-[13px] font-medium text-ink">{label}</span>}
 
-        <div className="relative w-full max-w-md border border-gray-200 rounded-lg overflow-hidden">
+        <label
+          className={`relative flex items-center gap-3 p-4 rounded-[10px] border border-dashed bg-matter cursor-pointer transition-colors focus-within:border-ink hover:border-ink/50 ${errorMessage ? "border-danger" : "border-ink/25"}`}
+        >
           <input
             ref={ref}
             type="file"
-            className={`absolute inset-0 opacity-0 cursor-pointer z-10 h-full w-full`}
+            className="sr-only"
             accept="application/pdf"
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -44,14 +44,15 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
               if (!file) return;
 
               if (file.size > maxFileSizeInMB * 1024 * 1024) {
-                setErrorMessage("File size exceeds 5MB limit.");
+                setErrorMessage(`That file is over ${maxFileSizeInMB} MB. Choose a smaller PDF.`);
                 e.target.value = "";
-                setFileName("No File Chosen");
+                setFileName("");
                 return;
               } else if (file.type !== "application/pdf") {
-                setErrorMessage("The uploaded file is not a pdf.");
+                setErrorMessage("That file isn't a PDF. Choose a .pdf file.");
                 e.target.value = "";
-                setFileName("No File Chosen");
+                setFileName("");
+                return;
               } else {
                 setErrorMessage("");
               }
@@ -62,23 +63,16 @@ const FileUploadComponent = React.forwardRef<HTMLInputElement, FileUploadProps>(
             }}
             {...rest}
           />
-
-          <div className="flex items-center bg-gray-50 text-white h-full border-black">
-            <span className="bg-gray-700 text-sm font-semibold px-4 py-2 whitespace-nowrap">
-              Choose file
-            </span>
-            <span className="ml-3 text-gray-400 text-sm truncate">
-              {fileName}
-            </span>
-          </div>
-        </div>
+          <span className="h-9 px-3 inline-flex items-center rounded-[10px] bg-ink text-matter text-[14px] font-semibold whitespace-nowrap">
+            Choose PDF
+          </span>
+          <span className={`text-[14px] truncate ${fileName ? "text-ink" : "text-dim"}`}>
+            {fileName || "No file chosen"}
+          </span>
+        </label>
 
         {errorMessage && (
-          <span
-            className={`text-sm text-red-500 ${errorMessage && errorMessage !== "" ? "py-1" : ""}`}
-          >
-            {errorMessage || (isSubmitted && errorMessage) ? errorMessage : ""}
-          </span>
+          <span className="text-[13px] text-danger">{errorMessage}</span>
         )}
       </div>
     );

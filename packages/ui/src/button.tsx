@@ -1,7 +1,8 @@
-type Variant = "primary" | "secondary" | "google";
+type Variant = "primary" | "secondary" | "ink" | "ghost" | "google";
 type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
   variant: Variant;
   size: ButtonSize;
   text: string;
@@ -13,32 +14,57 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
+// primary = the recall colour. Use it once per screen, for the main action.
 const variantStyles: Record<Variant, string> = {
-  primary: "bg-gray-700 text-white hover:bg-gray-800 focus:bg-black",
-  secondary: "bg-gray-200 text-black hover:bg-gray-300 focus:bg-gray-400",
-  google: "bg-[#131314] text-white border border-gray-400"
+  primary:
+    "bg-recall text-recall-ink font-semibold hover:brightness-95 active:brightness-90",
+  secondary:
+    "bg-transparent text-ink border border-ink/25 hover:border-ink/60 hover:bg-ink/[0.04]",
+  ink: "bg-ink text-matter font-semibold hover:opacity-90",
+  ghost: "bg-transparent text-dim hover:text-ink hover:bg-ink/[0.06]",
+  google:
+    "bg-tissue text-ink border border-fold font-medium hover:border-ink/40",
 };
-
-const defaultStyles =
-  "rounded-md flex items-center cursor-pointer transition-all duration-150 justify-center";
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "py-1 px-2",
-  md: "py-2 px-3",
-  lg: "py-4 px-6",
+  sm: "h-8 px-2.5 text-[13px] gap-1.5",
+  md: "h-10 px-3.5 text-[15px] gap-2",
+  lg: "h-12 px-5 text-[15px] gap-2",
 };
 
-export const Button = (props: ButtonProps) => {
+export const Button = ({
+  variant,
+  size,
+  text,
+  startIcon,
+  endIcon,
+  onClick,
+  fullWidth,
+  loading,
+  className = "",
+  disabled,
+  type = "button",
+  ...rest
+}: ButtonProps) => {
   return (
     <button
-      className={`${defaultStyles} ${variantStyles[props.variant]} ${sizeStyles[props.size]} ${props.className} ${props.fullWidth ? "w-full justify-center" : ""} ${props.loading ? "opacity-40" : "opacity-100"}`}
-      onClick={props.onClick}
-      disabled={props.loading}
+      type={type}
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-full cursor-pointer transition-[background-color,border-color,opacity,filter] duration-150 disabled:cursor-not-allowed disabled:opacity-50 ${variantStyles[variant]} ${sizeStyles[size]} ${fullWidth ? "w-full" : ""} ${className}`}
+      onClick={onClick}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      {...rest}
     >
-      {props.startIcon ? <div className="pr-2.5">{props.startIcon}</div> : null}
-
-      {props.text}
-      {props.endIcon ? <div className="pl-2.5">{props.endIcon}</div> : null}
+      {loading ? (
+        <span
+          aria-hidden
+          className="size-4 rounded-full border-2 border-current border-r-transparent animate-spin"
+        />
+      ) : (
+        startIcon
+      )}
+      {text}
+      {endIcon}
     </button>
   );
 };

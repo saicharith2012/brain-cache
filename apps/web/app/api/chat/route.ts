@@ -95,11 +95,23 @@ export async function POST(req: Request) {
       },
     });
 
+    // Which memories the answer drew on, deduplicated, for the client to cite.
+    const seen = new Set<string>();
+    const sources = chunks
+      .map((c) => ({
+        contentId: String(c.payload?.contentId ?? ""),
+        title: String(c.payload?.title ?? ""),
+        type: String(c.payload?.type ?? ""),
+      }))
+      .filter((s) => s.contentId && !seen.has(s.contentId) && seen.add(s.contentId));
+
     return new Response(stream, {
       status: 200,
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache",
+        // URI-encoded because header values must be ASCII
+        "X-Braincache-Sources": encodeURIComponent(JSON.stringify(sources)),
       },
     });
   } catch (error) {

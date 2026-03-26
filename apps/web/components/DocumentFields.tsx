@@ -21,7 +21,7 @@ export default function DocumentFields({
         label="Title"
         type="text"
         {...register("title")}
-        placeholder="Enter a title"
+        placeholder="What is this document?"
         error={errors.title?.message}
       />
       <FileUploadComponent
@@ -29,12 +29,12 @@ export default function DocumentFields({
         onFileUpload={(e: ChangeEvent<HTMLInputElement>) => {
           if (e.target.files && e.target.files[0]) {
             setValue("file", e.target.files[0], { shouldValidate: true });
-            return e.target.files[0].name || "No file Chosen";
+            return e.target.files[0].name || "No file chosen";
           }
 
           return "No file chosen";
         }}
-        label="Upload file (pdf under 5MB)"
+        label="PDF file, up to 5 MB"
         maxFileSizeInMB={5}
       />
     </>

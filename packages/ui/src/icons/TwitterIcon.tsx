@@ -10,7 +10,7 @@ export default function TwitterIcon(props: IconProps) {
       className={IconSizeVariants[props.size]}
     >
       <g
-        fill="#6a7282"
+        fill="currentColor"
         fillRule="nonzero"
         stroke="currentColor"
         strokeWidth={props.strokeWidth || "2"}

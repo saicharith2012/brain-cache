@@ -19,7 +19,7 @@ export default function CommonFields({ register, errors }: CommonFieldsProps) {
         label="Title"
         type="text"
         {...register("title")}
-        placeholder="Enter a title"
+        placeholder="A name you'll recognise later"
         error={errors.title?.message}
       />
 
@@ -27,7 +27,7 @@ export default function CommonFields({ register, errors }: CommonFieldsProps) {
         label="Link"
         type="text"
         {...register("link")}
-        placeholder="Enter the link"
+        placeholder="https://"
         error={errors.link?.message}
       />
     </>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 
 type Point = { x: number; y: number; z: number };
-type Anchor = Point & { id: string; color: string };
+type Anchor = Point & { id: string; light: string; dark: string };
 const TAU = Math.PI * 2;
 function surface(latitude: number, arc: number): Point {
   const fold = 1 + 0.045 * Math.sin(arc * 7 + latitude * 6)
@@ -17,13 +18,13 @@ function surface(latitude: number, arc: number): Point {
 }
 
 const anchors: Anchor[] = [
-  { id: "talk", latitude: 2.12, arc: 2.42, color: "#ff9d9d" },
-  { id: "log", latitude: 1.16, arc: 2.04, color: "#ffd287" },
-  { id: "focus", latitude: 1.01, arc: 2.65, color: "#8aaeff" },
-  { id: "guide", latitude: 2.02, arc: 1.17, color: "#bd9cff" },
-  { id: "paper", latitude: 1.38, arc: 0.68, color: "#a0ffd7" },
-  { id: "cards", latitude: 0.79, arc: 1.32, color: "#ffd287" },
-].map(({ id, latitude, arc, color }) => ({ ...surface(latitude, arc), id, color }));
+  { id: "talk", latitude: 2.12, arc: 2.42, dark: "#ff9d9d", light: "#a7384a" },
+  { id: "log", latitude: 1.16, arc: 2.04, dark: "#ffd287", light: "#875711" },
+  { id: "focus", latitude: 1.01, arc: 2.65, dark: "#8aaeff", light: "#345caa" },
+  { id: "guide", latitude: 2.02, arc: 1.17, dark: "#bd9cff", light: "#67449e" },
+  { id: "paper", latitude: 1.38, arc: 0.68, dark: "#a0ffd7", light: "#217059" },
+  { id: "cards", latitude: 0.79, arc: 1.32, dark: "#ffd287", light: "#875711" },
+].map(({ id, latitude, arc, light, dark }) => ({ ...surface(latitude, arc), id, light, dark }));
 
 function makeNetwork() {
   const points: Point[] = [];
@@ -66,14 +67,21 @@ export default function NeuralSculpture({
   started: number | null;
   still: boolean;
 }) {
+  const { resolvedTheme } = useTheme();
+  const [theme, setTheme] = useState<"dark" | "light">("light");
+
+  useEffect(() => {
+    setTheme(resolvedTheme === "dark" ? "dark" : "light");
+  }, [resolvedTheme]);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const state = useRef({ sources, selected, started });
+  const state = useRef({ sources, selected, started, theme });
   const invalidate = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    state.current = { sources, selected, started };
+    state.current = { sources, selected, started, theme };
     invalidate.current?.();
-  }, [sources, selected, started]);
+  }, [sources, selected, started, theme]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -103,9 +111,12 @@ export default function NeuralSculpture({
       frame = 0;
       if (!context || !canvas || !width || !height || !visible || document.hidden) return;
       const calm = still || preference.matches;
-      const { sources, selected, started } = state.current;
+      const { sources, selected, started, theme } = state.current;
       const elapsed = calm || started === null ? RECALL_DURATION : time - started;
       const active = elapsed < RECALL_DURATION;
+      const dark = theme === "dark";
+      const wire = dark ? "117,218,189" : "31,109,88";
+      const spark = dark ? "170,255,224" : "34,122,97";
       tiltX += (pointerX - tiltX) * 0.075;
       tiltY += (pointerY - tiltY) * 0.075;
       const yaw = -0.22 + (calm ? 0 : tiltX * 0.24 + Math.sin(time / 4900) * 0.085);
@@ -139,14 +150,14 @@ export default function NeuralSculpture({
           context.moveTo(a.x, a.y);
           context.lineTo(b.x, b.y);
         }
-        context.strokeStyle = `rgba(117,218,189,${0.075 + layer * 0.095})`;
+        context.strokeStyle = `rgba(${wire},${0.075 + layer * 0.095})`;
         context.stroke();
       }
 
       for (const [index, point] of projected.entries()) {
         const light = clamp((point.z + 1) / 2);
         const shimmer = calm ? 0.7 : 0.65 + Math.sin(index * 1.7 + time / 850) * 0.32;
-        context.fillStyle = `rgba(170,255,224,${(0.14 + light * 0.62) * shimmer})`;
+        context.fillStyle = `rgba(${spark},${(0.14 + light * 0.62) * shimmer})`;
         const radius = index % 17 === 0 ? 1.35 : 0.7;
         context.fillRect(point.x, point.y, radius, radius);
       }
@@ -158,12 +169,13 @@ export default function NeuralSculpture({
         const matches = sources.includes(anchor.id);
         const recalled = matches && elapsed >= 560;
         const focused = selected === anchor.id;
+        const color = anchor[theme];
 
         if (recalled && !active) {
           context.beginPath();
           context.moveTo(point.x, point.y);
           context.quadraticCurveTo(point.x, output.y, output.x, output.y);
-          context.strokeStyle = anchor.color + (focused ? "ae" : "4d");
+          context.strokeStyle = color + (focused ? "ae" : dark ? "4d" : "75");
           context.lineWidth = focused ? 1.5 : 0.8;
           context.stroke();
         }
@@ -179,28 +191,28 @@ export default function NeuralSculpture({
             context.beginPath();
             context.moveTo(from.x, from.y);
             context.lineTo(x, y);
-            context.strokeStyle = "#9efbd6af";
+            context.strokeStyle = dark ? "#9efbd6af" : "#216651ce";
             context.lineWidth = 1.3;
             context.stroke();
-            context.fillStyle = "#e1fff4";
+            context.fillStyle = dark ? "#e1fff4" : "#216651";
             context.fillRect(x - 2, y - 2, 4, 4);
           }
         }
 
         const radius = focused ? 31 : recalled ? 21 : 10;
         const glow = context.createRadialGradient(point.x, point.y, 1, point.x, point.y, radius);
-        glow.addColorStop(0, anchor.color + (recalled ? "b0" : "55"));
-        glow.addColorStop(1, anchor.color + "00");
+        glow.addColorStop(0, color + (recalled ? (dark ? "b0" : "68") : "40"));
+        glow.addColorStop(1, color + "00");
         context.fillStyle = glow;
         context.fillRect(point.x - radius, point.y - radius, radius * 2, radius * 2);
         context.beginPath();
         context.arc(point.x, point.y, focused ? 7 : recalled ? 4.5 : 2.5, 0, TAU);
-        context.fillStyle = anchor.color;
+        context.fillStyle = color;
         context.fill();
         if (recalled) {
           context.beginPath();
           context.arc(point.x, point.y, focused ? 15 : 10, 0, TAU);
-          context.strokeStyle = anchor.color + "ae";
+          context.strokeStyle = color + "ae";
           context.lineWidth = 1;
           context.stroke();
         }
@@ -267,12 +279,12 @@ export default function NeuralSculpture({
     <div className="sculpture-field" aria-hidden="true">
       <canvas ref={canvasRef} />
       <div className="sculpture-fallback">
-        {anchors.map(({ id, x, y, color }) => (
+        {anchors.map((anchor) => (
           <i
-            key={id}
-            data-active={sources.includes(id) || undefined}
-            data-selected={selected === id || undefined}
-            style={{ left: `${50 + x * 27}%`, top: `${50 + y * 39}%`, color }}
+            key={anchor.id}
+            data-active={sources.includes(anchor.id) || undefined}
+            data-selected={selected === anchor.id || undefined}
+            style={{ left: `${50 + anchor.x * 27}%`, top: `${50 + anchor.y * 39}%`, color: anchor[theme] }}
           />
         ))}
       </div>

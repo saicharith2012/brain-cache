@@ -38,13 +38,13 @@ export default function Page() {
           <NeuralHero intro={
             <>
               <h1 className="font-display text-[clamp(3.45rem,7vw,7rem)] font-semibold leading-[0.91] tracking-[-0.062em]">
-                Ask anything{" "}<em className="block font-medium text-[#a5fbdc] xl:inline">you’ve saved.</em>
+                Ask anything{" "}<em className="block font-medium text-[var(--hero-accent)] xl:inline">you’ve saved.</em>
               </h1>
               <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
                 <Link href="/signup" className={primary}>
                   Get started <ArrowUpRight className="size-4" aria-hidden />
                 </Link>
-                <a href="#demo" className="inline-flex min-h-11 items-center gap-2 rounded-full px-2 font-semibold text-[#c4d9cf] hover:text-white">
+                <a href="#demo" className="inline-flex min-h-11 items-center gap-2 rounded-full px-2 font-semibold text-[var(--hero-muted)] hover:text-[var(--hero-ink)]">
                   Try an example <ArrowDown className="size-4" aria-hidden />
                 </a>
               </div>

@@ -85,7 +85,7 @@ export default function NeuralHero({ still = false, intro }: { still?: boolean; 
         <motion.div className="neural-question" key={started}
           initial={instant || started === null ? false : { opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-          <AudioLines aria-hidden="true" className="size-4 shrink-0 text-[#91fad3]" />
+          <AudioLines aria-hidden="true" className="size-4 shrink-0 text-[var(--hero-accent)]" />
           {example.question}
         </motion.div>
         <NeuralSculpture sources={example.sources} selected={selectedId} started={started} still={still} />

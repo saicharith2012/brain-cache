@@ -4,5 +4,6 @@ dotenv.config();
 
 export const client = new QdrantClient({
   url: process.env.QDRANT_URL,
-  apiKey: process.env.QDRANT_APIKEY,
+  // apiKey: process.env.QDRANT_APIKEY,
+  checkCompatibility: false
 });

@@ -54,9 +54,9 @@ const ingestionWorker = new Worker(
     // console.log(vectors[0]);
 
     // storing in qdrant vector store
-    if (!client.collectionExists(qdrantCollectionName!)) {
+    if (!(await client.collectionExists(qdrantCollectionName!)).exists) {
       throw new Error(
-        `Collection ${qdrantCollectionName} does not exists on the vector store`,
+        `Collection ${qdrantCollectionName} does not exist on the vector store`,
       );
     }
 
